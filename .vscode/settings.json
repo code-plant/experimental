@@ -1,0 +1,16 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+  },
+  "[typescript][typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "files.exclude": {
+    "**/*.js": true,
+    "**/*.d.ts": true,
+    "**/node_modules": true,
+    "**/tsconfig.tsbuildinfo": true,
+    "**/package-lock.json": true,
+  },
+}

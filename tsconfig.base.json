@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    // vscode
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // custom
+    "incremental": true,
+    "declaration": true,
+
+    // strict
+    // TODO:
+  },
+}
