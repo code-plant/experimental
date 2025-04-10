@@ -11,16 +11,27 @@ import {
 import { join, resolve } from "node:path";
 
 import {
+  ClassDeclaration,
   createSourceFile,
+  Declaration,
+  EnumDeclaration,
+  FunctionDeclaration,
+  getCombinedModifierFlags,
+  InterfaceDeclaration,
   isClassDeclaration,
   isEnumDeclaration,
+  isExportDeclaration,
   isFunctionDeclaration,
   isIdentifier,
   isInterfaceDeclaration,
+  isNamedExports,
   isTypeAliasDeclaration,
   isVariableStatement,
+  ModifierFlags,
   ScriptTarget,
   SyntaxKind,
+  TypeAliasDeclaration,
+  VariableStatement,
 } from "typescript";
 
 /**
@@ -101,7 +112,9 @@ function generateIndexForDirectory(dir: string): void {
 }
 
 /**
- * Parses a .ts file with the TypeScript Compiler API and returns an array of top-level exported identifiers.
+ * Parses the given .ts file and returns an array of named exports.
+ * Generates names only, ignoring default exports or `export *`.
+ * All found declarations (class, function, interface, etc.) are treated as type exports.
  */
 function getExportedIdentifiers(filePath: string): string[] {
   const sourceText = readFileSync(filePath, "utf8");
@@ -109,39 +122,72 @@ function getExportedIdentifiers(filePath: string): string[] {
     filePath,
     sourceText,
     ScriptTarget.ESNext,
-    true
+    /* setParentNodes */ true
   );
 
   const exportedNames: string[] = [];
+
   sourceFile.forEachChild((node) => {
+    // 1) Exported declarations with "export" keyword
     if (
-      "modifiers" in node &&
-      Array.isArray(node.modifiers) &&
-      node.modifiers.some((m) => m.kind === SyntaxKind.ExportKeyword)
-    ) {
-      // e.g. export class Foo, export interface Bar, export function Baz, export type Qux, etc.
-      if (
-        isClassDeclaration(node) ||
+      (isClassDeclaration(node) ||
+        isFunctionDeclaration(node) ||
         isInterfaceDeclaration(node) ||
         isEnumDeclaration(node) ||
-        isFunctionDeclaration(node) ||
-        isTypeAliasDeclaration(node)
-      ) {
-        if (node.name) {
-          exportedNames.push(node.name.escapedText.toString());
-        }
-      } else if (isVariableStatement(node)) {
-        // export const Foo = ...
-        for (const decl of node.declarationList.declarations) {
-          if (isIdentifier(decl.name)) {
-            exportedNames.push(decl.name.escapedText.toString());
-          }
+        isTypeAliasDeclaration(node)) &&
+      hasExportKeyword(node)
+    ) {
+      // e.g. `export class Foo`, `export interface Bar`, `export function Baz`
+      if (node.name) {
+        exportedNames.push(node.name.text);
+      }
+    } else if (isVariableStatement(node) && hasExportKeyword(node)) {
+      // e.g. `export const foo = ...`
+      for (const decl of node.declarationList.declarations) {
+        if (isIdentifier(decl.name)) {
+          exportedNames.push(decl.name.text);
         }
       }
     }
+    // 2) Re-export statements
+    else if (isExportDeclaration(node)) {
+      // e.g. `export { Foo, Bar as Baz } from './somewhere'`
+      // or `export * from './somewhere'`
+      // skip `export * from` because there's no named list
+      if (node.exportClause && isNamedExports(node.exportClause)) {
+        for (const spec of node.exportClause.elements) {
+          // e.g. `export { Foo as Bar }`
+          // `spec.name` is the local exported name (Bar)
+          exportedNames.push(spec.name.text);
+        }
+      }
+    }
+    // 3) `export default` or `export = ...` => skip or handle differently
+    // If needed, handle it here. For purely type re-exports, we typically skip default exports
   });
 
   return exportedNames;
+}
+
+/**
+ * Helper to detect if a node has `export` in its modifiers.
+ */
+function hasExportKeyword(
+  node:
+    | ClassDeclaration
+    | FunctionDeclaration
+    | InterfaceDeclaration
+    | EnumDeclaration
+    | TypeAliasDeclaration
+    | VariableStatement
+): boolean {
+  // If TS >= 5, you can use: `ts.getModifiers(node)?.some(...)`
+  // For backwards compatibility, do:
+  return (
+    (!!node.modifiers?.some((m) => m.kind === SyntaxKind.ExportKeyword) ||
+      getCombinedModifierFlags(node as Declaration) & ModifierFlags.Export) !==
+    0
+  );
 }
 
 /**

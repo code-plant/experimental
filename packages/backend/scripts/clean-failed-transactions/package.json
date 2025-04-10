@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "@this-project/backend-scripts-clean-failed-transactions",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/backend-application-adapter": "file:../../application/adapter",
+    "@this-project/backend-application-transaction": "file:../../application/transaction"
+  }
+}
