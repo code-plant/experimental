@@ -2,6 +2,7 @@
 
 // copypasted from https://github.com/42ts/-ft-mode-codegen/blob/2f80f373f57b95685f54f337b7ee9320f6ff84cf/bin.d.ts
 
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 import { Mode } from "@this-project/frontend-util-mode";
@@ -143,7 +144,7 @@ function addslashes(str: string) {
     : !config.persist?.type || config.persist.type === "cookie"
     ? `;document.cookie=K+'='+m+'; path=/'`
     : `;${config.persist.type}.setItem(K,m)`;
-  await mkdir("public");
+  if (!existsSync("public")) await mkdir("public");
   await writeFile(
     "public/mode.js",
     // q = mediaQuery, m/t = current mode/theme, M/T = mode/theme watchers

@@ -211,7 +211,12 @@ export class Args<
   ):
     | { type: "help" }
     | { type: "version" }
-    | { type: "ok"; positional: args; keywords: kwargs; extra: string[] }
+    | {
+        type: "ok";
+        positional: args;
+        keywords: Omit<kwargs, "help" | "version">;
+        extra: string[];
+      }
     | { type: "error"; reason: string } {
     const positionalValues: any[] = [];
     const keywordValues: Record<string, unknown> = {};

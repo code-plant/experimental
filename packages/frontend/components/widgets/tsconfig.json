@@ -3,5 +3,6 @@
   "compilerOptions": {
     "lib": ["DOM", "ES2017"],
     "jsx": "react-jsx",
+    "skipLibCheck": true,
   },
 }

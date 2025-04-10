@@ -13,7 +13,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
       <head>
         <link rel="icon" href="/favicon.ico" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <script src="/script/mode.js" />
+        <script src="/mode.js" />
       </head>
       <body>
         <ModeContextProvider

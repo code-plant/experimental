@@ -9,7 +9,10 @@ export interface ThemeContextConfig {
 }
 
 function useTheme(config: ThemeContextConfig): ThemeContextType {
-  return useMemo(() => ({ container: document.body, ...config }), [config]);
+  return useMemo(
+    () => ({ container: globalThis.document?.body, ...config }),
+    [config]
+  );
 }
 
 export interface ThemeProviderProps extends PropsWithChildren {

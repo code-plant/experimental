@@ -58,6 +58,7 @@ Therefore, if you need to include a `.d.ts` file, make sure it starts with an un
   - `util` - utilities
 - `development` - will be used for development only
   - `codegen` - for code generation
+  - `guc` - Generated Utility Classes - tailwindcss alternative
   - `util` - utilities only for development
 - `frontend` - frontend-specific packages
   - `apps` - Next.js apps

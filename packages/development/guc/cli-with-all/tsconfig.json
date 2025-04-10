@@ -1,9 +1,6 @@
 {
   "extends": "../../../../tsconfig.base.json",
   "compilerOptions": {
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
     "skipLibCheck": true,
-    "lib": ["DOM", "ES2015"],
   },
 }
