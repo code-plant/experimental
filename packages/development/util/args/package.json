@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "@this-project/development-util-args",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsx test"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}
