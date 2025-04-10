@@ -70,21 +70,43 @@ export class Args<
     let newShort = this._short;
     if (short !== undefined) {
       if (short.length !== 1) {
-        throw new Error("short keyword parameter length must be 1");
+        throw new Error("Short keyword parameter length must be 1");
       }
       if (short in newShort) {
         throw new Error(
           `Duplicate short parameter "${short}": "${newShort[short]}" and "${long}"`
         );
       }
+      if ((ALLOWED as readonly string[]).indexOf(short) === -1) {
+        throw new Error(`Invalid charactor "${short}"`);
+      }
+      if (short === "-") {
+        throw new Error('Short keyword parameter cannot be "-".');
+      }
       newShort = { ...newShort, [short]: long };
     }
     let newKeyword = this._keyword;
     if (long.length === 0) {
-      throw new Error("long keyword parameter length must be greater than 0");
+      throw new Error("Long keyword parameter length must be greater than 0");
     }
     if (long in newKeyword) {
       throw new Error(`Duplicate long parameter: ${long}`);
+    }
+    if (
+      long
+        .split("")
+        .some((ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1)
+    ) {
+      throw new Error(
+        `Invalid charactor "${long
+          .split("")
+          .find(
+            (ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1
+          )}" in "${long}"`
+      );
+    }
+    if (long.startsWith("-")) {
+      throw new Error('Long keyword parameter cannot starts with "-".');
     }
     newKeyword = { ...newKeyword, [long]: parse };
     return new Args(this._positional, newKeyword, newShort);
@@ -137,21 +159,43 @@ export class Args<
     let newShort = this._short;
     if (short !== undefined) {
       if (short.length !== 1) {
-        throw new Error("short keyword parameter length must be 1");
+        throw new Error("Short keyword parameter length must be 1");
       }
       if (short in newShort) {
         throw new Error(
           `Duplicate short parameter "${short}": "${newShort[short]}" and "${long}"`
         );
       }
+      if ((ALLOWED as readonly string[]).indexOf(short) === -1) {
+        throw new Error(`Invalid charactor "${short}"`);
+      }
+      if (short === "-") {
+        throw new Error('Short keyword parameter cannot be "-".');
+      }
       newShort = { ...newShort, [short]: long };
     }
     let newKeyword = this._keyword;
     if (long.length === 0) {
-      throw new Error("long keyword parameter length must be greater than 0");
+      throw new Error("Long keyword parameter length must be greater than 0");
     }
     if (long in newKeyword) {
       throw new Error(`Duplicate long parameter: ${long}`);
+    }
+    if (
+      long
+        .split("")
+        .some((ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1)
+    ) {
+      throw new Error(
+        `Invalid charactor "${long
+          .split("")
+          .find(
+            (ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1
+          )}" in "${long}"`
+      );
+    }
+    if (long.startsWith("-")) {
+      throw new Error('Long keyword parameter cannot starts with "-".');
     }
     newKeyword = { ...newKeyword, [long]: Boolean };
     return new Args(this._positional, newKeyword, newShort);
