@@ -1,6 +1,6 @@
 export class EnvNotFoundError extends Error {
   constructor(public readonly key: string) {
-    super(`Envuironment variable not found: ${key}`);
+    super(`Environment variable not found: ${key}`);
   }
 }
 

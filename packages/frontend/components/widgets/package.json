@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "@this-project/frontend-components-widgets",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/frontend-components-base": "file:../base",
+    "next": "^15.3.0",
+    "react-dom": "^19.1.0"
+  }
+}

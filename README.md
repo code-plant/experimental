@@ -60,5 +60,6 @@ Therefore, if you need to include a `.d.ts` file, make sure it starts with an un
   - `codegen` - for code generation
   - `util` - utilities only for development
 - `frontend` - frontend-specific packages
-  - `app` - Next.js apps
+  - `apps` - Next.js apps
+  - `components` - React components
   - `util` - utilities only for frontend

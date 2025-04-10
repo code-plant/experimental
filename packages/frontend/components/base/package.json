@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "name": "@this-project/frontend-components-base",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/common-util-util": "file:../../../common/util/util",
+    "@this-project/frontend-util-dom-util": "file:../../util/dom-util",
+    "@this-project/frontend-util-react-util": "file:../../util/react-util",
+    "next": "^15.3.0",
+    "react-dom": "^19.1.0"
+  }
+}

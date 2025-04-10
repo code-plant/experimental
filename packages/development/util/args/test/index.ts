@@ -12,7 +12,7 @@ function deepEqual(a: any, b: any): boolean {
   if (keysA.length !== keysB.length) return false;
 
   for (const key of keysA) {
-    if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
+    if (keysB.indexOf(key) === -1 || !deepEqual(a[key], b[key])) return false;
   }
 
   return true;
@@ -20,7 +20,6 @@ function deepEqual(a: any, b: any): boolean {
 
 function assertDeepEqual(a: any, b: any) {
   if (!deepEqual(a, b)) {
-    console.log({ a, b });
     throw new Error("Test failed");
   }
 }

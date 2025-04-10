@@ -17,7 +17,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <ModeContextProvider
-          variableName="npm:@-ft/mode-codegen"
+          variableName="__theme_mode"
           ssrInitialMode={theme?.value || "light"}
         >
           {children}
