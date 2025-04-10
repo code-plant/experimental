@@ -2,4 +2,6 @@ node_modules/
 package-lock.json
 tsconfig.tsbuildinfo
 *.js
-*.d.ts
+[!_]*.d.ts
+.env*
+!.env*.example

@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "@this-project/frontend-util-mode-next",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "@this-project/frontend-util-mode": "file:../mode",
+    "next": "^15.3.0"
+  }
+}

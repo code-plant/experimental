@@ -8,7 +8,7 @@
   },
   "files.exclude": {
     "**/*.js": true,
-    "**/*.d.ts": true,
+    "**/[!_]*.d.ts": true,
     "**/node_modules": true,
     "**/tsconfig.tsbuildinfo": true,
     "**/package-lock.json": true,
