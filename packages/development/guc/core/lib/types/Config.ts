@@ -1,15 +1,16 @@
+import { ThemeBase } from "./ThemeBase";
 import { TypePlugin } from "./TypePlugin";
 import { VariantPlugin } from "./VariantPlugin";
 
-export interface Config<TTheme> extends ConfigWithoutPlugins<TTheme> {
+export interface Config<TTheme extends ThemeBase>
+  extends ConfigWithoutPlugins<TTheme> {
   typePlugins: readonly TypePlugin<TTheme>[];
   variantPlugins: readonly VariantPlugin<TTheme>[];
 }
 
-export interface ConfigWithoutPlugins<TTheme> {
+export interface ConfigWithoutPlugins<TTheme extends ThemeBase> {
   prefix: string;
   theme: TTheme;
-  allowArbitraryValue: boolean;
   darkModeStrategy: DarkModeStrategy;
 }
 
@@ -17,11 +18,10 @@ export type DarkModeStrategy = DarkModeStrategyClass | DarkModeStrategyMedia;
 
 export interface DarkModeStrategyClass {
   type: "class";
+  className: string;
   on: "html" | "body" | "any";
-  fallbackDarkMode: boolean;
 }
 
 export interface DarkModeStrategyMedia {
   type: "media";
-  fallbackDarkMode: boolean;
 }

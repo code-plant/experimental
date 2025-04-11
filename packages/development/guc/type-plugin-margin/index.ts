@@ -1,4 +1,4 @@
-import { TypePlugin } from "@this-project/development-guc-core";
+import { ThemeBase, TypePlugin } from "@this-project/development-guc-core";
 import { MBTypePlugin } from "./lib/plugins/MBTypePlugin";
 import { METypePlugin } from "./lib/plugins/METypePlugin";
 import { MLTypePlugin } from "./lib/plugins/MLTypePlugin";
@@ -9,7 +9,7 @@ import { MTypePlugin } from "./lib/plugins/MTypePlugin";
 import { MXTypePlugin } from "./lib/plugins/MXTypePlugin";
 import { MYTypePlugin } from "./lib/plugins/MYTypePlugin";
 
-export interface MarginTypePluginTheme {
+export interface MarginTypePluginTheme extends ThemeBase {
   margin: Record<string, string | number>;
 }
 

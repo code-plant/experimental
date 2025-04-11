@@ -2,10 +2,11 @@ import {
   CSSContent,
   Media,
   MediaTerminal,
+  ThemeBase,
   VariantPlugin,
 } from "@this-project/development-guc-core";
 
-export interface MediaVariantPluginTheme {
+export interface MediaVariantPluginTheme extends ThemeBase {
   media: Record<string, string>;
 }
 

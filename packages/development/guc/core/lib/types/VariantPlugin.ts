@@ -1,7 +1,8 @@
 import { ConfigWithoutPlugins } from "./Config";
 import { CSSContent } from "./CSSContent";
+import { ThemeBase } from "./ThemeBase";
 
-export interface VariantPlugin<TTheme> {
+export interface VariantPlugin<TTheme extends ThemeBase> {
   prefixes: string[] | undefined;
   isValidVariant: (
     variant: string,

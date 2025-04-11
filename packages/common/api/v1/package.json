@@ -9,11 +9,11 @@
     "generate": "ts-auto-index -t ."
   },
   "devDependencies": {
+    "@this-project/development-codegen-ts-auto-index": "file:../../../development/codegen/ts-auto-index",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@this-project/common-api-common": "file:../common",
-    "@this-project/common-util-types": "file:../../util/types",
-    "@this-project/development-codegen-ts-auto-index": "file:../../../development/codegen/ts-auto-index"
+    "@this-project/common-util-types": "file:../../util/types"
   }
 }

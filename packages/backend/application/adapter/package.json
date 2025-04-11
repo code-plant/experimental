@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@this-project/development-codegen-ts-auto-index": "file:../../../development/codegen/ts-auto-index",
+    "@types/node": "^22.14.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {

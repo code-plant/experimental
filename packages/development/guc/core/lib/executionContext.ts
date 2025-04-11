@@ -1,8 +1,9 @@
 import { Config } from "./types/Config";
+import { ThemeBase } from "./types/ThemeBase";
 import { TypePlugin } from "./types/TypePlugin";
 import { VariantPlugin } from "./types/VariantPlugin";
 
-export interface ExecutionContext<TTheme> {
+export interface ExecutionContext<TTheme extends ThemeBase> {
   typePrefixes: TypePrefixes<TTheme>;
   typesWithoutPrefix: TypePlugin<TTheme>[];
   variantPrefixes: VariantPrefixes<TTheme>;
@@ -10,15 +11,15 @@ export interface ExecutionContext<TTheme> {
   warnings: Record<string, number>;
 }
 
-export interface TypePrefixes<TTheme> {
+export interface TypePrefixes<TTheme extends ThemeBase> {
   [_: string]: TypePlugin<TTheme>[] | undefined;
 }
 
-export interface VariantPrefixes<TTheme> {
+export interface VariantPrefixes<TTheme extends ThemeBase> {
   [_: string]: VariantPlugin<TTheme>[];
 }
 
-export function executionContext<TTheme>(
+export function executionContext<TTheme extends ThemeBase>(
   config: Config<TTheme>
 ): ExecutionContext<TTheme> {
   const typePrefixes: TypePrefixes<TTheme> = {};

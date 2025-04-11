@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/common-util-types": "file:../../util/types"
   }
 }

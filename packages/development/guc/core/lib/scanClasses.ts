@@ -1,9 +1,10 @@
 import { executionContext, ExecutionContext } from "./executionContext";
 import { Config, ConfigWithoutPlugins } from "./types/Config";
 import { GUCClass } from "./types/GUCClass";
+import { ThemeBase } from "./types/ThemeBase";
 import { stringToGUCClass } from "./util/stringToGUCClass";
 
-function isValidClassName<TTheme>(
+function isValidClassName<TTheme extends ThemeBase>(
   className: string,
   config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
@@ -39,7 +40,7 @@ function isValidClassName<TTheme>(
   }
 }
 
-function isValidVariant<TTheme>(
+function isValidVariant<TTheme extends ThemeBase>(
   variant: string,
   config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
@@ -75,7 +76,7 @@ function isValidVariant<TTheme>(
   }
 }
 
-function isValidGUCClass<TTheme>(
+function isValidGUCClass<TTheme extends ThemeBase>(
   { className, variants }: GUCClass,
   config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
@@ -86,7 +87,7 @@ function isValidGUCClass<TTheme>(
   );
 }
 
-export function scanClasses<TTheme>(
+export function scanClasses<TTheme extends ThemeBase>(
   source: string,
   config: Config<TTheme>,
   context: ExecutionContext<TTheme> = executionContext(config)

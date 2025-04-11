@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@this-project/common-application-authorization",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

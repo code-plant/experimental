@@ -1,7 +1,10 @@
 import { Awaitable } from "@this-project/common-util-types";
-import { Config as GUCConfig } from "@this-project/development-guc-core";
+import {
+  Config as GUCConfig,
+  ThemeBase,
+} from "@this-project/development-guc-core";
 
-export interface Config<TTheme> extends GUCConfig<TTheme> {
+export interface Config<TTheme extends ThemeBase> extends GUCConfig<TTheme> {
   filesToProcessGlobPattern: string;
   shouldProcess?: (filePath: string) => Awaitable<boolean>;
   emitTo: ConfigEmitTo;

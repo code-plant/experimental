@@ -19,6 +19,7 @@ task all
 sh scripts/for-each-package.sh "! [ -f .env.example ] || [ -f .env ] || cp .env.example .env"
 
 # Start Docker containers for example infrastructure
+chmod a+x scripts/localstack-setup.sh
 docker compose up -d
 
 # Start the backend server
@@ -48,13 +49,22 @@ For example: `packages/vendor/project/module`.
 All `*.js` and `[!_]*.d.ts` files are excluded from Git and VS Code.  
 Therefore, if you need to include a `.d.ts` file, make sure it starts with an underscore (e.g., `_declarations.d.ts`).
 
+If type error occurs because of residue `.d.ts` files, use command below:
+
+```sh
+sh scripts/for-each-package.sh sh ../../../../scripts/clean-others.sh
+```
+
 ## Brief Structure
 
 - `backend` - backend-specific packages
-  - `application` - core business logics
+  - `adapters` - adapter implementations
+  - `application` - core business logic
+  - `data` - data layer
   - `scripts` - runnable scripts, such as start server
 - `common` - can be used both in backend, frontend, or even development
   - `api` - API types
+  - `application` - shared business logic
   - `util` - utilities
 - `development` - will be used for development only
   - `codegen` - for code generation

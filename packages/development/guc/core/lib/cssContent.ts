@@ -3,11 +3,12 @@ import { executionContext, ExecutionContext } from "./executionContext";
 import { Config, ConfigWithoutPlugins } from "./types/Config";
 import { CSSContent } from "./types/CSSContent";
 import { GUCClass } from "./types/GUCClass";
+import { ThemeBase } from "./types/ThemeBase";
 import { TypePlugin } from "./types/TypePlugin";
 import { VariantPlugin } from "./types/VariantPlugin";
 import { GUCClassToString } from "./util/GUCClassToString";
 
-function classNameHandler<TTheme>(
+function classNameHandler<TTheme extends ThemeBase>(
   className: string,
   config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
@@ -30,7 +31,7 @@ function classNameHandler<TTheme>(
   throw new Error("maybe unreachable");
 }
 
-function variantHandler<TTheme>(
+function variantHandler<TTheme extends ThemeBase>(
   variant: string,
   config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
@@ -53,7 +54,7 @@ function variantHandler<TTheme>(
   throw new Error("maybe unreachable");
 }
 
-export function cssContent<TTheme>(
+export function cssContent<TTheme extends ThemeBase>(
   gucClass: GUCClass,
   config: Config<TTheme>,
   context: ExecutionContext<TTheme> = executionContext(config)

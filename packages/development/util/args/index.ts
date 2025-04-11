@@ -49,17 +49,13 @@ export class Args<
     ? never
     : S extends keyof short
     ? never
-    : S extends `${infer _}${infer I}`
+    : S extends `${string}${infer I}`
     ? I extends ""
       ? ToLetters<L> extends Allowed
         ? S extends Allowed
           ? Args<args, kwargs & Record<L, T>, short & Record<S, L>>
           : never
         : never
-      : never
-    : ToLetters<L> extends Allowed
-    ? S extends Allowed
-      ? Args<args, kwargs & Record<L, T>, short & Record<S, L>>
       : never
     : never;
   public keyword(
@@ -138,7 +134,7 @@ export class Args<
     ? never
     : S extends keyof short
     ? never
-    : S extends `${infer _}${infer I}`
+    : S extends `${string}${infer I}`
     ? I extends ""
       ? ToLetters<L> extends Allowed
         ? S extends Allowed
@@ -149,10 +145,6 @@ export class Args<
             >
           : never
         : never
-      : never
-    : ToLetters<L> extends Allowed
-    ? S extends Allowed
-      ? Args<args, kwargs & Record<L, true | undefined>, short & Record<S, L>>
       : never
     : never;
   public boolean(long: string, short?: string): Args<any[], any, any> {
@@ -206,9 +198,7 @@ export class Args<
   public static FLOAT = (value: string) => parseFloat(value);
 
   // parse function is by ChatGPT (implementing it is too boring)
-  public parse(
-    argv: string[]
-  ):
+  public parse(argv: string[]):
     | { type: "help" }
     | { type: "version" }
     | {

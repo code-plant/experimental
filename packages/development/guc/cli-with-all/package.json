@@ -16,7 +16,11 @@
   "dependencies": {
     "@this-project/development-guc-core": "file:../core",
     "@this-project/development-guc-node": "file:../node",
+    "@this-project/development-guc-type-plugin-color": "file:../type-plugin-color",
     "@this-project/development-guc-type-plugin-margin": "file:../type-plugin-margin",
+    "@this-project/development-guc-type-plugin-padding": "file:../type-plugin-padding",
+    "@this-project/development-guc-variant-plugin-a-state": "file:../variant-plugin-a-state",
+    "@this-project/development-guc-variant-plugin-group": "file:../variant-plugin-group",
     "@this-project/development-guc-variant-plugin-media": "file:../variant-plugin-media",
     "@this-project/development-util-args": "file:../../util/args",
     "typescript": "^5.8.3"

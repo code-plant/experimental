@@ -9,9 +9,7 @@
     "generate": "ts-auto-index -t ."
   },
   "devDependencies": {
+    "@this-project/development-codegen-ts-auto-index": "file:../../../development/codegen/ts-auto-index",
     "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "@this-project/development-codegen-ts-auto-index": "file:../../../development/codegen/ts-auto-index"
   }
 }

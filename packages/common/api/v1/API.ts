@@ -1,1 +1,3 @@
-export type API = never;
+import { UserRoutes } from "./users";
+
+export type API = UserRoutes;

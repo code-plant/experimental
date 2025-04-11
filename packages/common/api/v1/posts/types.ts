@@ -1,5 +1,5 @@
 import { CountEstimationView, Id } from "@this-project/common-api-common";
-import { UserSimpleView } from "../uesrs/types";
+import { UserSimpleView } from "../users/types";
 
 export type PostId = Id<"post">;
 

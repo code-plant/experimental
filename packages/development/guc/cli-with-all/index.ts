@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { ThemeBase } from "@this-project/development-guc-core";
 import { once } from "@this-project/development-guc-node";
 import { Args } from "@this-project/development-util-args";
 import { basename } from "node:path";
@@ -7,7 +8,8 @@ import { typePlugins, TypePluginsTheme } from "./typePlugins";
 import { variantPlugins, VariantPluginsTheme } from "./variantPlugins";
 
 export interface AllPluginsTheme
-  extends TypePluginsTheme,
+  extends ThemeBase,
+    TypePluginsTheme,
     VariantPluginsTheme {}
 
 const args = Args.instance.boolean("near", "n").parse(process.argv.slice(2));
@@ -27,8 +29,7 @@ Options:
 const near = args.keywords.near;
 
 once<AllPluginsTheme>({
-  allowArbitraryValue: true,
-  darkModeStrategy: { type: "class", fallbackDarkMode: false, on: "html" },
+  darkModeStrategy: { type: "class", className: "dark", on: "html" },
   emitTo: near
     ? {
         to: "nearSource",
@@ -47,6 +48,10 @@ once<AllPluginsTheme>({
   typePlugins,
   variantPlugins,
   theme: {
+    color: {
+      primary: ["#bbff88", "#440088"],
+    },
+    padding: { auto: "auto" },
     margin: { auto: "auto" },
     media: { dark: "prefers-color-scheme:dark" },
   },

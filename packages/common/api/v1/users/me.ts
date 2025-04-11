@@ -19,3 +19,5 @@ export type UserMePatch = EnsureAPIRoute<{
     status?: string | null;
   };
 }>;
+
+export type UserMeRoutes = UserMeGet | UserMePatch;
