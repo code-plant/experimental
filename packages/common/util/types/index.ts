@@ -3,6 +3,7 @@ export type { APIRouteBase, EnsureAPIRoute, ExtractVariablesFromPath } from './r
 export type { AnyCleanup } from './AnyCleanup';
 export type { Awaitable } from './Awaitable';
 export type { Cleanup } from './Cleanup';
+export type { Ensure } from './Ensure';
 export type { RemoveFirst } from './RemoveFirst';
 export type { StringUnionToString } from './StringUnionToString';
 export type { UnionAny } from './UnionAny';
