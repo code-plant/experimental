@@ -11,6 +11,7 @@ import {
   GraphQLUnionType,
 } from "@this-project/common-util-graphql-client-types";
 import { UnionToIntersection } from "@this-project/common-util-types";
+import { GraphQLResult } from "./GraphQLResult";
 
 export interface SchemaDescription<T extends GraphQLSchema> {
   query: "query" extends keyof T
@@ -230,7 +231,95 @@ export type InputOnlyTerminalTypeDescription<T extends GraphQLTerminalType> = [
   ? InputTypeDescription<T>
   : "Error: argument cannot be non-input type" & { " error": never };
 
-export class GraphqlClientBuilder<Schema extends GraphQLSchema> {
-  constructor(private readonly schema: SchemaDescription<Schema>) {}
-  // TODO: implement
+// =============================================================================
+
+export type GatherScalarTypesFromSchema<T extends GraphQLSchema> =
+  T[keyof T] extends infer I extends GraphQLObjectType
+    ? GatherScalarTypesFromObjectType<I>
+    : never;
+
+export type GatherScalarTypesFromType<T extends GraphQLType> =
+  T extends GraphQLTerminalType
+    ? GatherScalarTypesFromTerminalType<T>
+    : T extends (infer I extends GraphQLType)[]
+    ? GatherScalarTypesFromType<I>
+    : never;
+
+export type GatherScalarTypesFromTerminalType<T extends GraphQLTerminalType> =
+  T extends GraphQLScalarType
+    ? T["name"]
+    : T extends GraphQLObjectType
+    ? GatherScalarTypesFromObjectType<T>
+    : T extends GraphQLInterfaceType
+    ? GatherScalarTypesFromInterfaceType<T>
+    : T extends GraphQLUnionType
+    ? GatherScalarTypesFromUnionType<T>
+    : T extends GraphQLInputType
+    ? GatherScalarTypesFromInputType<T>
+    : never;
+
+export type GatherScalarTypesFromObjectType<T extends GraphQLObjectType> =
+  | GatherScalarTypesFromImplementsInterfaces<
+      Exclude<T["implementsInterfaces"], undefined>
+    >
+  | GatherScalarTypesFromFields<T["fields"]>;
+
+export type GatherScalarTypesFromImplementsInterfaces<
+  T extends GraphQLInterfaceType[]
+> = T[number] extends infer I extends GraphQLInterfaceType
+  ? GatherScalarTypesFromInterfaceType<I>
+  : never;
+
+export type GatherScalarTypesFromFields<
+  T extends Partial<Record<string, GraphQLField>>
+> = T[keyof T] extends infer I extends GraphQLField
+  ? GatherScalarTypesFromField<I>
+  : never;
+
+export type GatherScalarTypesFromField<T extends GraphQLField> =
+  | GatherScalarTypesFromArgs<Exclude<T["args"], undefined>>
+  | GatherScalarTypesFromType<T["value"]>;
+
+export type GatherScalarTypesFromArgs<
+  T extends Partial<Record<string, GraphQLType>>
+> = T[keyof T] extends infer I extends GraphQLType
+  ? GatherScalarTypesFromType<I>
+  : never;
+
+export type GatherScalarTypesFromInterfaceType<T extends GraphQLInterfaceType> =
+  // to avoid error: Type instantiation is excessively deep and possibly infinite
+  | (T extends Record<
+      "implementsInterfaces",
+      infer I extends GraphQLInterfaceType[]
+    >
+      ? GatherScalarTypesFromImplementsInterfaces<I>
+      : never)
+  | GatherScalarTypesFromFields<T["fields"]>;
+
+export type GatherScalarTypesFromUnionType<T extends GraphQLUnionType> =
+  T["variants"] extends infer I extends GraphQLObjectType
+    ? GatherScalarTypesFromObjectType<I>
+    : never;
+
+export type GatherScalarTypesFromInputType<T extends GraphQLInputType> =
+  GatherScalarTypesFromArgs<T["fields"]>;
+
+// =============================================================================
+
+export interface GraphQLOptions {
+  customFetch?: typeof fetch;
+  headers?: Record<string, string>;
+}
+
+export function graphql<
+  Schema extends GraphQLSchema,
+  ScalarTypeMap extends Record<GatherScalarTypesFromSchema<Schema>, unknown>,
+  const Query extends string
+>(
+  serverUrl: string,
+  path: string,
+  query: Query,
+  options: GraphQLOptions = {}
+): GraphQLResult<Schema, ScalarTypeMap, Query> {
+  // TODO:
 }
