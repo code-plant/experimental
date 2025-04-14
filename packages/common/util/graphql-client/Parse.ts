@@ -14,6 +14,19 @@ export interface GraphQLSelectionField {
   selectionSet?: GraphQLSelectionSet;
 }
 
+export interface GraphQLSelectionFragmentSpread {
+  type: "fragmentSpread";
+  name: string;
+  directives?: GraphQLDirective[];
+}
+
+export interface GraphQLSelectionInlineFragment {
+  type: "inlineFragment";
+  typeCondition?: string;
+  directives?: GraphQLDirective[];
+  selectionSet?: GraphQLSelectionSet;
+}
+
 export interface GraphQLDirective {
   name: string;
   arguments?: GraphQLArgument[];
@@ -49,12 +62,12 @@ export interface GraphQLVariable {
 
 export interface GraphQLNumberValue {
   type: "number";
-  name: string;
+  value: string;
 }
 
 export interface GraphQLEnumValue {
   type: "enum";
-  name: string;
+  value: string;
 }
 
 export interface GraphQLListValue {
@@ -211,10 +224,10 @@ type ExpectExecutableDefinition<S extends string> = ExpectName<S> extends [
   "fragment",
   string
 ]
-  ? ExpectFragment<S>
+  ? ExpectFragmentDefinition<S>
   : ExpectOperation<S>;
 
-type ExpectFragment<S extends string> = ExpectName<S> extends [
+type ExpectFragmentDefinition<S extends string> = ExpectName<S> extends [
   "fragment",
   infer A extends string
 ]
@@ -300,7 +313,7 @@ type ExpectArguments<S extends string> = S extends `(${infer A extends string}`
 
 type ExpectArgumentsInternal<
   S extends string,
-  R extends unknown[]
+  R extends GraphQLArgument[]
 > = S extends `)${infer I}`
   ? [R, TrimStart<I>]
   : ExpectArgument<S> extends [
@@ -327,7 +340,7 @@ type ExpectArgument<S extends string> = ExpectName<S> extends [
     : never
   : never;
 
-type ExpectValue<S extends string> = S extends `${NameStart}${string}`
+type ExpectValue<S extends string> = S extends `$${string}`
   ? ExpectVariable<S>
   : S extends `${"-" | Digit}${string}`
   ? ExpectNumber<S>
@@ -439,10 +452,13 @@ type ExpectListValue<S extends string> = S extends `[${infer I}`
 
 type ExpectListValueInternal<
   S extends string,
-  R extends unknown[]
+  R extends GraphQLValue[]
 > = S extends `]${infer I}`
   ? [R, TrimStart<I>]
-  : ExpectValue<S> extends [infer A, infer B extends string]
+  : ExpectValue<S> extends [
+      infer A extends GraphQLValue,
+      infer B extends string
+    ]
   ? string extends B
     ? never
     : ExpectListValueInternal<B, [...R, A]>
@@ -477,7 +493,7 @@ type ExpectObjectValueInternal<
 type ExpectSelectionSet<S extends string> = S extends `{${infer A}`
   ? string extends A
     ? never
-    : ExpectSelection<A> extends [
+    : ExpectSelection<TrimStart<A>> extends [
         infer Selection extends GraphQLSelection,
         infer B extends string
       ]
@@ -511,8 +527,11 @@ type ExpectSelectionItemField<S extends string> = ExpectName<S> extends [
 ]
   ? string extends A
     ? never
-    : A extends `${NameStart}${string}`
-    ? ExpectName<A> extends [infer Name extends string, infer B extends string]
+    : A extends `:${infer B}`
+    ? ExpectName<TrimStart<B>> extends [
+        infer Name extends string,
+        infer B extends string
+      ]
       ? string extends B
         ? never
         : ExpectSelectionItemFieldArguments<B, Name, NameOrAlias>
@@ -540,22 +559,20 @@ type ExpectSelectionItemFieldDirectives<
   Name extends string,
   Alias extends string | undefined,
   Arguments extends GraphQLArgument[] | undefined
-> = S extends `@${string}`
-  ? ExpectDirectives<S> extends [
-      infer Directives extends GraphQLDirective[],
-      infer A extends string
-    ]
-    ? string extends A
-      ? never
-      : ExpectSelectionItemFieldSelectionSet<
-          A,
-          Name,
-          Alias,
-          Arguments,
-          Directives
-        >
-    : never
-  : ExpectSelectionItemFieldSelectionSet<S, Name, Alias, Arguments, undefined>;
+> = ExpectDirectives<S> extends [
+  infer Directives extends GraphQLDirective[],
+  infer A extends string
+]
+  ? string extends A
+    ? never
+    : ExpectSelectionItemFieldSelectionSet<
+        A,
+        Name,
+        Alias,
+        Arguments,
+        Directives
+      >
+  : never;
 
 type ExpectSelectionItemFieldSelectionSet<
   S extends string,
@@ -593,5 +610,75 @@ type ExpectSelectionItemFieldSelectionSet<
       },
       S
     ];
+
+type ExpectSelectionItemFragmentSpreadOrInlineFragment<S extends string> =
+  S extends `...${infer A}`
+    ? ExpectName<TrimStart<A>> extends [
+        infer Name extends string,
+        infer B extends string
+      ]
+      ? string extends B
+        ? ExpectSelectionItemInlineFragmentDirectives<TrimStart<A>, undefined>
+        : Name extends "on"
+        ? ExpectSelectionItemInlineFragmentTypeCondition<B>
+        : ExpectSelectionItemFragmentSpread<B, Name>
+      : never
+    : never;
+
+type ExpectSelectionItemInlineFragmentTypeCondition<S extends string> =
+  ExpectName<S> extends [
+    infer TypeCondition extends string,
+    infer A extends string
+  ]
+    ? string extends A
+      ? never
+      : ExpectSelectionItemInlineFragmentDirectives<A, TypeCondition>
+    : never;
+
+type ExpectSelectionItemInlineFragmentDirectives<
+  A extends string,
+  TypeCondition extends string | undefined
+> = ExpectDirectives<A> extends [
+  infer Directives extends GraphQLDirective[],
+  infer B extends string
+]
+  ? string extends B
+    ? never
+    : ExpectSelectionSet<B> extends [
+        infer SelectionSet extends GraphQLSelectionSet,
+        infer C extends string
+      ]
+    ? string extends C
+      ? never
+      : [
+          {
+            type: "inlineFragment";
+            typeCondition: TypeCondition;
+            directives: Directives;
+            selectionSet: SelectionSet;
+          },
+          C
+        ]
+    : never
+  : never;
+
+type ExpectSelectionItemFragmentSpread<
+  S extends string,
+  Name extends string
+> = ExpectDirectives<S> extends [
+  infer Directives extends GraphQLDirective[],
+  infer A extends string
+]
+  ? string extends A
+    ? never
+    : [
+        {
+          type: "fragmentSpread";
+          name: Name;
+          directives: Directives;
+        },
+        TrimStart<A>
+      ]
+  : never;
 
 type ExpectOperation<S extends string> = never; // TODO;
