@@ -1,3 +1,37 @@
+export type GraphQLSelectionSet = GraphQLSelection[];
+
+export type GraphQLSelection =
+  | GraphQLSelectionField
+  | GraphQLSelectionFragmentSpread
+  | GraphQLSelectionInlineFragment;
+
+export interface GraphQLSelectionField {
+  type: "field";
+  name: string;
+  alias?: string;
+  arguments?: GraphQLArgument[];
+  directives?: GraphQLDirective[];
+  selectionSet?: GraphQLSelectionSet;
+}
+
+export interface GraphQLDirective {
+  name: string;
+  arguments?: GraphQLArgument[];
+}
+
+export interface GraphQLArgument {
+  name: string;
+  value: GraphQLValue;
+}
+
+export interface GraphQLFragmentDefinition {
+  type: "fragment";
+  name: string;
+  typeCondition: string;
+  directives?: GraphQLDirective[];
+  selectionSet?: GraphQLSelectionSet;
+}
+
 export type GraphQLValue =
   | GraphQLVariable
   | GraphQLNumberValue
@@ -196,32 +230,68 @@ type ExpectFragment<S extends string> = ExpectName<S> extends [
           ]
         ? string extends D
           ? never
-          : SkipDirectives<D> extends infer E extends string
+          : ExpectDirectives<D> extends [
+              infer Directives extends GraphQLDirective[],
+              infer E extends string
+            ]
           ? string extends E
             ? never
-            : TODO
+            : ExpectSelectionSet<E> extends [
+                infer SelectionSet extends GraphQLSelectionSet,
+                infer F extends string
+              ]
+            ? string extends F
+              ? never
+              : [
+                  {
+                    type: "fragment";
+                    name: Name;
+                    typeCondition: TypeCondition;
+                    directives: Directives;
+                    selectionSet: SelectionSet;
+                  },
+                  TrimStart<F>
+                ]
+            : never
           : never
         : never
       : never
     : never
   : never;
 
-type SkipDirectives<S extends string> = S extends `@${infer A}`
-  ? ExpectName<TrimStart<A>> extends [string, infer B extends string]
+type ExpectDirectives<S extends string> = ExpectDirectivesInternal<S, []>;
+
+type ExpectDirectivesInternal<
+  S extends string,
+  R extends GraphQLDirective[]
+> = S extends `@${infer A}`
+  ? ExpectName<TrimStart<A>> extends [
+      infer Name extends string,
+      infer B extends string
+    ]
     ? string extends B
       ? never
       : B extends `(${string}`
-      ? ExpectArguments<B> extends [unknown, infer C extends string]
+      ? ExpectArguments<B> extends [
+          infer Arguments extends GraphQLArgument[],
+          infer C extends string
+        ]
         ? string extends C
           ? never
-          : SkipDirectives<C>
+          : ExpectDirectivesInternal<
+              C,
+              [...R, { name: Name; arguments: Arguments }]
+            >
         : never
-      : B
+      : ExpectDirectivesInternal<TrimStart<B>, [...R, { name: Name }]>
     : never
-  : S;
+  : [R, S];
 
 type ExpectArguments<S extends string> = S extends `(${infer A extends string}`
-  ? ExpectArgument<A> extends [infer Argument, infer B extends string]
+  ? ExpectArgument<A> extends [
+      infer Argument extends GraphQLArgument,
+      infer B extends string
+    ]
     ? string extends B
       ? never
       : ExpectArgumentsInternal<B, [Argument]>
@@ -233,7 +303,10 @@ type ExpectArgumentsInternal<
   R extends unknown[]
 > = S extends `)${infer I}`
   ? [R, TrimStart<I>]
-  : ExpectArgument<S> extends [infer Argument, infer A extends string]
+  : ExpectArgument<S> extends [
+      infer Argument extends GraphQLArgument,
+      infer A extends string
+    ]
   ? string extends A
     ? never
     : ExpectArgumentsInternal<A, [...R, Argument]>
@@ -249,7 +322,7 @@ type ExpectArgument<S extends string> = ExpectName<S> extends [
     ? ExpectValue<TrimStart<B>> extends [infer Value, infer C extends string]
       ? string extends C
         ? never
-        : [[Name, Value], TrimStart<C>]
+        : [{ name: Name; value: Value }, TrimStart<C>]
       : never
     : never
   : never;
@@ -400,5 +473,125 @@ type ExpectObjectValueInternal<
       : never
     : never
   : never;
+
+type ExpectSelectionSet<S extends string> = S extends `{${infer A}`
+  ? string extends A
+    ? never
+    : ExpectSelection<A> extends [
+        infer Selection extends GraphQLSelection,
+        infer B extends string
+      ]
+    ? string extends B
+      ? never
+      : ExpectSelectionSetInternal<B, [Selection]>
+    : never
+  : never;
+
+type ExpectSelectionSetInternal<
+  S extends string,
+  R extends GraphQLSelection[]
+> = S extends `}${infer I}`
+  ? [R, TrimStart<I>]
+  : ExpectSelection<S> extends [
+      infer Selection extends GraphQLSelection,
+      infer A extends string
+    ]
+  ? string extends A
+    ? never
+    : ExpectSelectionSetInternal<A, [...R, Selection]>
+  : never;
+
+type ExpectSelection<S extends string> = S extends `${NameStart}${string}`
+  ? ExpectSelectionItemField<S>
+  : ExpectSelectionItemFragmentSpreadOrInlineFragment<S>;
+
+type ExpectSelectionItemField<S extends string> = ExpectName<S> extends [
+  infer NameOrAlias extends string,
+  infer A extends string
+]
+  ? string extends A
+    ? never
+    : A extends `${NameStart}${string}`
+    ? ExpectName<A> extends [infer Name extends string, infer B extends string]
+      ? string extends B
+        ? never
+        : ExpectSelectionItemFieldArguments<B, Name, NameOrAlias>
+      : never
+    : ExpectSelectionItemFieldArguments<A, NameOrAlias, undefined>
+  : never;
+
+type ExpectSelectionItemFieldArguments<
+  S extends string,
+  Name extends string,
+  Alias extends string | undefined
+> = S extends `(${string}`
+  ? ExpectArguments<S> extends [
+      infer Arguments extends GraphQLArgument[],
+      infer A extends string
+    ]
+    ? string extends A
+      ? never
+      : ExpectSelectionItemFieldDirectives<A, Name, Alias, Arguments>
+    : never
+  : ExpectSelectionItemFieldDirectives<S, Name, Alias, undefined>;
+
+type ExpectSelectionItemFieldDirectives<
+  S extends string,
+  Name extends string,
+  Alias extends string | undefined,
+  Arguments extends GraphQLArgument[] | undefined
+> = S extends `@${string}`
+  ? ExpectDirectives<S> extends [
+      infer Directives extends GraphQLDirective[],
+      infer A extends string
+    ]
+    ? string extends A
+      ? never
+      : ExpectSelectionItemFieldSelectionSet<
+          A,
+          Name,
+          Alias,
+          Arguments,
+          Directives
+        >
+    : never
+  : ExpectSelectionItemFieldSelectionSet<S, Name, Alias, Arguments, undefined>;
+
+type ExpectSelectionItemFieldSelectionSet<
+  S extends string,
+  Name extends string,
+  Alias extends string | undefined,
+  Arguments extends GraphQLArgument[] | undefined,
+  Directives extends GraphQLDirective[] | undefined
+> = S extends `{${string}`
+  ? ExpectSelectionSet<S> extends [
+      infer SelectionSet extends GraphQLSelectionSet,
+      infer A extends string
+    ]
+    ? string extends A
+      ? never
+      : [
+          {
+            type: "field";
+            name: Name;
+            alias: Alias;
+            arguments: Arguments;
+            directives: Directives;
+            selectionSet: SelectionSet;
+          },
+          TrimStart<A>
+        ]
+    : never
+  : [
+      {
+        type: "field";
+        name: Name;
+        alias: Alias;
+        arguments: Arguments;
+        directives: Directives;
+        selectionSet: undefined;
+      },
+      S
+    ];
 
 type ExpectOperation<S extends string> = never; // TODO;
