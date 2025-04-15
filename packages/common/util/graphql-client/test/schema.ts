@@ -2,8 +2,8 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
 } from "@this-project/common-util-graphql-client-types";
-import { Ensure } from "@this-project/common-util-types";
-import { GatherScalarTypesFromFields } from "..";
+import { Ensure, ExpandRecursively } from "@this-project/common-util-types";
+import { AnalyzeSchema } from "../Analyze";
 
 type ConnectionArgsType = {
   first: { type: "scalar"; name: "Int" } | null;
@@ -80,8 +80,6 @@ type UserType = Ensure<
 
 type SchemaType = Ensure<{ query: QueryType }, GraphQLSchema>;
 
-export type Scalars = GatherScalarTypesFromFields<
-  SchemaType["query"]["fields"]
->;
+export type AnalyzedSchema = ExpandRecursively<AnalyzeSchema<SchemaType>>;
 
 export { type SchemaType as Schema };

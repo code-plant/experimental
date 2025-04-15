@@ -4,6 +4,9 @@ export type { AnyCleanup } from './AnyCleanup';
 export type { Awaitable } from './Awaitable';
 export type { Cleanup } from './Cleanup';
 export type { Ensure } from './Ensure';
+export type { Expand } from './Expand';
+export type { ExpandRecursively } from './ExpandRecursively';
+export type { IsSameType } from './IsSameType'
 export type { RemoveFirst } from './RemoveFirst';
 export type { StringUnionToString } from './StringUnionToString';
 export type { UnionAny } from './UnionAny';

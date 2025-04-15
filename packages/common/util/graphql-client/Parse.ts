@@ -1,3 +1,7 @@
+export type GraphQLExecutableDefintion =
+  | GraphQLOperationDefinition
+  | GraphQLFragmentDefinition;
+
 export type GraphQLSelectionSet = GraphQLSelection[];
 
 export type GraphQLSelection =
@@ -24,7 +28,7 @@ export interface GraphQLSelectionInlineFragment {
   type: "inlineFragment";
   typeCondition?: string;
   directives?: GraphQLDirective[];
-  selectionSet?: GraphQLSelectionSet;
+  selectionSet: GraphQLSelectionSet;
 }
 
 export interface GraphQLDirective {
@@ -42,13 +46,13 @@ export interface GraphQLFragmentDefinition {
   name: string;
   typeCondition: string;
   directives?: GraphQLDirective[];
-  selectionSet?: GraphQLSelectionSet;
+  selectionSet: GraphQLSelectionSet;
 }
 
 export interface GraphQLOperationDefinition {
   type: "operation";
   operationType: GraphQLOperationType;
-  name: string;
+  name?: string;
   variables?: GraphQLVariableDefinition[];
   directives?: GraphQLDirective[];
   selectionSet: GraphQLSelectionSet;

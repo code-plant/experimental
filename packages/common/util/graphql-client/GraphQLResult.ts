@@ -14,7 +14,7 @@ type ExpandRecursively<T> = T extends object
     : never
   : T;
 
-const source = "fragment a" as const;
+const source = "fragment a on User { id }" as const;
 
 const a = graphql("", "", source);
 type A = ExpandRecursively<typeof a>;
