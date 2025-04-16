@@ -196,15 +196,64 @@ type TypeMapFromInputType<
   ? R
   : TypeMapFromArgs<T["fields"], R & TerminalTypeToTypeMap<T>>;
 
-export interface AnalyzeSchemaResult {
-  schema: GraphQLSchema;
-  typeMap: TypeMap;
+export type AnalyzeSchemaResult =
+  | AnalyzeSchemaResultError
+  | AnalyzeSchemaResultOk;
+
+export interface AnalyzeSchemaResultError {
+  type: "error";
+  error: string;
 }
 
-export type AnalyzeSchema<T extends GraphQLSchema> = {
-  schema: T;
-  typeMap: TypeMapFromSchema<T>;
-};
+export interface AnalyzeSchemaResultOk {
+  type: "ok";
+  schema: GraphQLSchema;
+  typeMap: TypeMap;
+  scalarTypes: string;
+}
+
+export type AnalyzeSchema<T extends GraphQLSchema> =
+  TypeMapFromSchema<T> extends infer I extends TypeMap
+    ? IsValidTypes<I> extends true
+      ? { type: "ok"; schema: T; typeMap: I; scalarTypes: ScalarTypes<I> }
+      : { type: "error"; error: "Schema validation failed" }
+    : never;
+
+type IsValidTypes<T extends TypeMap> = {
+  [K in keyof T]: T[K] extends GraphQLInputType
+    ? IsFieldsAllInputCompatible<T[K]["fields"]>
+    : never;
+}[keyof T];
+
+type IsFieldsAllInputCompatible<
+  T extends Partial<Record<string, GraphQLType>>,
+  R extends boolean = never
+> = [keyof T] extends [never]
+  ? R
+  : UnionAny<keyof T> extends infer I extends keyof T
+  ? IsFieldsAllInputCompatible<
+      Omit<T, I>,
+      | R
+      | ([Exclude<T[I], undefined>] extends [never]
+          ? never
+          : TerminalTypeFromType<Exclude<T[I], undefined>> extends
+              | GraphQLInputType
+              | GraphQLScalarType
+              | GraphQLEnumType
+          ? true
+          : false)
+    >
+  : never;
+
+type TerminalTypeFromType<T extends GraphQLType> = T extends GraphQLTerminalType
+  ? T
+  : T extends (null | infer I extends GraphQLType)[]
+  ? TerminalTypeFromType<I>
+  : never;
+
+type ScalarTypes<T extends TypeMap> = {
+  [K in keyof T]: T[K] extends GraphQLScalarType ? K : never;
+}[keyof T];
 
 export type AnalyzeResult = AnalyzeResultError | AnalyzeResultOk;
 

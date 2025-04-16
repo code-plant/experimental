@@ -1,11 +1,13 @@
 import {
+  GraphQLEnumType,
+  GraphQLInputType,
   GraphQLObjectType,
   GraphQLSchema,
 } from "@this-project/common-util-graphql-client-types";
-import { Ensure, ExpandRecursively } from "@this-project/common-util-types";
-import { AnalyzeSchema } from "../Analyze";
+import { Ensure } from "@this-project/common-util-types";
+import { AnalyzeSchema, AnalyzeSchemaResultOk } from "../Analyze";
 
-type ConnectionArgsType = {
+type ConnectionArgs = {
   first: { type: "scalar"; name: "Int" } | null;
   last: { type: "scalar"; name: "Int" } | null;
   after: { type: "scalar"; name: "ID" } | null;
@@ -33,6 +35,7 @@ type ConnectionWithTotalType<T extends GraphQLObjectType> = Ensure<
     fields: {
       pageInfo: { value: PageInfoType };
       edges: { value: EdgeType<T>[] };
+      nodes: { value: T[] };
       total: { value: { type: "scalar"; name: "Int" } };
     };
   },
@@ -51,16 +54,60 @@ type EdgeType<T extends GraphQLObjectType> = Ensure<
   GraphQLObjectType
 >;
 
+type SearchOrderType<Name extends string, Fields extends string[]> = Ensure<
+  {
+    type: "input";
+    name: `${Name}SearchOrder`;
+    fields: {
+      field: Ensure<
+        { type: "enum"; name: `${Name}SearchOrderField`; members: Fields },
+        GraphQLEnumType
+      >;
+      direction: SearchOrderDirection;
+    };
+  },
+  GraphQLInputType
+>;
+
+type SearchOrderDirection = Ensure<
+  { type: "enum"; name: "SearchOrderDirection"; members: ["ASC", "DESC"] },
+  GraphQLEnumType
+>;
+
 type QueryType = Ensure<
   {
     type: "object";
     name: "Query";
     fields: {
       users: {
-        args: ConnectionArgsType & {
-          cursor: { type: "scalar"; name: "ID" } | null;
+        args: ConnectionArgs & {
+          query: { type: "scalar"; name: "String" } | null;
+          order: SearchOrderType<
+            "User",
+            ["name", "registeredAt", "lastActiveAt"]
+          > | null;
+          filter: UserSearchFilterType | null;
         };
         value: ConnectionWithTotalType<UserType>;
+      };
+      user: {
+        args: { id: { type: "scalar"; name: "ID" } };
+        value: UserType | null;
+      };
+      posts: {
+        args: ConnectionArgs & {
+          query: { type: "scalar"; name: "String" } | null;
+          order: SearchOrderType<
+            "Post",
+            ["title", "publishedAt", "lastActiveAt"]
+          > | null;
+          filter: UserSearchFilterType | null;
+        };
+        value: ConnectionWithTotalType<PostType>;
+      };
+      post: {
+        args: { id: { type: "scalar"; name: "ID" } };
+        value: PostType | null;
       };
     };
   },
@@ -73,6 +120,37 @@ type UserType = Ensure<
     name: "User";
     fields: {
       name: { value: { type: "scalar"; name: "String" } };
+      registeredAt: { value: { type: "scalar"; name: "DateTime" } };
+      lastActiveAt: { value: { type: "scalar"; name: "DateTime" } };
+      recentPosts: {
+        args: { count: { type: "scalar"; name: "Int" } | null };
+        value: PostType[];
+      };
+    };
+  },
+  GraphQLObjectType
+>;
+
+type UserSearchFilterType = Ensure<
+  {
+    type: "input";
+    name: "UserSearchFilter";
+    fields: {
+      name: { type: "scalar"; name: "String" } | null;
+    };
+  },
+  GraphQLInputType
+>;
+
+type PostType = Ensure<
+  {
+    type: "object";
+    name: "Post";
+    fields: {
+      title: { value: { type: "scalar"; name: "String" } };
+      publishedAt: { value: { type: "scalar"; name: "DateTime" } };
+      lastActiveAt: { value: { type: "scalar"; name: "DateTime" } };
+      author: { value: UserType };
     };
   },
   GraphQLObjectType
@@ -80,6 +158,9 @@ type UserType = Ensure<
 
 type SchemaType = Ensure<{ query: QueryType }, GraphQLSchema>;
 
-export type AnalyzedSchema = ExpandRecursively<AnalyzeSchema<SchemaType>>;
+export type AnalyzedSchema = Ensure<
+  AnalyzeSchema<SchemaType>,
+  AnalyzeSchemaResultOk
+>;
 
 export { type SchemaType as Schema };
