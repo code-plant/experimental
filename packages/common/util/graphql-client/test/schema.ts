@@ -162,5 +162,3 @@ export type AnalyzedSchema = Ensure<
   AnalyzeSchema<SchemaType>,
   AnalyzeSchemaResultOk
 >;
-
-export { type SchemaType as Schema };

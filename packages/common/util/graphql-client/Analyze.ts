@@ -11,7 +11,17 @@ import {
   GraphQLUnionType,
 } from "@this-project/common-util-graphql-client-types";
 import { UnionAny } from "@this-project/common-util-types";
-import { GraphQLExecutableDefintion, GraphQLOperationType } from "./Parse";
+import {
+  GraphQLExecutableDefintion,
+  GraphQLOperationType,
+  GraphQLSelection,
+  GraphQLSelectionField,
+  GraphQLSelectionFragmentSpread,
+  GraphQLSelectionInlineFragment,
+  GraphQLVariableDefinition,
+  GraphQLFragmentDefinition as ParseFragmentDefinition,
+  GraphQLOperationDefinition as ParseOperationDefinition,
+} from "./Parse";
 
 type TypeMap = Partial<Record<string, GraphQLTerminalType>>;
 
@@ -182,7 +192,7 @@ type TypeMapFromVariants<
   R extends TypeMap
 > = T extends [
   infer I extends GraphQLObjectType,
-  infer J extends GraphQLObjectType[]
+  ...infer J extends GraphQLObjectType[]
 ]
   ? TypeMapFromObjectType<I, R> extends infer K extends TypeMap
     ? TypeMapFromVariants<J, K>
@@ -264,6 +274,7 @@ export interface AnalyzeResultError {
 
 export interface AnalyzeResultOk {
   type: "ok";
+  unnamedOperation?: GraphQLOperationDefinition;
   namedOperations: Partial<Record<string, GraphQLOperationDefinition>>;
   fragments: Partial<Record<string, GraphQLFragmentDefinition>>;
 }
@@ -271,7 +282,7 @@ export interface AnalyzeResultOk {
 export interface GraphQLOperationDefinition {
   type: "operation";
   operationType: GraphQLOperationType;
-  name: string;
+  name?: string;
   variables: Partial<Record<string, GraphQLType>>;
   selectionSet: GraphQLSelectionSet;
 }
@@ -302,7 +313,135 @@ export interface GraphQLInlineFragment {
   skipIf?: string;
 }
 
-export type Analyze<T extends GraphQLExecutableDefintion> = {
+export type Analyze<T extends GraphQLExecutableDefintion[]> =
+  AnalyzeInternalRecursive<
+    T,
+    { type: "ok"; namedOperations: {}; fragments: {} }
+  >;
+
+type AnalyzeInternalRecursive<
+  T extends GraphQLExecutableDefintion[],
+  R extends AnalyzeResult
+> = T extends [
+  infer I extends GraphQLExecutableDefintion,
+  ...infer J extends GraphQLExecutableDefintion[]
+]
+  ? AnalyzeInternalRecursive<J, AnalyzeInternal<I, R>>
+  : R;
+
+type AnalyzeInternal<
+  T extends GraphQLExecutableDefintion,
+  R extends AnalyzeResult
+> = R extends AnalyzeResultOk
+  ? T extends ParseOperationDefinition
+    ? AnalyzeOperationDefinition<T, R>
+    : T extends ParseFragmentDefinition
+    ? AnalyzeFragmentDefinition<T, R>
+    : never
+  : R;
+
+type AnalyzeOperationDefinition<
+  T extends ParseOperationDefinition,
+  R extends AnalyzeResultOk
+> = AnalyzeGraphQLOperationDefinition<T> extends infer I extends GraphQLOperationDefinition
+  ? T["name"] extends undefined
+    ? R["unnamedOperation"] extends GraphQLOperationDefinition
+      ? { type: "error"; error: "Unnamed operation already exists" }
+      : {
+          type: "ok";
+          unnamedOperation: I;
+          namedOperations: R["namedOperations"];
+          fragments: R["fragments"];
+        }
+    : T["name"] extends keyof R["namedOperations"]
+    ? {
+        type: "error";
+        error: `Named operation "${T["name"]}" already exists`;
+      }
+    : {
+        type: "ok";
+        unnamedOperation: R["unnamedOperation"];
+        namedOperations: R["namedOperations"] & {
+          [K in Exclude<T["name"], undefined>]: I;
+        };
+        fragments: R["fragments"];
+      }
+  : never;
+
+type AnalyzeGraphQLOperationDefinition<T extends ParseOperationDefinition> = (
+  T["variables"] extends GraphQLVariableDefinition[]
+    ? AnalyzeGraphQLVariableDefinition<T["variables"]>
+    : {}
+) extends infer V extends Partial<Record<string, GraphQLType>>
+  ? (
+      T["selectionSet"] extends GraphQLSelection[]
+        ? AnalyzeGraphQLSelectionSet<T["selectionSet"]>
+        : {}
+    ) extends infer S extends GraphQLSelectionSet
+    ? {
+        type: "operation";
+        operationType: T["operationType"];
+        name: T["name"];
+        variables: V;
+        selectionSet: S;
+      }
+    : never
+  : never;
+
+type AnalyzeGraphQLVariableDefinition<
+  T extends GraphQLVariableDefinition[],
+  R extends Partial<Record<string, GraphQLType>> = {}
+> = T extends [
+  infer I extends GraphQLVariableDefinition,
+  ...infer J extends GraphQLVariableDefinition[]
+]
+  ? I["name"] extends keyof R
+    ? never
+    : AnalyzeGraphQLVariableDefinition<J, R & { [K in I["name"]]: I }>
+  : R;
+
+type AnalyzeGraphQLSelectionSet<
+  T extends GraphQLSelection[],
+  R extends GraphQLSelectionSet = {
+    fields: {};
+    fragmentSpreads: [];
+    inlineFragments: [];
+  }
+> = T extends [
+  infer I extends GraphQLSelection,
+  ...infer J extends GraphQLSelection[]
+]
+  ? I extends GraphQLSelectionField
+    ? {
+        fields: AnalyzeGraphQLSelectionField<R["fields"], I>;
+        fragmentSpreads: R["fragmentSpreads"];
+        inlineFragments: R["inlineFragments"];
+      }
+    : I extends GraphQLSelectionFragmentSpread
+    ? {
+        fields: R["fields"];
+        fragmentSpreads: [
+          ...R["fragmentSpreads"],
+          AnalyzeGraphQLSelectionFragmentSpread<I>
+        ];
+        inlineFragments: R["inlineFragments"];
+      }
+    : I extends GraphQLSelectionInlineFragment
+    ? {
+        fields: R["fields"];
+        fragmentSpreads: R["fragmentSpreads"];
+        inlineFragments: [
+          ...R["inlineFragments"],
+          AnalyzeGraphQLSelectionInlineFragment<I>
+        ];
+      }
+    : never
+  : never;
+
+type AnalyzeFragmentDefinition<
+  T extends ParseFragmentDefinition,
+  R extends AnalyzeResultOk
+> = {
   type: "error";
-  error: "// TODO: not implemented";
+  error: "// TODO: implement";
 };
