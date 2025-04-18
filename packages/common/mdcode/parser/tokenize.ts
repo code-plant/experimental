@@ -234,6 +234,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
               };
             }
             state.content.push(currentLine.join(""));
+            currentLine.length = 0;
           }
           if (state) {
             tokens.push({
@@ -278,6 +279,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
               };
             }
             state.content.push(currentLine.join(""));
+            currentLine.length = 0;
           }
           const [name, value] = parsedAttr;
           if (state) {
@@ -311,6 +313,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
           };
         }
         state.content.push(currentLine.join(""));
+        currentLine.length = 0;
       }
     }
   }

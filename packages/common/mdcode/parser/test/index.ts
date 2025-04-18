@@ -1,18 +1,19 @@
+import { parse } from "../parse";
 import { tokenize } from "../tokenize";
+import { stringify } from "./stringify";
 
-const { console } = globalThis as unknown as {
-  console: { log: (...args: any[]) => void };
-};
+declare const console: { log: (...args: any[]) => void };
 
-console.log(
-  tokenize(`
+const tokens = tokenize(`
 
-    Hello world![b]42[/b]
-    [multi-line
-    ]
-    [multi-line=xXx
-    xXx1=xXx xXx2="xXx" xXx3="\\\\\\"\\\\"
-    /]haha[/multi-line]
+[a][b][/a][/b]
 
-`)
-);
+`);
+
+if (!Array.isArray(tokens)) {
+  throw new Error(tokens.message);
+}
+
+const document = parse(tokens);
+
+console.log(stringify(document));
