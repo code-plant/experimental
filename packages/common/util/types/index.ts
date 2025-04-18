@@ -8,6 +8,7 @@ export type { Expand } from './Expand';
 export type { ExpandRecursively } from './ExpandRecursively';
 export type { IsSameType } from './IsSameType'
 export type { RemoveFirst } from './RemoveFirst';
+export type { Result, ResultError, ResultOk } from './Result';
 export type { StringUnionToString } from './StringUnionToString';
 export type { UnionAny } from './UnionAny';
 export type { UnionToIntersection } from './UnionToIntersection';

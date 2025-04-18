@@ -1,4 +1,4 @@
-import { GraphQLSchema } from "@this-project/common-util-graphql-client-types";
+import { GraphQLSchema } from "@this-project/common-util-graphql-common-types";
 import { graphql } from ".";
 import { Parse } from "./Parse";
 

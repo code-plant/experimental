@@ -3,7 +3,7 @@ import {
   GraphQLInputType,
   GraphQLObjectType,
   GraphQLSchema,
-} from "@this-project/common-util-graphql-client-types";
+} from "@this-project/common-util-graphql-common-types";
 import { Ensure } from "@this-project/common-util-types";
 import { AnalyzeSchema, AnalyzeSchemaResultOk } from "../Analyze";
 

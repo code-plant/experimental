@@ -1,4 +1,4 @@
-import { GraphQLSchema } from "@this-project/common-util-graphql-client-types";
+import { GraphQLSchema } from "@this-project/common-util-graphql-common-types";
 import { GraphQLResult } from "./GraphQLResult";
 
 export interface GraphQLOptions {

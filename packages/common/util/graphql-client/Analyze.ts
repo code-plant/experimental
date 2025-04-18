@@ -1,3 +1,4 @@
+import { UnionAny } from "@this-project/common-util-types";
 import {
   GraphQLEnumType,
   GraphQLField,
@@ -9,9 +10,10 @@ import {
   GraphQLTerminalType,
   GraphQLType,
   GraphQLUnionType,
-} from "@this-project/common-util-graphql-client-types";
-import { UnionAny } from "@this-project/common-util-types";
+} from "../graphql-common-types";
 import {
+  GraphQLArgument,
+  GraphQLDirective,
   GraphQLExecutableDefinition,
   GraphQLOperationType,
   GraphQLSelection,
@@ -19,6 +21,7 @@ import {
   GraphQLSelectionFragmentSpread,
   GraphQLSelectionInlineFragment,
   GraphQLValue,
+  GraphQLVariable,
   GraphQLVariableDefinition,
   GraphQLFragmentDefinition as ParseFragmentDefinition,
   GraphQLOperationDefinition as ParseOperationDefinition,
@@ -479,7 +482,14 @@ type AnalyzeGraphQLSelectionField<
           : true
       ) extends infer J
     ? J extends GraphQLSelectionSet | true
-      ? AnalyzeGraphQLArguments<T["arguments"]> extends infer K
+      ? (
+          T["arguments"] extends GraphQLArgument[]
+            ? AnalyzeGraphQLArguments<
+                T["arguments"],
+                { type: "ok"; result: {} }
+              >
+            : { type: "ok"; result: {} }
+        ) extends infer K
         ? K extends {
             type: "ok";
             result: infer L extends Partial<Record<string, GraphQLValue>>;
@@ -488,14 +498,100 @@ type AnalyzeGraphQLSelectionField<
               name: T["name"];
               args: L;
               selection: J;
-              includeIf: TODO;
-              skipIf: TODO;
+              includeIf: T["directives"] extends GraphQLDirective[]
+                ? AnalyzeIncludeIf<T["directives"]>
+                : undefined;
+              skipIf: T["directives"] extends GraphQLDirective[]
+                ? AnalyzeSkipIf<T["directives"]>
+                : undefined;
             }
           : K
         : never
       : J
     : never
   : never;
+
+type AnalyzeGraphQLArgumentsResult =
+  | AnalyzeResultError
+  | { type: "ok"; result: Partial<Record<string, GraphQLValue>> };
+
+type AnalyzeGraphQLArguments<
+  T extends GraphQLArgument[],
+  R extends AnalyzeGraphQLArgumentsResult
+> = T extends [
+  infer I extends GraphQLArgument,
+  ...infer J extends GraphQLArgument[]
+]
+  ? R extends {
+      type: "ok";
+      result: infer K extends Partial<Record<string, GraphQLValue>>;
+    }
+    ? I["name"] extends keyof K
+      ? { type: "error"; error: `Duplicate argument: ${I["name"]}` }
+      : AnalyzeGraphQLArguments<
+          J,
+          { type: "ok"; result: K & { [K in I["name"]]: I["value"] } }
+        >
+    : R
+  : R;
+
+type AnalyzeIncludeIf<T extends GraphQLDirective[]> = T extends [
+  infer I extends GraphQLDirective,
+  ...infer J extends GraphQLDirective[]
+]
+  ? I["name"] extends "include"
+    ? Exclude<I["arguments"], undefined> extends never
+      ? AnalyzeIncludeIf<J>
+      : Exclude<I["arguments"], undefined> extends infer I
+      ? I extends GraphQLArgument[]
+        ? AnalyzeGraphQLArguments<I, { type: "ok"; result: {} }> extends infer I
+          ? I extends {
+              type: "ok";
+              result: infer K extends Partial<Record<string, GraphQLValue>>;
+            }
+            ? K["if"] extends boolean | GraphQLVariable
+              ? K["if"] extends GraphQLVariable
+                ? K["if"]["name"]
+                : K["if"]
+              : {
+                  type: "error";
+                  error: "@include directive must have if argument";
+                }
+            : I
+          : never
+        : I
+      : never
+    : AnalyzeIncludeIf<J>
+  : false;
+
+type AnalyzeSkipIf<T extends GraphQLDirective[]> = T extends [
+  infer I extends GraphQLDirective,
+  ...infer J extends GraphQLDirective[]
+]
+  ? I["name"] extends "skip"
+    ? Exclude<I["arguments"], undefined> extends never
+      ? AnalyzeSkipIf<J>
+      : Exclude<I["arguments"], undefined> extends infer I
+      ? I extends GraphQLArgument[]
+        ? AnalyzeGraphQLArguments<I, { type: "ok"; result: {} }> extends infer I
+          ? I extends {
+              type: "ok";
+              result: infer K extends Partial<Record<string, GraphQLValue>>;
+            }
+            ? K["if"] extends boolean | GraphQLVariable
+              ? K["if"] extends GraphQLVariable
+                ? K["if"]["name"]
+                : K["if"]
+              : {
+                  type: "error";
+                  error: "@skip directive must have if argument";
+                }
+            : I
+          : never
+        : I
+      : never
+    : AnalyzeSkipIf<J>
+  : false;
 
 type AnalyzeFragmentDefinition<
   T extends ParseFragmentDefinition,
