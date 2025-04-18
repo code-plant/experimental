@@ -1,4 +1,4 @@
-export type GraphQLExecutableDefintion =
+export type GraphQLExecutableDefinition =
   | GraphQLOperationDefinition
   | GraphQLFragmentDefinition;
 

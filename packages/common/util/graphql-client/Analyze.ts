@@ -12,12 +12,13 @@ import {
 } from "@this-project/common-util-graphql-client-types";
 import { UnionAny } from "@this-project/common-util-types";
 import {
-  GraphQLExecutableDefintion,
+  GraphQLExecutableDefinition,
   GraphQLOperationType,
   GraphQLSelection,
   GraphQLSelectionField,
   GraphQLSelectionFragmentSpread,
   GraphQLSelectionInlineFragment,
+  GraphQLValue,
   GraphQLVariableDefinition,
   GraphQLFragmentDefinition as ParseFragmentDefinition,
   GraphQLOperationDefinition as ParseOperationDefinition,
@@ -295,9 +296,17 @@ export interface GraphQLFragmentDefinition {
 }
 
 export interface GraphQLSelectionSet {
-  fields: Partial<Record<string, GraphQLField>>;
+  fields: Partial<Record<string, GraphQLSelectionSetField>>;
   fragmentSpreads: GraphQLFragmentSpread[];
   inlineFragments: GraphQLInlineFragment[];
+}
+
+export interface GraphQLSelectionSetField {
+  name: string;
+  args: Partial<Record<string, GraphQLValue>>;
+  selection: GraphQLSelectionSet | true;
+  includeIf?: string;
+  skipIf?: string;
 }
 
 export interface GraphQLFragmentSpread {
@@ -313,24 +322,24 @@ export interface GraphQLInlineFragment {
   skipIf?: string;
 }
 
-export type Analyze<T extends GraphQLExecutableDefintion[]> =
+export type Analyze<T extends GraphQLExecutableDefinition[]> =
   AnalyzeInternalRecursive<
     T,
     { type: "ok"; namedOperations: {}; fragments: {} }
   >;
 
 type AnalyzeInternalRecursive<
-  T extends GraphQLExecutableDefintion[],
+  T extends GraphQLExecutableDefinition[],
   R extends AnalyzeResult
 > = T extends [
-  infer I extends GraphQLExecutableDefintion,
-  ...infer J extends GraphQLExecutableDefintion[]
+  infer I extends GraphQLExecutableDefinition,
+  ...infer J extends GraphQLExecutableDefinition[]
 ]
   ? AnalyzeInternalRecursive<J, AnalyzeInternal<I, R>>
   : R;
 
 type AnalyzeInternal<
-  T extends GraphQLExecutableDefintion,
+  T extends GraphQLExecutableDefinition,
   R extends AnalyzeResult
 > = R extends AnalyzeResultOk
   ? T extends ParseOperationDefinition
@@ -343,49 +352,55 @@ type AnalyzeInternal<
 type AnalyzeOperationDefinition<
   T extends ParseOperationDefinition,
   R extends AnalyzeResultOk
-> = AnalyzeGraphQLOperationDefinition<T> extends infer I extends GraphQLOperationDefinition
-  ? T["name"] extends undefined
-    ? R["unnamedOperation"] extends GraphQLOperationDefinition
-      ? { type: "error"; error: "Unnamed operation already exists" }
+> = AnalyzeGraphQLOperationDefinition<T> extends infer I
+  ? I extends GraphQLOperationDefinition
+    ? T["name"] extends undefined
+      ? R["unnamedOperation"] extends GraphQLOperationDefinition
+        ? { type: "error"; error: "Unnamed operation already exists" }
+        : {
+            type: "ok";
+            unnamedOperation: I;
+            namedOperations: R["namedOperations"];
+            fragments: R["fragments"];
+          }
+      : T["name"] extends keyof R["namedOperations"]
+      ? {
+          type: "error";
+          error: `Named operation "${T["name"]}" already exists`;
+        }
       : {
           type: "ok";
-          unnamedOperation: I;
-          namedOperations: R["namedOperations"];
+          unnamedOperation: R["unnamedOperation"];
+          namedOperations: R["namedOperations"] & {
+            [K in Exclude<T["name"], undefined>]: I;
+          };
           fragments: R["fragments"];
         }
-    : T["name"] extends keyof R["namedOperations"]
-    ? {
-        type: "error";
-        error: `Named operation "${T["name"]}" already exists`;
-      }
-    : {
-        type: "ok";
-        unnamedOperation: R["unnamedOperation"];
-        namedOperations: R["namedOperations"] & {
-          [K in Exclude<T["name"], undefined>]: I;
-        };
-        fragments: R["fragments"];
-      }
+    : I
   : never;
 
 type AnalyzeGraphQLOperationDefinition<T extends ParseOperationDefinition> = (
   T["variables"] extends GraphQLVariableDefinition[]
     ? AnalyzeGraphQLVariableDefinition<T["variables"]>
     : {}
-) extends infer V extends Partial<Record<string, GraphQLType>>
-  ? (
-      T["selectionSet"] extends GraphQLSelection[]
-        ? AnalyzeGraphQLSelectionSet<T["selectionSet"]>
-        : {}
-    ) extends infer S extends GraphQLSelectionSet
-    ? {
-        type: "operation";
-        operationType: T["operationType"];
-        name: T["name"];
-        variables: V;
-        selectionSet: S;
-      }
-    : never
+) extends infer V
+  ? V extends Partial<Record<string, GraphQLType>>
+    ? (
+        T["selectionSet"] extends GraphQLSelection[]
+          ? AnalyzeGraphQLSelectionSet<T["selectionSet"]>
+          : { fields: {}; fragmentSpreads: []; inlineFragments: [] }
+      ) extends infer S
+      ? S extends GraphQLSelectionSet
+        ? {
+            type: "operation";
+            operationType: T["operationType"];
+            name: T["name"];
+            variables: V;
+            selectionSet: S;
+          }
+        : S
+      : never
+    : V
   : never;
 
 type AnalyzeGraphQLVariableDefinition<
@@ -396,7 +411,7 @@ type AnalyzeGraphQLVariableDefinition<
   ...infer J extends GraphQLVariableDefinition[]
 ]
   ? I["name"] extends keyof R
-    ? never
+    ? { type: "error"; error: `Duplicate variable name: ${I["name"]}` }
     : AnalyzeGraphQLVariableDefinition<J, R & { [K in I["name"]]: I }>
   : R;
 
@@ -412,29 +427,73 @@ type AnalyzeGraphQLSelectionSet<
   ...infer J extends GraphQLSelection[]
 ]
   ? I extends GraphQLSelectionField
-    ? {
-        fields: AnalyzeGraphQLSelectionField<R["fields"], I>;
-        fragmentSpreads: R["fragmentSpreads"];
-        inlineFragments: R["inlineFragments"];
-      }
+    ? AnalyzeGraphQLSelectionField<I, R["fields"]> extends infer K
+      ? K extends Partial<Record<string, GraphQLSelectionSetField>>
+        ? AnalyzeGraphQLSelectionSet<
+            J,
+            {
+              fields: K;
+              fragmentSpreads: R["fragmentSpreads"];
+              inlineFragments: R["inlineFragments"];
+            }
+          >
+        : K
+      : never
     : I extends GraphQLSelectionFragmentSpread
-    ? {
-        fields: R["fields"];
-        fragmentSpreads: [
-          ...R["fragmentSpreads"],
-          AnalyzeGraphQLSelectionFragmentSpread<I>
-        ];
-        inlineFragments: R["inlineFragments"];
-      }
+    ? AnalyzeGraphQLSelectionFragmentSpread<I> extends infer K
+      ? K extends GraphQLFragmentSpread
+        ? {
+            fields: R["fields"];
+            fragmentSpreads: [...R["fragmentSpreads"], K];
+            inlineFragments: R["inlineFragments"];
+          }
+        : K
+      : never
     : I extends GraphQLSelectionInlineFragment
+    ? AnalyzeGraphQLSelectionInlineFragment<I> extends infer K
+      ? K extends GraphQLInlineFragment
+        ? {
+            fields: R["fields"];
+            fragmentSpreads: R["fragmentSpreads"];
+            inlineFragments: [...R["inlineFragments"], K];
+          }
+        : K
+      : never
+    : never
+  : R;
+
+type AnalyzeGraphQLSelectionField<
+  T extends GraphQLSelectionField,
+  R extends Partial<Record<string, GraphQLSelectionSetField>>
+> = (
+  T["alias"] extends string ? T["alias"] : T["name"]
+) extends infer I extends string
+  ? I extends keyof R
     ? {
-        fields: R["fields"];
-        fragmentSpreads: R["fragmentSpreads"];
-        inlineFragments: [
-          ...R["inlineFragments"],
-          AnalyzeGraphQLSelectionInlineFragment<I>
-        ];
+        type: "error";
+        error: `Duplicate field: ${I}`;
       }
+    : (
+        T["selectionSet"] extends GraphQLSelection[]
+          ? AnalyzeGraphQLSelectionSet<T["selectionSet"]>
+          : true
+      ) extends infer J
+    ? J extends GraphQLSelectionSet | true
+      ? AnalyzeGraphQLArguments<T["arguments"]> extends infer K
+        ? K extends {
+            type: "ok";
+            result: infer L extends Partial<Record<string, GraphQLValue>>;
+          }
+          ? {
+              name: T["name"];
+              args: L;
+              selection: J;
+              includeIf: TODO;
+              skipIf: TODO;
+            }
+          : K
+        : never
+      : J
     : never
   : never;
 
