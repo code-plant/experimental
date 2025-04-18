@@ -1,4 +1,4 @@
-import { Document, InlineNode } from "./Document";
+import { Document, InlineNode } from "@this-project/common-mdcode-types";
 import { Token, TokenTagEnd, TokenTagStart } from "./Token";
 
 export interface ParseError {

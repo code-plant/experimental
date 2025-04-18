@@ -7,6 +7,7 @@ export interface NodeBase {
   type: string;
   line: number;
   col: number;
+  context?: Context;
 }
 
 export interface NodeSection extends NodeBase {
@@ -33,4 +34,22 @@ export interface NodeCodeBlock extends NodeBase {
   type: "codeBlock";
   lang: string;
   content: string;
+}
+
+export interface Context extends Partial<Record<keyof any, unknown>> {
+  isMeaningful?: boolean;
+}
+
+export type Transformer = (document: Document) => Document;
+
+export type Validator = (document: Document) => ValidationError[] | undefined;
+
+export interface ValidationError {
+  message: string;
+  node: Node;
+}
+
+export interface Plugin {
+  transform?: Transformer;
+  validate?: Validator;
 }
