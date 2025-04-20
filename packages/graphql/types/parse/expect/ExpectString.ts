@@ -3,7 +3,7 @@ import {
   ExpectResultError,
   ExpectResultOk,
   TrimStart,
-} from "../../internal-types";
+} from "../internal-types";
 
 export type ExpectString<S extends string> = S extends `"""${infer I}`
   ? InternalBlock<I, "">

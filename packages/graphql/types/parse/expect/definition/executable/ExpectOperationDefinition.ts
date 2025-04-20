@@ -13,7 +13,7 @@ import { ExpectVariableDefinitions } from "../ExpectVariableDefinitions";
 import { ExpectSelectionSet } from "./ExpectSelectionSet";
 
 export type ExpectOperationDefinition<S extends string> = S extends `{${string}`
-  ? AfterDirectives<S, "query", undefined, undefined, undefined>
+  ? AfterDirectives<S, "query", undefined, [], []>
   : ExpectName<S> extends infer I
   ? I extends {
       type: "ok";
@@ -49,13 +49,13 @@ type AfterName<
       ? AfterVariables<A, OT, Name, Variables>
       : I
     : never
-  : AfterVariables<S, OT, Name, undefined>;
+  : AfterVariables<S, OT, Name, []>;
 
 type AfterVariables<
   S extends string,
   OT extends OperationType,
   Name extends string | undefined,
-  Variables extends VariableDefinition[] | undefined
+  Variables extends VariableDefinition[]
 > = ExpectDirectives<S> extends infer I
   ? I extends {
       type: "ok";
@@ -70,8 +70,8 @@ type AfterDirectives<
   S extends string,
   OT extends OperationType,
   Name extends string | undefined,
-  Variables extends VariableDefinition[] | undefined,
-  Directives extends Directive[] | undefined
+  Variables extends VariableDefinition[],
+  Directives extends Directive[]
 > = ExpectSelectionSet<S> extends infer I
   ? I extends {
       type: "ok";

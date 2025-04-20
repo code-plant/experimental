@@ -1,0 +1,26 @@
+import { Ensure } from "@this-project/common-util-types";
+import { ExpectResultError, ExpectResultOk } from "../../internal-types";
+import { StringValue } from "../../types";
+import { ExpectString } from "../ExpectString";
+
+export type ExpectStringValue<S extends string> = S extends `"${string}`
+  ? ExpectString<S> extends infer I
+    ? I extends {
+        type: "ok";
+        value: infer Value extends string;
+        rest: infer Rest extends string;
+      }
+      ? Ensure<
+          {
+            type: "ok";
+            value: {
+              type: "string";
+              value: Value;
+            };
+            rest: Rest;
+          },
+          ExpectResultOk<StringValue>
+        >
+      : I
+    : never
+  : Ensure<{ type: "error"; error: "Expected string" }, ExpectResultError>;
