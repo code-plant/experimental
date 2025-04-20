@@ -6,36 +6,41 @@ import { Directives, UnionTypeExtension } from "../../../../types";
 import { ExpectDirectives } from "../../../ExpectDirectives";
 import { ExpectName } from "../../../ExpectName";
 
-export type ExpectUnionTypeExtensionAfterUnion<S extends string> =
-  ExpectName<S> extends infer I
-    ? I extends {
-        type: "ok";
-        value: infer Name extends string;
-        rest: infer A extends string;
-      }
-      ? ExpectDirectives<A> extends infer I
-        ? I extends {
-            type: "ok";
-            value: infer Dir extends Directives;
-            rest: infer B extends string;
-          }
-          ? B extends `=${infer C}`
-            ? TrimStart<C> extends `|${string}`
-              ? Internal<TrimStart<C>, Name, Dir, []>
-              : ExpectName<TrimStart<C>> extends infer I
-              ? I extends {
-                  type: "ok";
-                  value: infer UnionMemberType extends string;
-                  rest: infer E extends string;
-                }
-                ? Internal<E, Name, Dir, [UnionMemberType]>
-                : I
-              : never
-            : Validate<B, Name, Dir, []>
-          : I
-        : never
-      : I
-    : never;
+export type ExpectUnionTypeExtensionAfterUnion<S extends string> = ExpectName<
+  S,
+  "top level - union extension"
+> extends infer I
+  ? I extends {
+      type: "ok";
+      value: infer Name extends string;
+      rest: infer A extends string;
+    }
+    ? ExpectDirectives<A, `${Name} extension - directives`> extends infer I
+      ? I extends {
+          type: "ok";
+          value: infer Dir extends Directives;
+          rest: infer B extends string;
+        }
+        ? B extends `=${infer C}`
+          ? TrimStart<C> extends `|${string}`
+            ? Internal<TrimStart<C>, Name, Dir, []>
+            : ExpectName<
+                TrimStart<C>,
+                `${Name} extension - union member type`
+              > extends infer I
+            ? I extends {
+                type: "ok";
+                value: infer UnionMemberType extends string;
+                rest: infer E extends string;
+              }
+              ? Internal<E, Name, Dir, [UnionMemberType]>
+              : I
+            : never
+          : Validate<B, Name, Dir, []>
+        : I
+      : never
+    : I
+  : never;
 
 type Internal<
   S extends string,
@@ -43,7 +48,10 @@ type Internal<
   Dir extends Directives,
   R extends string[]
 > = S extends `|${infer A}`
-  ? ExpectName<TrimStart<A>> extends infer I
+  ? ExpectName<
+      TrimStart<A>,
+      `${Name} extension - union member type`
+    > extends infer I
     ? I extends {
         type: "ok";
         value: infer UnionMemberType extends string;
@@ -77,7 +85,11 @@ type Validate<
       ExpectResultOk<UnionTypeExtension>
     >
   : Ensure<
-      { type: "error"; error: "Expected Directives or UnionMemberTypes" },
+      {
+        type: "error";
+        error: "Expected Directives or UnionMemberTypes";
+        on: `${Name} extension`;
+      },
       ExpectResultError
     >;
 

@@ -7,8 +7,11 @@ import {
 import { Variable } from "../../types";
 import { ExpectName } from "../ExpectName";
 
-export type ExpectVariable<S extends string> = S extends `$${infer I}`
-  ? ExpectName<TrimStart<I>> extends infer I
+export type ExpectVariable<
+  S extends string,
+  On extends string
+> = S extends `$${infer I}`
+  ? ExpectName<TrimStart<I>, On> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
@@ -24,4 +27,7 @@ export type ExpectVariable<S extends string> = S extends `$${infer I}`
         >
       : I
     : never
-  : Ensure<{ type: "error"; error: "Expected variable" }, ExpectResultError>;
+  : Ensure<
+      { type: "error"; error: "Expected variable"; on: On },
+      ExpectResultError
+    >;

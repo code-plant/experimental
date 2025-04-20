@@ -1,4 +1,4 @@
-import { ResultError } from "@this-project/common-util-types";
+import { ResultError, ResultOk } from "@this-project/common-util-types";
 
 export type NameStart = Letter | "_";
 export type NameContinue = Letter | Digit | "_";
@@ -66,9 +66,9 @@ export type TrimStart<S extends string> = S extends `${Ignored}${infer I}`
   : S;
 
 export type ExpectResult<T> = ExpectResultOk<T> | ExpectResultError;
-export type ExpectResultError = ResultError<string>;
-export interface ExpectResultOk<T> {
-  type: "ok";
-  value: T;
+export interface ExpectResultError extends ResultError<string> {
+  on: string;
+}
+export interface ExpectResultOk<T> extends ResultOk<T> {
   rest: string;
 }

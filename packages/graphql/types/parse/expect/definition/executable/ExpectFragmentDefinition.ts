@@ -9,12 +9,15 @@ import { ExpectDirectives } from "../../ExpectDirectives";
 import { ExpectName } from "../../ExpectName";
 import { ExpectSelectionSet } from "./ExpectSelectionSet";
 
-export type ExpectFragmentDefinition<S extends string> = ExpectName<S> extends {
+export type ExpectFragmentDefinition<S extends string> = ExpectName<
+  S,
+  "top level - fragment definition"
+> extends {
   type: "ok";
   value: "fragment";
   rest: infer A extends string;
 }
-  ? ExpectName<A> extends infer I
+  ? ExpectName<A, "top level - fragment definition"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
@@ -22,27 +25,34 @@ export type ExpectFragmentDefinition<S extends string> = ExpectName<S> extends {
       }
       ? Name extends "on"
         ? Ensure<
-            { type: "error"; error: "Fragment name cannot be on" },
+            {
+              type: "error";
+              error: "Fragment name cannot be on";
+              on: "top level - fragment definition";
+            },
             ExpectResultError
           >
-        : ExpectName<B> extends {
+        : ExpectName<B, `fragment ${Name}`> extends {
             type: "ok";
             value: "on";
             rest: infer C extends string;
           }
-        ? ExpectName<C> extends infer I
+        ? ExpectName<C, `fragment ${Name} - type condition`> extends infer I
           ? I extends {
               type: "ok";
               value: infer TypeCondition extends string;
               rest: infer D extends string;
             }
-            ? ExpectDirectives<D> extends infer I
+            ? ExpectDirectives<
+                D,
+                `fragment ${Name} - directives`
+              > extends infer I
               ? I extends {
                   type: "ok";
                   value: infer Dir extends Directive[];
                   rest: infer E extends string;
                 }
-                ? ExpectSelectionSet<E> extends infer I
+                ? ExpectSelectionSet<E, `fragment ${Name}`> extends infer I
                   ? I extends {
                       type: "ok";
                       value: infer Sel extends SelectionSet;
@@ -70,12 +80,20 @@ export type ExpectFragmentDefinition<S extends string> = ExpectName<S> extends {
             : I
           : never
         : Ensure<
-            { type: "error"; error: "Expected keyword on" },
+            {
+              type: "error";
+              error: "Expected keyword on";
+              on: `fragment ${Name} - type condition`;
+            },
             ExpectResultError
           >
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword fragment" },
+      {
+        type: "error";
+        error: "Expected keyword fragment";
+        on: "top level - fragment definition";
+      },
       ExpectResultError
     >;

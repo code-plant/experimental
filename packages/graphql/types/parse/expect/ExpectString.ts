@@ -5,18 +5,25 @@ import {
   TrimStart,
 } from "../internal-types";
 
-export type ExpectString<S extends string> = S extends `"""${infer I}`
-  ? InternalBlock<I, "">
+export type ExpectString<
+  S extends string,
+  On extends string
+> = S extends `"""${infer I}`
+  ? InternalBlock<I, "", On>
   : S extends `"${infer I}`
-  ? Internal<I, "">
-  : Ensure<{ type: "error"; error: `string expected` }, ExpectResultError>;
+  ? Internal<I, "", On>
+  : Ensure<
+      { type: "error"; error: `string expected`; on: On },
+      ExpectResultError
+    >;
 
 type InternalBlock<
   S extends string,
-  R extends string
+  R extends string,
+  On extends string
 > = S extends `${infer A}"""${infer B}`
   ? A extends `${infer C}\\`
-    ? InternalBlock<B, `${R}${C}"""`>
+    ? InternalBlock<B, `${R}${C}"""`, On>
     : Ensure<
         {
           type: "ok";
@@ -29,6 +36,7 @@ type InternalBlock<
       {
         type: "error";
         error: `unterminated block string`;
+        on: On;
       },
       ExpectResultError
     >;
@@ -38,7 +46,8 @@ type PostProcessBlockString<S extends string> =
 
 type Internal<
   S extends string,
-  R extends string
+  R extends string,
+  On extends string
 > = S extends `${infer A}"${infer B}`
   ? A extends `${string}\\`
     ? A extends `${string}\n${string}`
@@ -46,19 +55,21 @@ type Internal<
           {
             type: "error";
             error: `unterminated string`;
+            on: On;
           },
           ExpectResultError
         >
-      : Internal<B, `${R}${A}\\"`>
+      : Internal<B, `${R}${A}\\"`, On>
     : A extends `${string}\n${string}`
     ? Ensure<
         {
           type: "error";
           error: `unterminated string`;
+          on: On;
         },
         ExpectResultError
       >
-    : Unescape<`${R}${A}`> extends infer I
+    : Unescape<`${R}${A}`, On> extends infer I
     ? I extends { type: "ok"; value: infer I extends string }
       ? Ensure<
           { type: "ok"; value: I; rest: TrimStart<B> },
@@ -70,11 +81,16 @@ type Internal<
       {
         type: "error";
         error: `unterminated string`;
+        on: On;
       },
       ExpectResultError
     >;
 
-type Unescape<S extends string> = UnescapeInternal<S, "">;
+type Unescape<S extends string, On extends string> = UnescapeInternal<
+  S,
+  "",
+  On
+>;
 
 type UnescapeMap = {
   '"': '"';
@@ -89,14 +105,15 @@ type UnescapeMap = {
 
 type UnescapeInternal<
   S extends string,
-  R extends string
+  R extends string,
+  On extends string
 > = S extends `${infer A}\\${infer B}`
   ? B extends `${infer C extends keyof UnescapeMap}${infer D}`
-    ? UnescapeInternal<D, `${R}${A}${UnescapeMap[C]}`>
+    ? UnescapeInternal<D, `${R}${A}${UnescapeMap[C]}`, On>
     : B extends `u${infer C}`
-    ? UnescapeInternal<C, `${R}${A}\\u`>
+    ? UnescapeInternal<C, `${R}${A}\\u`, On>
     : Ensure<
-        { type: "error"; error: "Unknown escape sequence" },
+        { type: "error"; error: "Unknown escape sequence"; on: On },
         ExpectResultError
       >
   : Ensure<{ type: "ok"; value: `${R}${S}` }, Result<string>>;

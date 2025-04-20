@@ -3,7 +3,10 @@ import { ExpectResultOk, TrimStart } from "../../internal-types";
 import { Value } from "../../types";
 import { ExpectName } from "../ExpectName";
 
-export type ExpectNameValue<S extends string> = ExpectName<S> extends infer I
+export type ExpectNameValue<S extends string, On extends string> = ExpectName<
+  S,
+  On
+> extends infer I
   ? I extends {
       type: "ok";
       value: infer Name extends string;

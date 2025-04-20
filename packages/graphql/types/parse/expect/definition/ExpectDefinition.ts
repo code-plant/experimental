@@ -18,7 +18,7 @@ export type ExpectDefinition<S extends string> = S extends `{${string}`
   ? ExpectOperationDefinition<S>
   : S extends `"${string}`
   ? ExpectTypeSystemDefinitionOrExtensionStartsWithDescription<S>
-  : ExpectName<S> extends {
+  : ExpectName<S, "top level"> extends {
       type: "ok";
       value: infer Keyword extends string;
       rest: infer A extends string;
@@ -45,8 +45,15 @@ export type ExpectDefinition<S extends string> = S extends `{${string}`
     ? ExpectInputObjectTypeDefinitionAfterDescription<S, undefined>
     : Keyword extends "extend"
     ? ExpectTypeSystemExtensionAfterExtend<A>
-    : Ensure<{ type: "error"; error: "Expected keyword" }, ExpectResultError>
+    : Ensure<
+        { type: "error"; error: "Expected keyword"; on: "top level" },
+        ExpectResultError
+      >
   : Ensure<
-      { type: "error"; error: "Expected { or description or keyword" },
+      {
+        type: "error";
+        error: "Expected { or description or keyword";
+        on: "top level";
+      },
       ExpectResultError
     >;

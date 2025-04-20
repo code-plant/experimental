@@ -11,49 +11,62 @@ import { ExpectString } from "../../ExpectString";
 import { ExpectType } from "../../ExpectType";
 import { ExpectValue } from "../../value/ExpectValue";
 
-export type ExpectInputValueDefinition<S extends string> =
-  S extends `"${string}`
-    ? ExpectString<S> extends infer I
-      ? I extends {
-          type: "ok";
-          value: infer Description extends string;
-          rest: infer A extends string;
-        }
-        ? AfterDescription<A, Description>
-        : I
-      : never
-    : AfterDescription<S, undefined>;
+export type ExpectInputValueDefinition<
+  S extends string,
+  On extends string
+> = S extends `"${string}`
+  ? ExpectString<S, On> extends infer I
+    ? I extends {
+        type: "ok";
+        value: infer Description extends string;
+        rest: infer A extends string;
+      }
+      ? AfterDescription<A, Description, On>
+      : I
+    : never
+  : AfterDescription<S, undefined, On>;
 
 type AfterDescription<
   S extends string,
-  Description extends string | undefined
-> = ExpectName<S> extends infer I
+  Description extends string | undefined,
+  On extends string
+> = ExpectName<S, On> extends infer I
   ? I extends {
       type: "ok";
       value: infer Name extends string;
       rest: infer A extends string;
     }
     ? A extends `:${infer B}`
-      ? ExpectType<TrimStart<B>> extends infer I
+      ? ExpectType<TrimStart<B>, `${On} - type of ${Name}`> extends infer I
         ? I extends {
             type: "ok";
             value: infer T extends Type;
             rest: infer C extends string;
           }
           ? C extends `=${infer D}`
-            ? ExpectValue<TrimStart<D>> extends infer I
+            ? ExpectValue<
+                TrimStart<D>,
+                `${On} - default value of ${Name}`
+              > extends infer I
               ? I extends {
                   type: "ok";
                   value: infer DefaultValue extends Value;
                   rest: infer E extends string;
                 }
-                ? AfterDefaultValue<E, Description, Name, T, DefaultValue>
+                ? AfterDefaultValue<E, Description, Name, T, DefaultValue, On>
                 : I
               : never
-            : AfterDefaultValue<C, Description, Name, T, undefined>
+            : AfterDefaultValue<C, Description, Name, T, undefined, On>
           : I
         : never
-      : Ensure<{ type: "error"; error: "Expected :" }, ExpectResultError>
+      : Ensure<
+          {
+            type: "error";
+            error: "Expected :";
+            on: `${On} - after name ${Name}`;
+          },
+          ExpectResultError
+        >
     : I
   : never;
 
@@ -62,8 +75,9 @@ type AfterDefaultValue<
   Description extends string | undefined,
   Name extends string,
   T extends Type,
-  DefaultValue extends Value | undefined
-> = ExpectDirectives<S> extends infer I
+  DefaultValue extends Value | undefined,
+  On extends string
+> = ExpectDirectives<S, `${On} - directive of ${Name}`> extends infer I
   ? I extends {
       type: "ok";
       value: infer Directives extends Directive[];

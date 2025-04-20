@@ -14,19 +14,19 @@ import { ExpectName } from "../../../ExpectName";
 import { ExpectFieldsDefinition } from "../ExpectFieldsDefinition";
 
 export type ExpectInterfaceTypeExtensionAfterInterface<S extends string> =
-  ExpectName<S> extends infer I
+  ExpectName<S, "top level - interface type extension"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
         rest: infer A extends string;
       }
-      ? ExpectName<A> extends {
+      ? ExpectName<A, `${Name} extension`> extends {
           type: "ok";
           value: "implements";
           rest: infer B extends string;
         }
         ? B extends `&${infer C}`
-          ? ExpectImplementsInterfaces<TrimStart<C>, []> extends infer I
+          ? ExpectImplementsInterfaces<TrimStart<C>, [], Name> extends infer I
             ? I extends {
                 type: "ok";
                 value: infer ImplementsInterfaces extends string[];
@@ -35,7 +35,7 @@ export type ExpectInterfaceTypeExtensionAfterInterface<S extends string> =
               ? AfterImplementsInterfaces<D, Name, ImplementsInterfaces>
               : I
             : never
-          : ExpectName<B> extends infer I
+          : ExpectName<B, `${Name} extension - implements`> extends infer I
           ? I extends {
               type: "ok";
               value: infer ImplementsInterface extends string;
@@ -43,7 +43,8 @@ export type ExpectInterfaceTypeExtensionAfterInterface<S extends string> =
             }
             ? ExpectImplementsInterfaces<
                 D,
-                [ImplementsInterface]
+                [ImplementsInterface],
+                Name
               > extends infer I
               ? I extends {
                   type: "ok";
@@ -61,15 +62,16 @@ export type ExpectInterfaceTypeExtensionAfterInterface<S extends string> =
 
 type ExpectImplementsInterfaces<
   S extends string,
-  R extends string[]
+  R extends string[],
+  Name extends string
 > = S extends `&${infer A}`
-  ? ExpectName<TrimStart<A>> extends infer I
+  ? ExpectName<TrimStart<A>, `${Name} extension - implements`> extends infer I
     ? I extends {
         type: "ok";
         value: infer ImplementsInterface extends string;
         rest: infer B extends string;
       }
-      ? ExpectImplementsInterfaces<B, [...R, ImplementsInterface]>
+      ? ExpectImplementsInterfaces<B, [...R, ImplementsInterface], Name>
       : I
     : never
   : Ensure<{ type: "ok"; value: R; rest: S }, ExpectResultOk<string[]>>;
@@ -78,14 +80,14 @@ type AfterImplementsInterfaces<
   S extends string,
   Name extends string,
   ImplementsInterfaces extends string[]
-> = ExpectDirectives<S> extends infer I
+> = ExpectDirectives<S, `${Name} extension - directives`> extends infer I
   ? I extends {
       type: "ok";
       value: infer Dir extends Directives;
       rest: infer A extends string;
     }
     ? A extends `{${string}`
-      ? ExpectFieldsDefinition<A> extends infer I
+      ? ExpectFieldsDefinition<A, `${Name} extension - fields`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Fields extends FieldsDefinition;
@@ -126,6 +128,7 @@ type Validate<
       {
         type: "error";
         error: "Expect ImplementsInterfaces or Directives or FieldsDefinition";
+        on: `${Name} extension`;
       },
       ExpectResultError
     >;

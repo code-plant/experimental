@@ -16,3 +16,5 @@ type ParseInternal<S extends string, R extends Definition[]> = S extends ""
     ? ParseInternal<B, [...R, A]>
     : I
   : never;
+
+export type * from "./types";

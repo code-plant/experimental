@@ -9,53 +9,60 @@ import { ExpectDirectives } from "../../ExpectDirectives";
 import { ExpectName } from "../../ExpectName";
 import { ExpectString } from "../../ExpectString";
 
-export type ExpectEnumValuesDefinition<S extends string> =
-  S extends `{${infer A}`
-    ? ExpectEnumValueDefinition<TrimStart<A>> extends infer I
-      ? I extends {
-          type: "ok";
-          value: infer Value extends EnumValueDefinition;
-          rest: infer B extends string;
-        }
-        ? Internal<B, [Value]>
-        : I
-      : never
-    : Ensure<{ type: "error"; error: "Expected {" }, ExpectResultError>;
+export type ExpectEnumValuesDefinition<
+  S extends string,
+  On extends string
+> = S extends `{${infer A}`
+  ? ExpectEnumValueDefinition<TrimStart<A>, On> extends infer I
+    ? I extends {
+        type: "ok";
+        value: infer Value extends EnumValueDefinition;
+        rest: infer B extends string;
+      }
+      ? Internal<B, [Value], On>
+      : I
+    : never
+  : Ensure<{ type: "error"; error: "Expected {"; on: On }, ExpectResultError>;
 
 type Internal<
   S extends string,
-  R extends EnumValuesDefinition
+  R extends EnumValuesDefinition,
+  On extends string
 > = S extends `}${infer I}`
   ? Ensure<
       { type: "ok"; value: R; rest: TrimStart<I> },
       ExpectResultOk<EnumValuesDefinition>
     >
-  : ExpectEnumValueDefinition<S> extends infer I
+  : ExpectEnumValueDefinition<S, On> extends infer I
   ? I extends {
       type: "ok";
       value: infer Value extends EnumValueDefinition;
       rest: infer A extends string;
     }
-    ? Internal<A, [...R, Value]>
+    ? Internal<A, [...R, Value], On>
     : I
   : never;
 
-type ExpectEnumValueDefinition<S extends string> = S extends `"${string}`
-  ? ExpectString<S> extends infer I
+type ExpectEnumValueDefinition<
+  S extends string,
+  On extends string
+> = S extends `"${string}`
+  ? ExpectString<S, On> extends infer I
     ? I extends {
         type: "ok";
         value: infer Description extends string;
         rest: infer A extends string;
       }
-      ? AfterDescription<A, Description>
+      ? AfterDescription<A, Description, On>
       : I
     : never
-  : AfterDescription<S, undefined>;
+  : AfterDescription<S, undefined, On>;
 
 type AfterDescription<
   S extends string,
-  Description extends string | undefined
-> = ExpectName<S> extends infer I
+  Description extends string | undefined,
+  On extends string
+> = ExpectName<S, On> extends infer I
   ? I extends {
       type: "ok";
       value: infer Name extends string;
@@ -63,10 +70,10 @@ type AfterDescription<
     }
     ? Name extends "true" | "false" | "null"
       ? Ensure<
-          { type: "error"; error: "Invalid enum value" },
+          { type: "error"; error: "Invalid enum value"; on: On },
           ExpectResultError
         >
-      : ExpectDirectives<A> extends infer I
+      : ExpectDirectives<A, `${On} - directives of ${Name}`> extends infer I
       ? I extends {
           type: "ok";
           value: infer Dir extends Directives;

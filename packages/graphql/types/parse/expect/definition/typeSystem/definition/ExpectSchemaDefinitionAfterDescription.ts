@@ -16,19 +16,22 @@ import { ExpectRootOperationTypesDefinition } from "../ExpectRootOperationTypesD
 export type ExpectSchemaDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
-> = ExpectName<S> extends {
+> = ExpectName<S, "top level - schema definition"> extends {
   type: "ok";
   value: "schema";
   rest: infer A extends string;
 }
-  ? ExpectDirectives<A> extends infer I
+  ? ExpectDirectives<A, `schema definition - directives`> extends infer I
     ? I extends {
         type: "ok";
         value: infer Directives extends Directive[];
         rest: infer B extends string;
       }
       ? B extends `{${string}`
-        ? ExpectRootOperationTypesDefinition<TrimStart<B>> extends infer I
+        ? ExpectRootOperationTypesDefinition<
+            TrimStart<B>,
+            `schema definition - root operation types`
+          > extends infer I
           ? I extends {
               type: "ok";
               value: infer RootOperationTypeDefinitions extends RootOperationTypeDefinition[];
@@ -51,10 +54,21 @@ export type ExpectSchemaDefinitionAfterDescription<
               >
             : I
           : never
-        : Ensure<{ type: "error"; error: "Expected {" }, ExpectResultError>
+        : Ensure<
+            {
+              type: "error";
+              error: "Expected {";
+              on: "schema definition - root operation types";
+            },
+            ExpectResultError
+          >
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword schema" },
+      {
+        type: "error";
+        error: "Expected keyword schema";
+        on: "top level - schema definition";
+      },
       ExpectResultError
     >;

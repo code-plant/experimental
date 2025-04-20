@@ -11,18 +11,18 @@ import { ExpectName } from "../../../ExpectName";
 export type ExpectUnionTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
-> = ExpectName<S> extends {
+> = ExpectName<S, "top level - union type definition"> extends {
   type: "ok";
   value: "union";
   rest: infer A extends string;
 }
-  ? ExpectName<A> extends infer I
+  ? ExpectName<A, "top level - union type definition"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
         rest: infer B extends string;
       }
-      ? ExpectDirectives<B> extends infer I
+      ? ExpectDirectives<B, `${Name} definition - directives`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Dir extends Directives;
@@ -31,7 +31,10 @@ export type ExpectUnionTypeDefinitionAfterDescription<
           ? C extends `=${infer D}`
             ? TrimStart<D> extends `|${string}`
               ? Internal<TrimStart<D>, Description, Name, Dir, []>
-              : ExpectName<TrimStart<D>> extends infer I
+              : ExpectName<
+                  TrimStart<D>,
+                  `${Name} definition - union member type`
+                > extends infer I
               ? I extends {
                   type: "ok";
                   value: infer UnionMemberType extends string;
@@ -62,7 +65,11 @@ export type ExpectUnionTypeDefinitionAfterDescription<
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword union" },
+      {
+        type: "error";
+        error: "Expected keyword union";
+        on: "top level - union type definition";
+      },
       ExpectResultError
     >;
 
@@ -73,7 +80,10 @@ type Internal<
   Dir extends Directives,
   R extends string[]
 > = S extends `|${infer A}`
-  ? ExpectName<TrimStart<A>> extends infer I
+  ? ExpectName<
+      TrimStart<A>,
+      `${Name} definition - union member type`
+    > extends infer I
     ? I extends {
         type: "ok";
         value: infer UnionMemberType extends string;

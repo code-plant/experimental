@@ -7,10 +7,15 @@ import {
   TrimStart,
 } from "../internal-types";
 
-export type ExpectName<S extends string> =
-  S extends `${infer A extends NameStart}${infer B}`
-    ? Internal<B, A>
-    : Ensure<{ type: "error"; error: "Expected NameStart" }, ExpectResultError>;
+export type ExpectName<
+  S extends string,
+  On extends string
+> = S extends `${infer A extends NameStart}${infer B}`
+  ? Internal<B, A>
+  : Ensure<
+      { type: "error"; error: "Expected NameStart"; on: On },
+      ExpectResultError
+    >;
 
 type Internal<
   S extends string,

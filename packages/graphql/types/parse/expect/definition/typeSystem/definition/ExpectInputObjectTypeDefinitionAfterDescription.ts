@@ -12,25 +12,28 @@ import { ExpectInputFieldsDefinition } from "../ExpectInputFieldsDefinition";
 export type ExpectInputObjectTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
-> = ExpectName<S> extends {
+> = ExpectName<S, "top level - input object type definition"> extends {
   type: "ok";
   value: "input";
   rest: infer A extends string;
 }
-  ? ExpectName<A> extends infer I
+  ? ExpectName<A, "top level - input object type definition"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
         rest: infer B extends string;
       }
-      ? ExpectDirectives<B> extends infer I
+      ? ExpectDirectives<B, `${Name} definition - directives`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Dir extends Directives;
             rest: infer C extends string;
           }
           ? C extends `{${string}`
-            ? ExpectInputFieldsDefinition<C> extends infer I
+            ? ExpectInputFieldsDefinition<
+                C,
+                `${Name} definition - fields`
+              > extends infer I
               ? I extends {
                   type: "ok";
                   value: infer Fields extends InputFieldsDefinition;
@@ -77,6 +80,10 @@ export type ExpectInputObjectTypeDefinitionAfterDescription<
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword input" },
+      {
+        type: "error";
+        error: "Expected keyword input";
+        on: "top level - input object type definition";
+      },
       ExpectResultError
     >;

@@ -10,20 +10,23 @@ import { ExpectName } from "../../../ExpectName";
 import { ExpectInputFieldsDefinition } from "../ExpectInputFieldsDefinition";
 
 export type ExpectInputObjectTypeExtensionAfterInput<S extends string> =
-  ExpectName<S> extends infer I
+  ExpectName<S, "top level - input object type extension"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
         rest: infer A extends string;
       }
-      ? ExpectDirectives<A> extends infer I
+      ? ExpectDirectives<A, `${Name} extension - directives`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Dir extends Directives;
             rest: infer B extends string;
           }
           ? B extends `{${string}`
-            ? ExpectInputFieldsDefinition<B> extends infer I
+            ? ExpectInputFieldsDefinition<
+                B,
+                `${Name} extension - fields`
+              > extends infer I
               ? I extends {
                   type: "ok";
                   value: infer Fields extends InputFieldsDefinition;
@@ -61,7 +64,11 @@ type Validate<
       ExpectResultOk<InputObjectTypeExtension>
     >
   : Ensure<
-      { type: "error"; error: "Expected Directives or InputFieldsDefinition" },
+      {
+        type: "error";
+        error: "Expected Directives or InputFieldsDefinition";
+        on: `${Name} extension`;
+      },
       ExpectResultError
     >;
 

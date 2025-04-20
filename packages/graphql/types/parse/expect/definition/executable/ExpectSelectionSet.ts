@@ -18,85 +18,100 @@ import { ExpectArguments } from "../../ExpectArguments";
 import { ExpectDirectives } from "../../ExpectDirectives";
 import { ExpectName } from "../../ExpectName";
 
-export type ExpectSelectionSet<S extends string> = S extends `{${infer A}`
-  ? ExpectSelection<TrimStart<A>> extends infer I
+export type ExpectSelectionSet<
+  S extends string,
+  On extends string
+> = S extends `{${infer A}`
+  ? ExpectSelection<TrimStart<A>, On> extends infer I
     ? I extends {
         type: "ok";
         value: infer Sel extends Selection;
         rest: infer B extends string;
       }
-      ? Internal<B, [Sel]>
+      ? Internal<B, [Sel], On>
       : I
     : never
-  : Ensure<{ type: "error"; error: "Expected {" }, ExpectResultError>;
+  : Ensure<{ type: "error"; error: "Expected {"; on: On }, ExpectResultError>;
 
-type Internal<S extends string, R extends Selection[]> = S extends `}${infer I}`
+type Internal<
+  S extends string,
+  R extends Selection[],
+  On extends string
+> = S extends `}${infer I}`
   ? Ensure<
       { type: "ok"; value: R; rest: TrimStart<I> },
       ExpectResultOk<SelectionSet>
     >
-  : ExpectSelection<S> extends infer I
+  : ExpectSelection<S, On> extends infer I
   ? I extends {
       type: "ok";
       value: infer Sel extends Selection;
       rest: infer A extends string;
     }
-    ? Internal<A, [...R, Sel]>
+    ? Internal<A, [...R, Sel], On>
     : I
   : never;
 
-type ExpectSelection<S extends string> = S extends `${NameStart}${string}`
-  ? ExpectField<S>
-  : ExpectFragmentSpreadOrInlineFragment<S>;
+type ExpectSelection<
+  S extends string,
+  On extends string
+> = S extends `${NameStart}${string}`
+  ? ExpectField<S, On>
+  : ExpectFragmentSpreadOrInlineFragment<S, On>;
 
-type ExpectField<S extends string> = ExpectName<S> extends infer I
+type ExpectField<S extends string, On extends string> = ExpectName<
+  S,
+  On
+> extends infer I
   ? I extends {
       type: "ok";
       value: infer NameOrAlias extends string;
       rest: infer A extends string;
     }
     ? A extends `:${infer B}`
-      ? ExpectName<TrimStart<B>> extends infer I
+      ? ExpectName<TrimStart<B>, `${On} - ${NameOrAlias} name`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Name extends string;
             rest: infer B extends string;
           }
-          ? ExpectFieldArguments<B, Name, NameOrAlias>
+          ? ExpectFieldArguments<B, Name, NameOrAlias, On>
           : I
         : never
-      : ExpectFieldArguments<A, NameOrAlias, undefined>
+      : ExpectFieldArguments<A, NameOrAlias, undefined, On>
     : I
   : never;
 
 type ExpectFieldArguments<
   S extends string,
   Name extends string,
-  Alias extends string | undefined
+  Alias extends string | undefined,
+  On extends string
 > = S extends `(${string}`
-  ? ExpectArguments<S> extends infer I
+  ? ExpectArguments<S, `${On} - ${Alias} arguments`> extends infer I
     ? I extends {
         type: "ok";
         value: infer Arguments extends Argument[];
         rest: infer A extends string;
       }
-      ? ExpectFieldDirectives<A, Name, Alias, Arguments>
+      ? ExpectFieldDirectives<A, Name, Alias, Arguments, On>
       : I
     : never
-  : ExpectFieldDirectives<S, Name, Alias, []>;
+  : ExpectFieldDirectives<S, Name, Alias, [], On>;
 
 type ExpectFieldDirectives<
   S extends string,
   Name extends string,
   Alias extends string | undefined,
-  Arguments extends Argument[]
-> = ExpectDirectives<S> extends infer I
+  Arguments extends Argument[],
+  On extends string
+> = ExpectDirectives<S, `${On} - ${Alias} directives`> extends infer I
   ? I extends {
       type: "ok";
       value: infer Dir extends Directive[];
       rest: infer A extends string;
     }
-    ? ExpectFieldSelectionSet<A, Name, Alias, Arguments, Dir>
+    ? ExpectFieldSelectionSet<A, Name, Alias, Arguments, Dir, On>
     : I
   : never;
 
@@ -105,9 +120,10 @@ type ExpectFieldSelectionSet<
   Name extends string,
   Alias extends string | undefined,
   Arguments extends Argument[],
-  Dir extends Directive[]
+  Dir extends Directive[],
+  On extends string
 > = S extends `{${string}`
-  ? ExpectSelectionSet<S> extends infer I
+  ? ExpectSelectionSet<S, `${On} - ${Alias} selection set`> extends infer I
     ? I extends {
         type: "ok";
         value: infer Sel extends SelectionSet;
@@ -143,45 +159,56 @@ type ExpectFieldSelectionSet<
       ExpectResultOk<Field>
     >;
 
-type ExpectFragmentSpreadOrInlineFragment<S extends string> =
-  S extends `...${infer A}`
-    ? ExpectName<TrimStart<A>> extends infer I
-      ? I extends {
-          type: "ok";
-          value: infer Name extends string;
-          rest: infer B extends string;
-        }
-        ? Name extends "on"
-          ? ExpectInlineFragmentTypeCondition<B>
-          : ExpectFragmentSpread<B, Name>
-        : ExpectInlineFragmentDirectives<TrimStart<A>, undefined>
-      : never
-    : Ensure<
-        { type: "error"; error: "Expected field or ..." },
-        ExpectResultError
-      >;
-
-type ExpectInlineFragmentTypeCondition<S extends string> =
-  ExpectName<S> extends infer I
+type ExpectFragmentSpreadOrInlineFragment<
+  S extends string,
+  On extends string
+> = S extends `...${infer A}`
+  ? ExpectName<
+      TrimStart<A>,
+      `${On} - fragment spread or inline fragment`
+    > extends infer I
     ? I extends {
         type: "ok";
-        value: infer TypeCondition extends string;
-        rest: infer A extends string;
+        value: infer Name extends string;
+        rest: infer B extends string;
       }
-      ? ExpectInlineFragmentDirectives<A, TypeCondition>
-      : I
-    : never;
+      ? Name extends "on"
+        ? ExpectInlineFragmentTypeCondition<B, On>
+        : ExpectFragmentSpread<B, Name, On>
+      : ExpectInlineFragmentDirectives<TrimStart<A>, undefined, On>
+    : never
+  : Ensure<
+      { type: "error"; error: "Expected field or ..."; on: On },
+      ExpectResultError
+    >;
+
+type ExpectInlineFragmentTypeCondition<
+  S extends string,
+  On extends string
+> = ExpectName<S, `${On} - inline fragment type condition`> extends infer I
+  ? I extends {
+      type: "ok";
+      value: infer TypeCondition extends string;
+      rest: infer A extends string;
+    }
+    ? ExpectInlineFragmentDirectives<A, TypeCondition, On>
+    : I
+  : never;
 
 type ExpectInlineFragmentDirectives<
   A extends string,
-  TypeCondition extends string | undefined
-> = ExpectDirectives<A> extends infer I
+  TypeCondition extends string | undefined,
+  On extends string
+> = ExpectDirectives<A, `${On} - inline fragment directives`> extends infer I
   ? I extends {
       type: "ok";
       value: infer Dir extends Directive[];
       rest: infer B extends string;
     }
-    ? ExpectSelectionSet<B> extends infer I
+    ? ExpectSelectionSet<
+        B,
+        `${On} - inline fragment selection set`
+      > extends infer I
       ? I extends {
           type: "ok";
           value: infer Sel extends SelectionSet;
@@ -207,8 +234,9 @@ type ExpectInlineFragmentDirectives<
 
 type ExpectFragmentSpread<
   S extends string,
-  Name extends string
-> = ExpectDirectives<S> extends infer I
+  Name extends string,
+  On extends string
+> = ExpectDirectives<S, `${On} - fragment spread directives`> extends infer I
   ? I extends {
       type: "ok";
       value: infer Dir extends Directive[];

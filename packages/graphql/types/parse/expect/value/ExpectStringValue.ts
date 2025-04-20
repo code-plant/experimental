@@ -3,8 +3,11 @@ import { ExpectResultError, ExpectResultOk } from "../../internal-types";
 import { StringValue } from "../../types";
 import { ExpectString } from "../ExpectString";
 
-export type ExpectStringValue<S extends string> = S extends `"${string}`
-  ? ExpectString<S> extends infer I
+export type ExpectStringValue<
+  S extends string,
+  On extends string
+> = S extends `"${string}`
+  ? ExpectString<S, On> extends infer I
     ? I extends {
         type: "ok";
         value: infer Value extends string;
@@ -23,4 +26,7 @@ export type ExpectStringValue<S extends string> = S extends `"${string}`
         >
       : I
     : never
-  : Ensure<{ type: "error"; error: "Expected string" }, ExpectResultError>;
+  : Ensure<
+      { type: "error"; error: "Expected string"; on: On },
+      ExpectResultError
+    >;

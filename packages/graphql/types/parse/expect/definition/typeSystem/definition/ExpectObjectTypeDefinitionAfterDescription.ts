@@ -16,24 +16,24 @@ import { ExpectFieldsDefinition } from "../ExpectFieldsDefinition";
 export type ExpectObjectTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
-> = ExpectName<S> extends {
+> = ExpectName<S, "top level - object type definition"> extends {
   type: "ok";
   value: "type";
   rest: infer A extends string;
 }
-  ? ExpectName<A> extends infer I
+  ? ExpectName<A, "top level - object type definition"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
         rest: infer B extends string;
       }
-      ? ExpectName<B> extends {
+      ? ExpectName<B, `${Name} definition`> extends {
           type: "ok";
           value: "implements";
           rest: infer C extends string;
         }
         ? C extends `&${infer D}`
-          ? ExpectImplementsInterfaces<TrimStart<D>, []> extends infer I
+          ? ExpectImplementsInterfaces<TrimStart<D>, [], Name> extends infer I
             ? I extends {
                 type: "ok";
                 value: infer ImplementsInterfaces extends string[];
@@ -47,7 +47,7 @@ export type ExpectObjectTypeDefinitionAfterDescription<
                 >
               : I
             : never
-          : ExpectName<C> extends infer I
+          : ExpectName<C, `${Name} definition - implements`> extends infer I
           ? I extends {
               type: "ok";
               value: infer ImplementsInterface extends string;
@@ -55,7 +55,8 @@ export type ExpectObjectTypeDefinitionAfterDescription<
             }
             ? ExpectImplementsInterfaces<
                 D,
-                [ImplementsInterface]
+                [ImplementsInterface],
+                Name
               > extends infer I
               ? I extends {
                   type: "ok";
@@ -76,21 +77,26 @@ export type ExpectObjectTypeDefinitionAfterDescription<
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword type" },
+      {
+        type: "error";
+        error: "Expected keyword type";
+        on: "top level - object type definition";
+      },
       ExpectResultError
     >;
 
 type ExpectImplementsInterfaces<
   S extends string,
-  R extends string[]
+  R extends string[],
+  Name extends string
 > = S extends `&${infer A}`
-  ? ExpectName<TrimStart<A>> extends infer I
+  ? ExpectName<TrimStart<A>, `${Name} definition - implements`> extends infer I
     ? I extends {
         type: "ok";
         value: infer ImplementsInterface extends string;
         rest: infer B extends string;
       }
-      ? ExpectImplementsInterfaces<B, [...R, ImplementsInterface]>
+      ? ExpectImplementsInterfaces<B, [...R, ImplementsInterface], Name>
       : I
     : never
   : Ensure<{ type: "ok"; value: R; rest: S }, ExpectResultOk<string[]>>;
@@ -100,14 +106,14 @@ type AfterImplementsInterfaces<
   Description extends string | undefined,
   Name extends string,
   ImplementsInterfaces extends string[]
-> = ExpectDirectives<S> extends infer I
+> = ExpectDirectives<S, `${Name} definition - directives`> extends infer I
   ? I extends {
       type: "ok";
       value: infer Directives extends Directive[];
       rest: infer A extends string;
     }
     ? A extends `{${string}`
-      ? ExpectFieldsDefinition<A> extends infer I
+      ? ExpectFieldsDefinition<A, `${Name} definition - fields`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Fields extends FieldsDefinition;

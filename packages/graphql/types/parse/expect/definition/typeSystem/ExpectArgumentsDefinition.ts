@@ -4,13 +4,13 @@ import {
   ExpectResultOk,
   TrimStart,
 } from "../../../internal-types";
-import { InputFieldsDefinition, InputValueDefinition } from "../../../types";
+import { ArgumentsDefinition, InputValueDefinition } from "../../../types";
 import { ExpectInputValueDefinition } from "./ExpectInputValueDefinition";
 
-export type ExpectInputFieldsDefinition<
+export type ExpectArgumentsDefinition<
   S extends string,
   On extends string
-> = S extends `{${infer A}`
+> = S extends `(${infer A}`
   ? ExpectInputValueDefinition<TrimStart<A>, On> extends infer I
     ? I extends {
         type: "ok";
@@ -20,16 +20,16 @@ export type ExpectInputFieldsDefinition<
       ? Internal<B, [Argument], On>
       : I
     : never
-  : Ensure<{ type: "error"; error: "Expected {"; on: On }, ExpectResultError>;
+  : Ensure<{ type: "error"; error: "Expected ("; on: On }, ExpectResultError>;
 
 type Internal<
   S extends string,
   R extends InputValueDefinition[],
   On extends string
-> = S extends `}${infer I}`
+> = S extends `)${infer I}`
   ? Ensure<
       { type: "ok"; value: R; rest: TrimStart<I> },
-      ExpectResultOk<InputFieldsDefinition>
+      ExpectResultOk<ArgumentsDefinition>
     >
   : ExpectInputValueDefinition<S, On> extends infer I
   ? I extends {

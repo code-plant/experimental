@@ -13,13 +13,13 @@ import { ExpectUnionTypeDefinitionAfterDescription } from "./definition/ExpectUn
 
 export type ExpectTypeSystemDefinitionOrExtensionStartsWithDescription<
   S extends string
-> = ExpectString<S> extends infer I
+> = ExpectString<S, "top level"> extends infer I
   ? I extends {
       type: "ok";
       value: infer Description extends string;
       rest: infer A extends string;
     }
-    ? ExpectName<A> extends infer I
+    ? ExpectName<A, "top level"> extends infer I
       ? I extends {
           type: "ok";
           value: infer Keyword extends string;
@@ -41,7 +41,7 @@ export type ExpectTypeSystemDefinitionOrExtensionStartsWithDescription<
           : Keyword extends "input"
           ? ExpectInputObjectTypeDefinitionAfterDescription<A, Description>
           : Ensure<
-              { type: "error"; error: "Expected keyword" },
+              { type: "error"; error: "Expected keyword"; on: "top level" },
               ExpectResultError
             >
         : I

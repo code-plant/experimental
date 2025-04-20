@@ -7,18 +7,18 @@ import { ExpectName } from "../../../ExpectName";
 export type ExpectScalarTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
-> = ExpectName<S> extends {
+> = ExpectName<S, "top level - scalar type definition"> extends {
   type: "ok";
   value: "scalar";
   rest: infer A extends string;
 }
-  ? ExpectName<A> extends infer I
+  ? ExpectName<A, "top level - scalar type definition"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
         rest: infer B extends string;
       }
-      ? ExpectDirectives<B> extends infer I
+      ? ExpectDirectives<B, `${Name} definition - directives`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Directives extends Directive[];
@@ -45,6 +45,10 @@ export type ExpectScalarTypeDefinitionAfterDescription<
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword scalar" },
+      {
+        type: "error";
+        error: "Expected keyword scalar";
+        on: "top level - scalar type definition";
+      },
       ExpectResultError
     >;

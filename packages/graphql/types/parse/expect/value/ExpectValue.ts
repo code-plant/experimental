@@ -6,14 +6,17 @@ import { ExpectObjectValue } from "./ExpectObjectValue";
 import { ExpectStringValue } from "./ExpectStringValue";
 import { ExpectVariable } from "./ExpectVariable";
 
-export type ExpectValue<S extends string> = S extends `$${string}`
-  ? ExpectVariable<S>
+export type ExpectValue<
+  S extends string,
+  On extends string
+> = S extends `$${string}`
+  ? ExpectVariable<S, On>
   : S extends `${"-" | Digit}${string}`
-  ? ExpectNumberValue<S>
+  ? ExpectNumberValue<S, On>
   : S extends `"${string}`
-  ? ExpectStringValue<S>
+  ? ExpectStringValue<S, On>
   : S extends `[${string}`
-  ? ExpectListValue<S>
+  ? ExpectListValue<S, On>
   : S extends `{${string}`
-  ? ExpectObjectValue<S>
-  : ExpectNameValue<S>;
+  ? ExpectObjectValue<S, On>
+  : ExpectNameValue<S, On>;

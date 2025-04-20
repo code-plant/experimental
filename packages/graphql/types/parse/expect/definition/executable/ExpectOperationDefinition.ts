@@ -14,13 +14,13 @@ import { ExpectSelectionSet } from "./ExpectSelectionSet";
 
 export type ExpectOperationDefinition<S extends string> = S extends `{${string}`
   ? AfterDirectives<S, "query", undefined, [], []>
-  : ExpectName<S> extends infer I
+  : ExpectName<S, "top level - operation definition"> extends infer I
   ? I extends {
       type: "ok";
       value: infer OT extends OperationType;
       rest: infer A extends string;
     }
-    ? ExpectName<A> extends infer I
+    ? ExpectName<A, "top level - operation definition"> extends infer I
       ? I extends {
           type: "ok";
           value: infer Name extends string;
@@ -30,7 +30,11 @@ export type ExpectOperationDefinition<S extends string> = S extends `{${string}`
         : AfterName<A, OT, undefined>
       : never
     : Ensure<
-        { type: "error"; error: "Expected { or OperationType" },
+        {
+          type: "error";
+          error: "Expected { or OperationType";
+          on: "top level - operation definition";
+        },
         ExpectResultError
       >
   : never;
@@ -40,7 +44,10 @@ type AfterName<
   OT extends OperationType,
   Name extends string | undefined
 > = S extends `(${string}`
-  ? ExpectVariableDefinitions<S> extends infer I
+  ? ExpectVariableDefinitions<
+      S,
+      `${OT} ${Name} - variable definitions`
+    > extends infer I
     ? I extends {
         type: "ok";
         value: infer Variables extends VariableDefinition[];
@@ -56,7 +63,7 @@ type AfterVariables<
   OT extends OperationType,
   Name extends string | undefined,
   Variables extends VariableDefinition[]
-> = ExpectDirectives<S> extends infer I
+> = ExpectDirectives<S, `${OT} ${Name} - directives`> extends infer I
   ? I extends {
       type: "ok";
       value: infer Directives extends Directive[];
@@ -72,7 +79,7 @@ type AfterDirectives<
   Name extends string | undefined,
   Variables extends VariableDefinition[],
   Directives extends Directive[]
-> = ExpectSelectionSet<S> extends infer I
+> = ExpectSelectionSet<S, `${OT} ${Name} - selection set`> extends infer I
   ? I extends {
       type: "ok";
       value: infer SS extends SelectionSet;

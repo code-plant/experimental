@@ -12,25 +12,28 @@ import { ExpectEnumValuesDefinition } from "../ExpectEnumValuesDefinition";
 export type ExpectEnumTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
-> = ExpectName<S> extends {
+> = ExpectName<S, "top level - enum type definition"> extends {
   type: "ok";
   value: "enum";
   rest: infer A extends string;
 }
-  ? ExpectName<A> extends infer I
+  ? ExpectName<A, "top level - enum type definition"> extends infer I
     ? I extends {
         type: "ok";
         value: infer Name extends string;
         rest: infer B extends string;
       }
-      ? ExpectDirectives<B> extends infer I
+      ? ExpectDirectives<B, `${Name} definition - directives`> extends infer I
         ? I extends {
             type: "ok";
             value: infer Dir extends Directives;
             rest: infer C extends string;
           }
           ? C extends `{${string}`
-            ? ExpectEnumValuesDefinition<C> extends infer I
+            ? ExpectEnumValuesDefinition<
+                C,
+                `${Name} definition - enum values`
+              > extends infer I
               ? I extends {
                   type: "ok";
                   value: infer Values extends EnumValuesDefinition;
@@ -77,6 +80,10 @@ export type ExpectEnumTypeDefinitionAfterDescription<
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword enum" },
+      {
+        type: "error";
+        error: "Expected keyword enum";
+        on: "top level - enum type definition";
+      },
       ExpectResultError
     >;
