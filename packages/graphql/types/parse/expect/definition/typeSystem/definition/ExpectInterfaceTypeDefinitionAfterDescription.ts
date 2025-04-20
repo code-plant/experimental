@@ -7,18 +7,18 @@ import {
 import {
   Directive,
   FieldsDefinition,
-  ObjectTypeDefinition,
+  InterfaceTypeDefinition,
 } from "../../../../types";
 import { ExpectDirectives } from "../../../ExpectDirectives";
 import { ExpectName } from "../../../ExpectName";
 import { ExpectFieldsDefinition } from "../ExpectFieldsDefinition";
 
-export type ExpectObjectTypeDefinition<
+export type ExpectInterfaceTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
 > = ExpectName<S> extends {
   type: "ok";
-  value: "type";
+  value: "interface";
   rest: infer A extends string;
 }
   ? ExpectName<A> extends infer I
@@ -76,7 +76,7 @@ export type ExpectObjectTypeDefinition<
       : I
     : never
   : Ensure<
-      { type: "error"; error: "Expected keyword type" },
+      { type: "error"; error: "Expected keyword interface" },
       ExpectResultError
     >;
 
@@ -120,7 +120,7 @@ type AfterImplementsInterfaces<
                   type: "typeSystem";
                   subType: "definition";
                   definitionType: "type";
-                  typeType: "object";
+                  typeType: "interface";
                   description: Description;
                   name: Name;
                   implementsInterfaces: ImplementsInterfaces;
@@ -129,7 +129,7 @@ type AfterImplementsInterfaces<
                 };
                 rest: B;
               },
-              ExpectResultOk<ObjectTypeDefinition>
+              ExpectResultOk<InterfaceTypeDefinition>
             >
           : I
         : never
@@ -140,7 +140,7 @@ type AfterImplementsInterfaces<
               type: "typeSystem";
               subType: "definition";
               definitionType: "type";
-              typeType: "object";
+              typeType: "interface";
               description: Description;
               name: Name;
               implementsInterfaces: ImplementsInterfaces;
@@ -149,7 +149,7 @@ type AfterImplementsInterfaces<
             };
             rest: A;
           },
-          ExpectResultOk<ObjectTypeDefinition>
+          ExpectResultOk<InterfaceTypeDefinition>
         >
     : I
   : never;

@@ -2,14 +2,14 @@ import { Ensure } from "@this-project/common-util-types";
 import { ExpectResultError } from "../../../internal-types";
 import { ExpectName } from "../../ExpectName";
 import { ExpectString } from "../../ExpectString";
-import { ExpectDirectiveDefinition } from "./definition/ExpectDirectiveDefinition";
-import { ExpectEnumTypeDefinition } from "./definition/ExpectEnumTypeDefinition";
-import { ExpectInputObjectTypeDefinition } from "./definition/ExpectInputObjectTypeDefinition";
-import { ExpectInterfaceTypeDefinition } from "./definition/ExpectInterfaceTypeDefinition";
-import { ExpectObjectTypeDefinition } from "./definition/ExpectObjectTypeDefinition";
-import { ExpectScalarTypeDefinition } from "./definition/ExpectScalarTypeDefinition";
-import { ExpectSchemaDefinition } from "./definition/ExpectSchemaDefinition";
-import { ExpectUnionTypeDefinition } from "./definition/ExpectUnionTypeDefinition";
+import { ExpectDirectiveDefinitionAfterDescription } from "./definition/ExpectDirectiveDefinitionAfterDescription";
+import { ExpectEnumTypeDefinitionAfterDescription } from "./definition/ExpectEnumTypeDefinitionAfterDescription";
+import { ExpectInputObjectTypeDefinitionAfterDescription } from "./definition/ExpectInputObjectTypeDefinitionAfterDescription";
+import { ExpectInterfaceTypeDefinitionAfterDescription } from "./definition/ExpectInterfaceTypeDefinitionAfterDescription";
+import { ExpectObjectTypeDefinitionAfterDescription } from "./definition/ExpectObjectTypeDefinitionAfterDescription";
+import { ExpectScalarTypeDefinitionAfterDescription } from "./definition/ExpectScalarTypeDefinitionAfterDescription";
+import { ExpectSchemaDefinitionAfterDescription } from "./definition/ExpectSchemaDefinitionAfterDescription";
+import { ExpectUnionTypeDefinitionAfterDescription } from "./definition/ExpectUnionTypeDefinitionAfterDescription";
 
 export type ExpectTypeSystemDefinitionOrExtensionStartsWithDescription<
   S extends string
@@ -17,31 +17,29 @@ export type ExpectTypeSystemDefinitionOrExtensionStartsWithDescription<
   ? I extends {
       type: "ok";
       value: infer Description extends string;
-      rest: infer R extends string;
+      rest: infer A extends string;
     }
-    ? ExpectName<S> extends infer I
+    ? ExpectName<A> extends infer I
       ? I extends {
           type: "ok";
           value: infer Keyword extends string;
         }
         ? Keyword extends "schema"
-          ? ExpectSchemaDefinition<S, Description>
+          ? ExpectSchemaDefinitionAfterDescription<A, Description>
           : Keyword extends "directive"
-          ? ExpectDirectiveDefinition<S, Description>
+          ? ExpectDirectiveDefinitionAfterDescription<A, Description>
           : Keyword extends "scalar"
-          ? ExpectScalarTypeDefinition<S, Description>
+          ? ExpectScalarTypeDefinitionAfterDescription<A, Description>
           : Keyword extends "type"
-          ? ExpectObjectTypeDefinition<S, Description>
+          ? ExpectObjectTypeDefinitionAfterDescription<A, Description>
           : Keyword extends "interface"
-          ? ExpectInterfaceTypeDefinition<S, Description>
+          ? ExpectInterfaceTypeDefinitionAfterDescription<A, Description>
           : Keyword extends "union"
-          ? ExpectUnionTypeDefinition<S, Description>
-          : Keyword extends "input"
-          ? ExpectInputObjectTypeDefinition<S, Description>
+          ? ExpectUnionTypeDefinitionAfterDescription<A, Description>
           : Keyword extends "enum"
-          ? ExpectEnumTypeDefinition<S, Description>
-          : Keyword extends "extend"
-          ? ExpectTypeSystemExtensionDefinition<S, Description>
+          ? ExpectEnumTypeDefinitionAfterDescription<A, Description>
+          : Keyword extends "input"
+          ? ExpectInputObjectTypeDefinitionAfterDescription<A, Description>
           : Ensure<
               { type: "error"; error: "Expected keyword" },
               ExpectResultError

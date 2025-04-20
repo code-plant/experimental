@@ -3,15 +3,16 @@ import { ExpectResultError } from "../../internal-types";
 import { ExpectName } from "../ExpectName";
 import { ExpectFragmentDefinition } from "./executable/ExpectFragmentDefinition";
 import { ExpectOperationDefinition } from "./executable/ExpectOperationDefinition";
-import { ExpectDirectiveDefinition } from "./typeSystem/definition/ExpectDirectiveDefinition";
-import { ExpectEnumTypeDefinition } from "./typeSystem/definition/ExpectEnumTypeDefinition";
-import { ExpectInputObjectTypeDefinition } from "./typeSystem/definition/ExpectInputObjectTypeDefinition";
-import { ExpectInterfaceTypeDefinition } from "./typeSystem/definition/ExpectInterfaceTypeDefinition";
-import { ExpectObjectTypeDefinition } from "./typeSystem/definition/ExpectObjectTypeDefinition";
-import { ExpectScalarTypeDefinition } from "./typeSystem/definition/ExpectScalarTypeDefinition";
-import { ExpectSchemaDefinition } from "./typeSystem/definition/ExpectSchemaDefinition";
-import { ExpectUnionTypeDefinition } from "./typeSystem/definition/ExpectUnionTypeDefinition";
+import { ExpectDirectiveDefinitionAfterDescription } from "./typeSystem/definition/ExpectDirectiveDefinitionAfterDescription";
+import { ExpectEnumTypeDefinitionAfterDescription } from "./typeSystem/definition/ExpectEnumTypeDefinitionAfterDescription";
+import { ExpectInputObjectTypeDefinitionAfterDescription } from "./typeSystem/definition/ExpectInputObjectTypeDefinitionAfterDescription";
+import { ExpectInterfaceTypeDefinitionAfterDescription } from "./typeSystem/definition/ExpectInterfaceTypeDefinitionAfterDescription";
+import { ExpectObjectTypeDefinitionAfterDescription } from "./typeSystem/definition/ExpectObjectTypeDefinitionAfterDescription";
+import { ExpectScalarTypeDefinitionAfterDescription } from "./typeSystem/definition/ExpectScalarTypeDefinitionAfterDescription";
+import { ExpectSchemaDefinitionAfterDescription } from "./typeSystem/definition/ExpectSchemaDefinitionAfterDescription";
+import { ExpectUnionTypeDefinitionAfterDescription } from "./typeSystem/definition/ExpectUnionTypeDefinitionAfterDescription";
 import { ExpectTypeSystemDefinitionOrExtensionStartsWithDescription } from "./typeSystem/ExpectTypeSystemDefinitionOrExtensionStartsWithDescription";
+import { ExpectTypeSystemExtensionAfterExtend } from "./typeSystem/extension/ExpectTypeSystemExtensionAfterExtend";
 
 export type ExpectDefinition<S extends string> = S extends `{${string}`
   ? ExpectOperationDefinition<S>
@@ -20,29 +21,30 @@ export type ExpectDefinition<S extends string> = S extends `{${string}`
   : ExpectName<S> extends {
       type: "ok";
       value: infer Keyword extends string;
+      rest: infer A extends string;
     }
   ? Keyword extends "query" | "mutation" | "subscription"
     ? ExpectOperationDefinition<S>
     : Keyword extends "fragment"
     ? ExpectFragmentDefinition<S>
     : Keyword extends "schema"
-    ? ExpectSchemaDefinition<S, undefined>
+    ? ExpectSchemaDefinitionAfterDescription<S, undefined>
     : Keyword extends "directive"
-    ? ExpectDirectiveDefinition<S, undefined>
+    ? ExpectDirectiveDefinitionAfterDescription<S, undefined>
     : Keyword extends "scalar"
-    ? ExpectScalarTypeDefinition<S, undefined>
+    ? ExpectScalarTypeDefinitionAfterDescription<S, undefined>
     : Keyword extends "type"
-    ? ExpectObjectTypeDefinition<S, undefined>
+    ? ExpectObjectTypeDefinitionAfterDescription<S, undefined>
     : Keyword extends "interface"
-    ? ExpectInterfaceTypeDefinition<S, undefined>
+    ? ExpectInterfaceTypeDefinitionAfterDescription<S, undefined>
     : Keyword extends "union"
-    ? ExpectUnionTypeDefinition<S, undefined>
-    : Keyword extends "input"
-    ? ExpectInputObjectTypeDefinition<S, undefined>
+    ? ExpectUnionTypeDefinitionAfterDescription<S, undefined>
     : Keyword extends "enum"
-    ? ExpectEnumTypeDefinition<S, undefined>
+    ? ExpectEnumTypeDefinitionAfterDescription<S, undefined>
+    : Keyword extends "input"
+    ? ExpectInputObjectTypeDefinitionAfterDescription<S, undefined>
     : Keyword extends "extend"
-    ? ExpectTypeSystemExtensionDefinition<S, undefined>
+    ? ExpectTypeSystemExtensionAfterExtend<A>
     : Ensure<{ type: "error"; error: "Expected keyword" }, ExpectResultError>
   : Ensure<
       { type: "error"; error: "Expected { or description or keyword" },

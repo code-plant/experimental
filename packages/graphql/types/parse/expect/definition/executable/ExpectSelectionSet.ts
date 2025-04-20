@@ -113,17 +113,18 @@ type ExpectFieldSelectionSet<
         value: infer Sel extends SelectionSet;
         rest: infer A extends string;
       }
-      ? [
-          {
+      ? {
+          type: "ok";
+          value: {
             type: "field";
             name: Name;
             alias: Alias;
             arguments: Arguments;
             directives: Dir;
             selectionSet: Sel;
-          },
-          TrimStart<A>
-        ]
+          };
+          rest: TrimStart<A>;
+        }
       : I
     : never
   : Ensure<

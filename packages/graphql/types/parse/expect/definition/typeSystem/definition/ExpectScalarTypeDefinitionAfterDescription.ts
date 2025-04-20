@@ -4,7 +4,7 @@ import { Directive, ScalarTypeDefinition } from "../../../../types";
 import { ExpectDirectives } from "../../../ExpectDirectives";
 import { ExpectName } from "../../../ExpectName";
 
-export type ExpectScalarTypeDefinition<
+export type ExpectScalarTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
 > = ExpectName<S> extends {

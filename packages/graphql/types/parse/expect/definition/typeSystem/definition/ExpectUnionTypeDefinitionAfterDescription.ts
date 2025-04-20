@@ -8,7 +8,7 @@ import { Directives, UnionTypeDefinition } from "../../../../types";
 import { ExpectDirectives } from "../../../ExpectDirectives";
 import { ExpectName } from "../../../ExpectName";
 
-export type ExpectUnionTypeDefinition<
+export type ExpectUnionTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
 > = ExpectName<S> extends {

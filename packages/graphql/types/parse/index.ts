@@ -10,7 +10,8 @@ type ParseInternal<S extends string, R extends Definition[]> = S extends ""
   : ExpectDefinition<S> extends infer I
   ? I extends {
       type: "ok";
-      value: [infer A extends Definition, infer B extends string];
+      value: infer A extends Definition;
+      rest: infer B extends string;
     }
     ? ParseInternal<B, [...R, A]>
     : I

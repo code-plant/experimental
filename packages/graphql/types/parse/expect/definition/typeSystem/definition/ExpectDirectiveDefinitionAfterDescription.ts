@@ -12,7 +12,7 @@ import {
 import { ExpectName } from "../../../ExpectName";
 import { ExpectArgumentsDefinition } from "./ExpectArgumentsDefinition";
 
-export type ExpectDirectiveDefinition<
+export type ExpectDirectiveDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
 > = ExpectName<S> extends {

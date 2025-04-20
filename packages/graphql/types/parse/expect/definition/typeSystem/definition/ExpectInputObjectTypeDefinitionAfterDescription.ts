@@ -7,9 +7,9 @@ import {
 } from "../../../../types";
 import { ExpectDirectives } from "../../../ExpectDirectives";
 import { ExpectName } from "../../../ExpectName";
-import { ExpectInputFieldsDefinition } from "../ExpectINputFieldsDefinition";
+import { ExpectInputFieldsDefinition } from "../ExpectInputFieldsDefinition";
 
-export type ExpectInputObjectTypeDefinition<
+export type ExpectInputObjectTypeDefinitionAfterDescription<
   S extends string,
   Description extends string | undefined
 > = ExpectName<S> extends {
