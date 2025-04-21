@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "@this-project/editor-core-builder",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/common-util-types": "file:../../../common/util/types",
+    "@this-project/editor-core-types": "file:../types"
+  }
+}

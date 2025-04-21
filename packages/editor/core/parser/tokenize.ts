@@ -6,21 +6,12 @@ export interface TokenizeError {
   message: string;
 }
 
-type State = StateText | StateCodeBlock | StateTag;
+type State = StateText | StateTag | StateCodeBlock;
 
 interface StateText {
   type: "text";
   line: number;
   col: number;
-  content: string[];
-}
-
-interface StateCodeBlock {
-  type: "codeBlock";
-  line: number;
-  precedingWhitespaces: string;
-  fence: string;
-  lang: string;
   content: string[];
 }
 
@@ -33,33 +24,43 @@ interface StateTag {
   attrs: Partial<Record<string, string | true>>;
 }
 
+interface StateCodeBlock {
+  type: "codeBlock";
+  line: number;
+  col: number;
+  precedingWhitespaces: string;
+  fence: string;
+  lang: string;
+  content: string[];
+}
+
 export function tokenize(source: string): Token[] | TokenizeError {
   const lines = source.split(/\r?\n/);
   const tokens: Token[] = [];
 
   let lineNum = 0;
-  let state: State | undefined;
+  let state: State = { type: "text", line: 1, col: 0, content: [] };
 
   for (const line of lines) {
     lineNum++;
 
     // Code Block Body
-    if (state?.type === "codeBlock") {
+    if (state.type === "codeBlock") {
       if (line === `${state.precedingWhitespaces}${state.fence}`) {
         tokens.push({
-          type: "block",
+          type: "codeBlock",
           line: state.line,
           col: state.precedingWhitespaces.length,
           lang: state.lang,
           content: state.content.join("\n"),
         });
-        state = undefined;
+        state = { type: "text", line: lineNum + 1, col: 0, content: [] };
       } else if (!line) {
         state.content.push("");
       } else if (!line.startsWith(state.precedingWhitespaces)) {
         return {
           line: lineNum,
-          col: 0,
+          col: state.precedingWhitespaces.length,
           message: "Preceding whitespaces mismatch",
         };
       } else {
@@ -68,85 +69,43 @@ export function tokenize(source: string): Token[] | TokenizeError {
       continue;
     }
 
-    if (!state || state.type === "text") {
-      // Code Block Start
-      const codeMatch = line.match(/^(\s*)(`{3,})(.*)$/);
-      if (codeMatch) {
-        if (state) {
-          tokens.push({
-            type: "text",
-            line: state.line,
-            col: state.col,
-            value: state.content.join("\n"),
-          });
-        }
-        const [, precedingWhitespaces, fence, lang] = codeMatch;
-        state = {
-          type: "codeBlock",
+    // Code Block Start
+    if (state.type === "text" && line.match(/^\s*`{3,}/)) {
+      const match = line.match(/^(\s*)(`{3,})(.*)$/);
+      if (!match) {
+        return {
           line: lineNum,
-          precedingWhitespaces,
-          fence,
-          lang,
-          content: [],
+          col: 0,
+          message: "Unrecognized code block start",
         };
-        continue;
       }
-
-      // Section End
-      if (line.match(/^#+$/)) {
-        if (state) {
-          tokens.push({
-            type: "text",
-            line: state.line,
-            col: state.col,
-            value: state.content.join("\n"),
-          });
-          state = undefined;
-        }
-
-        tokens.push({
-          type: "sectionEnd",
-          line: lineNum,
-          col: 0,
-          depth: line.length,
-        });
-        continue;
-      }
-
-      // Section Start
-      const headingMatch = line.match(/^(#+) (.*?)(?: \{#([-a-zA-Z0-9]+)\})?$/);
-      if (headingMatch) {
-        if (state) {
-          tokens.push({
-            type: "text",
-            line: state.line,
-            col: state.col,
-            value: state.content.join("\n"),
-          });
-          state = undefined;
-        }
-
-        const [, hashes, title, id] = headingMatch;
-        const depth = hashes.length;
-        tokens.push({
-          type: "sectionStart",
-          line: lineNum,
-          col: 0,
-          title,
-          id,
-          depth,
-          content: [],
-        });
-        continue;
-      }
+      const [, precedingWhitespaces, fence, lang] = match;
+      tokens.push({
+        type: "text",
+        line: state.line,
+        col: state.col,
+        value: state.content.join("\n"),
+      });
+      state = {
+        type: "codeBlock",
+        line: lineNum,
+        col: precedingWhitespaces.length,
+        precedingWhitespaces,
+        fence,
+        lang,
+        content: [],
+      };
+      continue;
     }
 
     let left = line;
     let skipped = 0;
 
+    const currentLine: string[] = [];
+
     while (left) {
       // Tag Attributes and Closing
-      if (state?.type === "tag") {
+      if (state.type === "tag") {
         let match: RegExpMatchArray | null;
         while (
           (match = left.match(
@@ -183,7 +142,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
             attrs: state.attrs,
             selfClose: close.length === 1,
           });
-          state = undefined;
+          state = { type: "text", line: lineNum, col: skipped, content: [] };
           skipped += spaces.length + close.length + 1;
           left = rest;
         } else if (left.trim().length) {
@@ -197,24 +156,25 @@ export function tokenize(source: string): Token[] | TokenizeError {
           break;
         }
       }
-      // now state?.type is undefined or "text"
+      // now state.type is "text"
 
       // Text Mode
-      let currentLine: string[] = [];
-      let col = skipped;
       while (left) {
         if (!left.match(/^\[\/?[a-zA-Z0-9-]/)) {
-          const currentChar = left[0];
-          if (currentChar === "\\" && (left[1] === "\\" || left[1] === "[")) {
+          // text
+          if (left.match(/^\\\[\/?[a-zA-Z0-9-]/)) {
+            // real escape
             currentLine.push(left[1]);
             skipped += 2;
             left = left.slice(2);
           } else {
+            // not escape
             currentLine.push(left[0]);
             skipped += 1;
             left = left.slice(1);
           }
         } else if (left[1] === "/") {
+          // closing tag
           const match = left.match(/^\[\/([a-zA-Z0-9-]+)\](.*)$/);
           if (!match) {
             return {
@@ -224,27 +184,14 @@ export function tokenize(source: string): Token[] | TokenizeError {
             };
           }
           const [, name, rest] = match;
-          if (currentLine.length) {
-            if (!state) {
-              state = {
-                type: "text",
-                line: lineNum,
-                col,
-                content: [],
-              };
-            }
-            state.content.push(currentLine.join(""));
-            currentLine.length = 0;
-          }
-          if (state) {
-            tokens.push({
-              type: "text",
-              line: state.line,
-              col: state.col,
-              value: state.content.join("\n"),
-            });
-          }
-          state = undefined;
+          state.content.push(currentLine.join(""));
+          currentLine.length = 0;
+          tokens.push({
+            type: "text",
+            line: state.line,
+            col: state.col,
+            value: state.content.join("\n"),
+          });
           tokens.push({
             type: "tagEnd",
             line: lineNum,
@@ -253,7 +200,9 @@ export function tokenize(source: string): Token[] | TokenizeError {
           });
           left = rest;
           skipped += name.length + 3;
+          state = { type: "text", line: lineNum, col: skipped, content: [] };
         } else {
+          // opening tag
           const match = left.match(
             /^\[([a-zA-Z0-9-]+(?:=(?:"(?:(?:\\.)|[^"\\])*"|[a-zA-Z0-9-]*))?)((?:[\]\s\/]|$).*)$/
           );
@@ -269,18 +218,8 @@ export function tokenize(source: string): Token[] | TokenizeError {
           if (!Array.isArray(parsedAttr)) {
             return parsedAttr;
           }
-          if (currentLine.length) {
-            if (!state) {
-              state = {
-                type: "text",
-                line: lineNum,
-                col,
-                content: [],
-              };
-            }
-            state.content.push(currentLine.join(""));
-            currentLine.length = 0;
-          }
+          state.content.push(currentLine.join(""));
+          currentLine.length = 0;
           const [name, value] = parsedAttr;
           if (state) {
             tokens.push({
@@ -293,7 +232,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
           state = {
             type: "tag",
             line: lineNum,
-            col,
+            col: skipped,
             name,
             defaultAttr: value === true ? undefined : value,
             attrs: {},
@@ -303,29 +242,15 @@ export function tokenize(source: string): Token[] | TokenizeError {
           break; // Return to Tag Attributes and Closing
         }
       }
-      if (currentLine.length && state?.type !== "tag") {
-        if (!state) {
-          state = {
-            type: "text",
-            line: lineNum,
-            col,
-            content: [],
-          };
-        }
-        state.content.push(currentLine.join(""));
-        currentLine.length = 0;
-      }
+    }
+    if (state.type === "text") {
+      state.content.push(currentLine.join(""));
+      currentLine.length = 0;
     }
   }
 
-  // If EOF reached and still in code block
-  switch (state?.type) {
-    case "codeBlock":
-      return {
-        line: state.line,
-        col: state.precedingWhitespaces.length,
-        message: "Unterminated code block",
-      };
+  // finalize
+  switch (state.type) {
     case "text":
       tokens.push({
         type: "text",
@@ -339,6 +264,12 @@ export function tokenize(source: string): Token[] | TokenizeError {
         line: state.line,
         col: state.col,
         message: "Unterminated tag",
+      };
+    case "codeBlock":
+      return {
+        line: state.line,
+        col: state.col,
+        message: "Unterminated code block",
       };
   }
 

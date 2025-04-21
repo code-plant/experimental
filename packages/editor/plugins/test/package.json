@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "@this-project/editor-plugins-test",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/common-util-types": "file:../../../common/util/types",
+    "@this-project/editor-core-builder": "file:../../core/builder",
+    "@this-project/editor-core-parser": "file:../../core/parser",
+    "@this-project/editor-core-types": "file:../../core/types",
+    "@this-project/editor-plugins-section": "file:../section"
+  }
+}

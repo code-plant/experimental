@@ -1,28 +1,9 @@
-export type Token =
-  | TokenSectionStart
-  | TokenSectionEnd
-  | TokenText
-  | TokenTagStart
-  | TokenTagEnd
-  | TokenBlock;
+export type Token = TokenText | TokenTagStart | TokenTagEnd | TokenCodeBlock;
 
 export interface TokenBase {
   type: string;
   line: number;
   col: number;
-}
-
-export interface TokenSectionStart extends TokenBase {
-  type: "sectionStart";
-  title: string;
-  id?: string;
-  content: Token[];
-  depth: number;
-}
-
-export interface TokenSectionEnd extends TokenBase {
-  type: "sectionEnd";
-  depth: number;
 }
 
 export interface TokenText extends TokenBase {
@@ -43,8 +24,8 @@ export interface TokenTagEnd extends TokenBase {
   name: string;
 }
 
-export interface TokenBlock extends TokenBase {
-  type: "block";
+export interface TokenCodeBlock extends TokenBase {
+  type: "codeBlock";
   lang: string;
   content: string;
 }

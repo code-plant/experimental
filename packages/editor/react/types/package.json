@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "@this-project/editor-react-mdcode",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/editor-core-types": "file:../../core/types",
+    "react": "^19.1.0"
+  }
+}
