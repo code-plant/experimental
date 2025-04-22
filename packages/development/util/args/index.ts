@@ -1,26 +1,51 @@
 export class Args<
-  const args extends any[],
-  const kwargs extends Partial<Record<string, any>>,
-  const short extends Partial<Record<string, string>>
+  const requiredArgsCount extends number,
+  const args extends unknown[],
+  const kwargs extends Partial<Record<string, unknown>>,
+  const short extends Partial<Record<string, string>>,
+  const extra extends unknown
 > {
-  public static instance: Args<
+  public static readonly instance: Args<
+    0,
     [],
     { help: never; version: never },
-    { h: "help"; v: "version" }
-  > = new Args([], {} as any, {} as any);
+    { h: "help"; v: "version" },
+    never
+  > = new Args(0, [], {} as any, {} as any, undefined);
 
   private constructor(
-    private readonly _positional: any[],
+    private readonly requiredArgsCount: number,
+    private readonly _positional: unknown[],
     private readonly _keyword: Partial<
       Record<string, BooleanConstructor | ((value: string) => any)>
     >,
-    private readonly _short: short
+    private readonly _short: short,
+    private readonly _extra: [extra] extends [never]
+      ? undefined
+      : (value: string) => extra
   ) {}
 
   public positional<T>(
-    parse: (value: string) => T
-  ): Args<[...args, T], kwargs, short> {
-    return new Args([...this._positional, parse], this._keyword, this._short);
+    parse: (value: string) => T,
+    required?: true
+  ): args["length"] extends requiredArgsCount
+    ? Args<[...args, T]["length"], [...args, T], kwargs, short, extra>
+    : never;
+  public positional<T>(
+    parse: (value: string) => T,
+    required: false
+  ): Args<requiredArgsCount, [...args, optional?: T], kwargs, short, extra>;
+  public positional<T>(
+    parse: (value: string) => T,
+    required = false
+  ): Args<any, any[], kwargs, short, extra> {
+    return new Args(
+      this.requiredArgsCount + +required,
+      [...this._positional, parse],
+      this._keyword,
+      this._short,
+      this._extra
+    );
   }
 
   public keyword<T, const L extends string>(
@@ -31,7 +56,7 @@ export class Args<
     : L extends keyof kwargs
     ? never
     : ToLetters<L> extends Allowed
-    ? Args<args, kwargs & Record<L, T>, short>
+    ? Args<requiredArgsCount, args, kwargs & Record<L, T>, short, extra>
     : never;
   public keyword<T, const L extends string, const S extends string>(
     parse: (value: string) => T,
@@ -53,7 +78,13 @@ export class Args<
     ? I extends ""
       ? ToLetters<L> extends Allowed
         ? S extends Allowed
-          ? Args<args, kwargs & Record<L, T>, short & Record<S, L>>
+          ? Args<
+              requiredArgsCount,
+              args,
+              kwargs & Record<L, T>,
+              short & Record<S, L>,
+              extra
+            >
           : never
         : never
       : never
@@ -62,7 +93,7 @@ export class Args<
     parse: (value: string) => unknown,
     long: string,
     short?: string
-  ): Args<any[], any, any> {
+  ): Args<requiredArgsCount, any[], any, any, extra> {
     let newShort = this._short;
     if (short !== undefined) {
       if (short.length !== 1) {
@@ -105,7 +136,30 @@ export class Args<
       throw new Error('Long keyword parameter cannot starts with "-".');
     }
     newKeyword = { ...newKeyword, [long]: parse };
-    return new Args(this._positional, newKeyword, newShort);
+    return new Args(
+      this.requiredArgsCount,
+      this._positional,
+      newKeyword,
+      newShort,
+      this._extra
+    );
+  }
+
+  public extra<const E>(
+    parser: (str: string) => E
+  ): [extra] extends [never]
+    ? Args<requiredArgsCount, args, kwargs, short, E>
+    : never {
+    if (this._extra) {
+      throw new Error("Extra parser registered multiple times");
+    }
+    return new Args(
+      this.requiredArgsCount,
+      this._positional,
+      this._keyword,
+      this._short,
+      parser as any
+    ) as any;
   }
 
   public boolean<const L extends string>(
@@ -117,7 +171,13 @@ export class Args<
     : L extends keyof kwargs
     ? never
     : ToLetters<L> extends Allowed
-    ? Args<args, kwargs & Record<L, true | undefined>, short>
+    ? Args<
+        requiredArgsCount,
+        args,
+        kwargs & Record<L, true | undefined>,
+        short,
+        extra
+      >
     : never;
   public boolean<const L extends string, const S extends string>(
     long: L,
@@ -139,15 +199,20 @@ export class Args<
       ? ToLetters<L> extends Allowed
         ? S extends Allowed
           ? Args<
+              requiredArgsCount,
               args,
               kwargs & Record<L, true | undefined>,
-              short & Record<S, L>
+              short & Record<S, L>,
+              extra
             >
           : never
         : never
       : never
     : never;
-  public boolean(long: string, short?: string): Args<any[], any, any> {
+  public boolean(
+    long: string,
+    short?: string
+  ): Args<requiredArgsCount, any[], any, any, extra> {
     let newShort = this._short;
     if (short !== undefined) {
       if (short.length !== 1) {
@@ -190,7 +255,13 @@ export class Args<
       throw new Error('Long keyword parameter cannot starts with "-".');
     }
     newKeyword = { ...newKeyword, [long]: Boolean };
-    return new Args(this._positional, newKeyword, newShort);
+    return new Args(
+      this.requiredArgsCount,
+      this._positional,
+      newKeyword,
+      newShort,
+      this._extra
+    );
   }
 
   public static STRING = (value: string) => value;
@@ -205,12 +276,12 @@ export class Args<
         type: "ok";
         positional: args;
         keywords: Omit<kwargs, "help" | "version">;
-        extra: string[];
+        extra: extra[];
       }
     | { type: "error"; reason: string } {
     const positionalValues: any[] = [];
     const keywordValues: Record<string, unknown> = {};
-    const extra: string[] = [];
+    const extra: extra[] = [];
 
     let posIndex = 0;
     let parsingFlags = true; // true until we see `--`
@@ -229,7 +300,7 @@ export class Args<
         if (posIndex < this._positional.length) {
           const parser = this._positional[posIndex];
           try {
-            positionalValues.push(parser(current));
+            positionalValues.push((parser as any)(current));
           } catch (err) {
             return {
               type: "error",
@@ -238,7 +309,20 @@ export class Args<
           }
           posIndex++;
         } else {
-          extra.push(current);
+          if (!this._extra) {
+            return {
+              type: "error",
+              reason: "Extra positional argument given",
+            };
+          }
+          try {
+            extra.push(this._extra!(current));
+          } catch (err) {
+            return {
+              type: "error",
+              reason: err instanceof Error ? err.message : String(err),
+            };
+          }
         }
         continue; // move on to next token
       }
@@ -390,7 +474,7 @@ export class Args<
         if (posIndex < this._positional.length) {
           const parser = this._positional[posIndex];
           try {
-            positionalValues.push(parser(current));
+            positionalValues.push((parser as any)(current));
           } catch (err) {
             return {
               type: "error",
@@ -399,13 +483,26 @@ export class Args<
           }
           posIndex++;
         } else {
-          extra.push(current);
+          if (!this._extra) {
+            return {
+              type: "error",
+              reason: "Extra positional argument given",
+            };
+          }
+          try {
+            extra.push(this._extra!(current));
+          } catch (err) {
+            return {
+              type: "error",
+              reason: err instanceof Error ? err.message : String(err),
+            };
+          }
         }
       }
     } // end for-loop
 
     // 7) After loop, check if we used all required positional parsers
-    if (posIndex !== this._positional.length) {
+    if (posIndex < this.requiredArgsCount) {
       return {
         type: "error",
         reason: "Positional arguments mismatch",

@@ -11,14 +11,14 @@ export interface SectionComponentProps<T> {
   children: ReactNode[];
 }
 
-export function render<T extends NodeBase, O>(
+export function render<T extends NodeBase, C>(
   document: Document<T>,
   plugins: UnionToIntersection<
     T extends infer I extends NodeBase
-      ? Record<I["type"], ReactPlugin<I, O>>
+      ? Record<I["type"], ReactPlugin<I, C>>
       : never
   >,
-  options: RenderOptions<O> = {}
+  options: RenderOptions<T, C> = {}
 ): ReactElement | null {
   const children: ReactNode[] = [];
   for (const node of document) {
@@ -31,21 +31,19 @@ export function render<T extends NodeBase, O>(
   return createElement(Fragment, null, ...children);
 }
 
-function renderNode<T extends NodeBase, O>(
+function renderNode<T extends NodeBase, C>(
   node: T,
   plugins: UnionToIntersection<
     T extends infer I extends NodeBase
-      ? Record<I["type"], ReactPlugin<I, O>>
+      ? Record<I["type"], ReactPlugin<I, C>>
       : never
   >,
-  options: RenderOptions<O>
+  options: RenderOptions<T, C>
 ): ReactElement | null {
-  const plugin = (plugins as Record<string, ReactPlugin<NodeBase, O>>)[
-    node.type
-  ];
+  const plugin = (plugins as Record<string, ReactPlugin<T, C>>)[node.type];
   if (plugin) {
     return plugin.renderNode(node, options, (node) =>
-      renderNode<T, O>(node as T, plugins, options)
+      renderNode<T, C>(node as T, plugins, options)
     );
   } else {
     throw new Error(`No plugin found for node type: ${node.type}`);

@@ -101,6 +101,12 @@ export function tokenize(source: string): Token[] | TokenizeError {
     let left = line;
     let skipped = 0;
 
+    // Escaped Code Block Start
+    if (state.type === "text" && line.match(/^\s*\\```/)) {
+      left = left.slice(1);
+      skipped += 1;
+    }
+
     const currentLine: string[] = [];
 
     while (left) {
