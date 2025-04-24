@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "@this-project/development-scripts-list-packages-topo-order",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/development-util-topo-order": "file:../../util/topo-order"
+  }
+}

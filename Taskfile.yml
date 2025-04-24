@@ -1,6 +1,11 @@
 version: '3'
 
 tasks:
+  init:
+    desc: Initialize all packages
+    cmds:
+      - sh ./scripts/init.sh
+
   install:
     desc: Install all packages
     cmds:
@@ -19,6 +24,5 @@ tasks:
   all:
     desc: Run install, build, and test
     deps:
-      - install
-      - build
+      - init
       - test

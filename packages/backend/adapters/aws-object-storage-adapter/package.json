@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@this-project/backend-application-adapter",
+  "name": "@this-project/aws-object-storage-adapter",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",

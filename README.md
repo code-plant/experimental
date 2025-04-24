@@ -4,6 +4,8 @@ Development test project.
 
 > WORKING IN PROGRESS. NOT WORK YET.
 
+The current stage of this project is in active development. As such, commits may not be granular, and changes may not always be tracked in fine detail.
+
 ## Prerequisites
 
 Use [mise](https://mise.jdx.dev). It will automatically install all the dependencies you need.  

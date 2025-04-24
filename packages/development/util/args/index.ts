@@ -56,7 +56,13 @@ export class Args<
     : L extends keyof kwargs
     ? never
     : ToLetters<L> extends Allowed
-    ? Args<requiredArgsCount, args, kwargs & Record<L, T>, short, extra>
+    ? Args<
+        requiredArgsCount,
+        args,
+        kwargs & Partial<Record<L, T>>,
+        short,
+        extra
+      >
     : never;
   public keyword<T, const L extends string, const S extends string>(
     parse: (value: string) => T,
@@ -81,8 +87,8 @@ export class Args<
           ? Args<
               requiredArgsCount,
               args,
-              kwargs & Record<L, T>,
-              short & Record<S, L>,
+              kwargs & Partial<Record<L, T>>,
+              short & Partial<Record<S, L>>,
               extra
             >
           : never
@@ -174,7 +180,7 @@ export class Args<
     ? Args<
         requiredArgsCount,
         args,
-        kwargs & Record<L, true | undefined>,
+        kwargs & Partial<Record<L, true | undefined>>,
         short,
         extra
       >
@@ -201,8 +207,8 @@ export class Args<
           ? Args<
               requiredArgsCount,
               args,
-              kwargs & Record<L, true | undefined>,
-              short & Record<S, L>,
+              kwargs & Partial<Record<L, true | undefined>>,
+              short & Partial<Record<S, L>>,
               extra
             >
           : never
