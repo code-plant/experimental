@@ -11,7 +11,8 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/util-common-types": "file:../../../util/common/types",
-    "@this-project/editor-core-types": "file:../../core/types"
+    "@this-project/editor-core-types": "file:../../core/types",
+    "@this-project/editor-plugins-util": "file:../util",
+    "@this-project/util-common-types": "file:../../../util/common/types"
   }
 }

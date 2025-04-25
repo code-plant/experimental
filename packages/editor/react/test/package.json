@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "name": "@this-project/editor-react-test",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@this-project/editor-core-builder": "file:../../core/builder",
+    "@this-project/editor-core-parser": "file:../../core/parser",
+    "@this-project/editor-core-types": "file:../../core/types",
+    "@this-project/editor-plugins-section": "file:../../plugins/section",
+    "@this-project/editor-react-mdcode": "file:../mdcode",
+    "@this-project/editor-react-types": "file:../types",
+    "@this-project/util-atomic-unwrap": "file:../../../util/atomic/unwrap",
+    "@this-project/util-common-types": "file:../../../util/common/types",
+    "@types/node": "^22.15.2",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.3"
+  }
+}

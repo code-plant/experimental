@@ -1,5 +1,5 @@
+import { SectionComponentProps } from "@this-project/editor-react-mdcode";
 import { createElement } from "react";
-import { SectionComponentProps } from ".";
 
 export function DefaultSection({
   level,

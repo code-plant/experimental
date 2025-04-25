@@ -14,6 +14,7 @@
   "dependencies": {
     "@this-project/editor-core-types": "file:../../core/types",
     "@this-project/editor-react-types": "file:../types",
+    "@this-project/util-atomic-unwrap": "file:../../../util/atomic/unwrap",
     "@this-project/util-common-types": "file:../../../util/common/types",
     "react": "^19.1.0"
   }

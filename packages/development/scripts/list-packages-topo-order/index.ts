@@ -13,7 +13,9 @@ const nodes = packages.map((p) => {
     });
   const [, a] = json.name.match(/^@this-project\/(.*)$/)!;
   const name = a;
-  const [, b, c, d] = p.match(/^.*\/([^\/]*)\/([^\/]*)\/([^\/]*)\/([^\/]*)$/)!;
+  const [, b, c, d] = p
+    .replace(/\\/g, "/")
+    .match(/^.*\/([^\/]*)\/([^\/]*)\/([^\/]*)\/([^\/]*)$/)!;
   const path = `packages/${b}/${c}/${d}`;
   return {
     name,

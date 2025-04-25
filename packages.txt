@@ -23,13 +23,16 @@ packages/backend/scripts/clean-failed-transactions
 packages/editor/core/types
 packages/editor/core/builder
 packages/editor/core/parser
+packages/editor/plugins/util
 packages/editor/plugins/section
 packages/editor/plugins/test
 packages/editor/react/types
-packages/editor/react/mdcode
 packages/frontend/util/dom-util
 packages/frontend/util/react-util
 packages/graphql/types/parse
+packages/util/atomic/unwrap
+packages/editor/react/mdcode
+packages/editor/react/test
 packages/util/client/graphql-client
 packages/util/client/rest-client
 packages/util/common/util

@@ -1,32 +1,27 @@
 import {
   Document,
   NodeBase,
+  NodeTag,
   NodeText,
   ValidationError,
 } from "@this-project/editor-core-types";
+import { is } from "@this-project/editor-plugins-util";
 import { Result } from "@this-project/util-common-types";
-
-interface SectionNode<T extends NodeBase> extends NodeBase {
-  type: "section";
-  title: string;
-  id?: string;
-  children: T[];
-}
 
 export type SectionPluginResultNode<T extends NodeBase> =
   | T
   | NodeText
-  | SectionNode<SectionPluginResultNode<T>>;
+  | NodeTag<SectionPluginResultNode<T>>;
 
 export const SectionPlugin = <T extends NodeBase>(
-  document: Document<T | NodeText>
+  document: Document<SectionPluginResultNode<T>>
 ): Result<
   Document<SectionPluginResultNode<T>>,
-  ValidationError<T | NodeText>
+  ValidationError<NodeTag<SectionPluginResultNode<T>>>
 > => {
   const result: Document<SectionPluginResultNode<T>> = [];
-  const stack: SectionNode<SectionPluginResultNode<T>>[] = [];
-  let error: ValidationError<T | NodeText> | null = null;
+  const stack: NodeTag<SectionPluginResultNode<T>>[] = [];
+  let error: ValidationError<NodeText> | null = null;
   document.forEach((node) => {
     if (error) {
       return;
@@ -82,10 +77,13 @@ export const SectionPlugin = <T extends NodeBase>(
             while (stack.length >= level) {
               stack.pop();
             }
-            const sectionNode: SectionNode<SectionPluginResultNode<T>> = {
-              type: "section",
-              title,
-              id,
+            const sectionNode: NodeTag<SectionPluginResultNode<T>> = {
+              type: "tag",
+              name: "section",
+              attrs: {
+                title,
+                id,
+              },
               children: [],
               line: node.line + i,
               col: 0,
@@ -107,9 +105,12 @@ export const SectionPlugin = <T extends NodeBase>(
             while (stack.length >= level) {
               stack.pop();
             }
-            const sectionNode: SectionNode<SectionPluginResultNode<T>> = {
-              type: "section",
-              title,
+            const sectionNode: NodeTag<SectionPluginResultNode<T>> = {
+              type: "tag",
+              name: "section",
+              attrs: {
+                title,
+              },
               children: [],
               line: node.line + i,
               col: 0,
@@ -148,7 +149,3 @@ export const SectionPlugin = <T extends NodeBase>(
     value: result,
   };
 };
-
-function is<T extends NodeBase>(value: NodeBase, type: T["type"]): value is T {
-  return value.type === type;
-}
