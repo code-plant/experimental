@@ -1,10 +1,10 @@
-import { Result } from "@this-project/common-util-types";
 import {
   Document,
   NodeBase,
   Plugin,
   ValidationError,
 } from "@this-project/editor-core-types";
+import { Result } from "@this-project/util-common-types";
 
 export class Builder<T extends NodeBase, E> {
   constructor(private readonly result: Result<Document<T>, E>) {}

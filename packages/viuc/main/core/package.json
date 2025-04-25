@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "@this-project/viuc-main-core",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/cssesc": "^3.0.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "cssesc": "^3.0.0"
+  }
+}

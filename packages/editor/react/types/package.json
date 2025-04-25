@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@this-project/editor-react-mdcode",
+  "name": "@this-project/editor-react-types",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",

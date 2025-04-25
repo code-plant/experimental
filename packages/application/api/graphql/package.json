@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "@this-project/application-api-graphql",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "generate": "ts-auto-index -t ."
+  },
+  "devDependencies": {
+    "@this-project/development-codegen-ts-auto-index": "file:../../../development/codegen/ts-auto-index",
+    "typescript": "^5.8.3"
+  }
+}

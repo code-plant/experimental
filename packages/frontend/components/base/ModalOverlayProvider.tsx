@@ -1,10 +1,11 @@
 "use client";
 
-import { Disposer } from "@this-project/common-util-util/Disposer";
+import { Cleanup } from "@this-project/util-common-types";
+import { Disposer } from "@this-project/util-common-util/Disposer";
 import {
   watchTarget,
   WatchTarget,
-} from "@this-project/common-util-util/watchTarget";
+} from "@this-project/util-common-util/watchTarget";
 import {
   createContext,
   memo,
@@ -14,7 +15,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Cleanup } from "../../../common/util/types";
 
 export interface ModalOverlayComponentProps<T> {
   resolve(value: T): void;

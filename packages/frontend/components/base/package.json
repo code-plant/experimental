@@ -13,7 +13,8 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/common-util-util": "file:../../../common/util/util",
+    "@this-project/util-common-types": "file:../../../util/common/types",
+    "@this-project/util-common-util": "file:../../../util/common/util",
     "@this-project/frontend-util-dom-util": "file:../../util/dom-util",
     "@this-project/frontend-util-react-util": "file:../../util/react-util",
     "next": "^15.3.0",

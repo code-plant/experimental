@@ -11,6 +11,6 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/common-util-types": "file:../../../common/util/types"
+    "@this-project/util-common-types": "file:../../../util/common/types"
   }
 }

@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@this-project/backend-application-adapter": "file:../../application/adapter",
-    "@this-project/common-util-types": "file:../../../common/util/types",
-    "@this-project/common-util-util": "file:../../../common/util/util",
+    "@this-project/util-common-types": "file:../../../util/common/types",
+    "@this-project/util-common-util": "file:../../../util/common/util",
     "aws-sdk": "^2.1692.0"
   }
 }

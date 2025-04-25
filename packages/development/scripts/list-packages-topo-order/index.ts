@@ -8,13 +8,16 @@ const nodes = packages.map((p) => {
     .concat(Object.keys(json.devDependencies ?? {}))
     .filter((d) => d.startsWith("@this-project/"))
     .map((d) => {
-      const [, a, b, c] = d.match(/^@this-project\/(.*?)-(.*?)-(.*)$/)!;
-      return [a, b, c].join("/");
+      const [, a] = d.match(/^@this-project\/(.*)$/)!;
+      return a;
     });
-  const [, a, b, c] = json.name.match(/^@this-project\/(.*?)-(.*?)-(.*)$/)!;
-  const name = [a, b, c].join("/");
+  const [, a] = json.name.match(/^@this-project\/(.*)$/)!;
+  const name = a;
+  const [, b, c, d] = p.match(/^.*\/([^\/]*)\/([^\/]*)\/([^\/]*)\/([^\/]*)$/)!;
+  const path = `packages/${b}/${c}/${d}`;
   return {
     name,
+    path,
     dependencies,
   };
 });
@@ -23,6 +26,6 @@ const ordered = topoOrder(nodes, (node) =>
   node.dependencies.map((d) => nodes.find((n) => n.name === d)!)
 )!;
 
-const output = ordered.map((n) => `packages/${n.name}\n`);
+const output = ordered.map((n) => `${n.path}\n`);
 
 writeFileSync("../../../../packages.txt", output.join(""));

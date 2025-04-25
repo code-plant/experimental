@@ -1,4 +1,4 @@
-import { Result } from "@this-project/common-util-types";
+import { Result } from "@this-project/util-common-types";
 
 export type Document<T extends NodeBase = DefaultNode> = T[];
 

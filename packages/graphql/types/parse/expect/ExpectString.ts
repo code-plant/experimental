@@ -1,4 +1,4 @@
-import { Ensure, Result } from "@this-project/common-util-types";
+import { Ensure, Result } from "@this-project/util-common-types";
 import {
   ExpectResultError,
   ExpectResultOk,

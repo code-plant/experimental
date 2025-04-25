@@ -7,17 +7,17 @@
   "scripts": {
     "build": "tsc",
     "dev": "next dev",
-    "generate": "mode-codegen && npm run generate:guc",
-    "generate:guc": "guc -n"
+    "generate": "mode-codegen && npm run generate:viuc",
+    "generate:viuc": "viuc -n"
   },
   "devDependencies": {
     "@this-project/frontend-util-mode-codegen": "file:../../util/mode-codegen",
+    "@this-project/viuc-main-cli-with-all": "file:../../../viuc/main/cli-with-all",
     "@types/node": "22.14.0",
     "@types/react": "^19.1.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/development-guc-cli-with-all": "file:../../../development/guc/cli-with-all",
     "@this-project/frontend-components-base": "file:../../components/base",
     "@this-project/frontend-components-widgets": "file:../../components/widgets",
     "@this-project/frontend-util-mode-next": "file:../../util/mode-next",

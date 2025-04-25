@@ -1,6 +1,6 @@
-import { UnionToIntersection } from "@this-project/common-util-types";
 import { Document, NodeBase } from "@this-project/editor-core-types";
-import { ReactPlugin, RenderOptions } from "@this-project/editor-react-mdcode";
+import { ReactPlugin, RenderOptions } from "@this-project/editor-react-types";
+import { UnionToIntersection } from "@this-project/util-common-types";
 import { createElement, Fragment, ReactElement, ReactNode } from "react";
 
 export interface SectionComponentProps<T> {
