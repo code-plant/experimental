@@ -14,6 +14,9 @@ export function App() {
   const timerRef = useRef<NodeJS.Timeout>(null);
 
   useEffect(() => {
+    if (!editorContent) {
+      return;
+    }
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -52,25 +55,51 @@ export function App() {
             tag: {
               renderNode: (node, _options, renderOtherNode) => {
                 try {
-                  if (node.name === "section") {
-                    return {
-                      type: "ok",
-                      value: (
-                        <DefaultSection
-                          level={1}
-                          title={node.attrs.title! as string}
-                          id={node.attrs.id as string | undefined}
-                          children={node.children.map((node) =>
-                            unwrap(renderOtherNode(node))
-                          )}
-                        />
-                      ),
-                    };
+                  switch (node.name) {
+                    case "section":
+                      return {
+                        type: "ok",
+                        value: (
+                          <DefaultSection
+                            level={1}
+                            title={node.attrs.title! as string}
+                            id={node.attrs.id as string | undefined}
+                            children={node.children.map((node) =>
+                              unwrap(renderOtherNode(node))
+                            )}
+                          />
+                        ),
+                      };
+                    case "b":
+                      return {
+                        type: "ok",
+                        value: (
+                          <span
+                            style={{ fontWeight: 900 }}
+                            children={node.children.map((node) =>
+                              unwrap(renderOtherNode(node))
+                            )}
+                          />
+                        ),
+                      };
+                    case "i":
+                      return {
+                        type: "ok",
+                        value: (
+                          <span
+                            style={{ fontStyle: "italic" }}
+                            children={node.children.map((node) =>
+                              unwrap(renderOtherNode(node))
+                            )}
+                          />
+                        ),
+                      };
+                    default:
+                      return {
+                        type: "error",
+                        error: `Unrecognized tag: ${node.name}`,
+                      };
                   }
-                  return {
-                    type: "error",
-                    error: `Unrecognized tag: ${node.name}`,
-                  };
                 } catch (e) {
                   return {
                     type: "error",
