@@ -3,8 +3,7 @@ version: '3'
 tasks:
   init:
     desc: Initialize all packages
-    cmds:
-      - sh ./scripts/init.sh
+    deps: [init:init]
 
   install:
     desc: Install all packages
@@ -26,3 +25,6 @@ tasks:
     deps:
       - init
       - test
+
+includes:
+  init: ./task/init.yml
