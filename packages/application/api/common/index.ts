@@ -1,6 +1,6 @@
 import { APIRouteBase } from "@this-project/util-common-types";
 
-// branded type
+// branded types
 export type Id<T extends string> = string & { " id": T };
 export type Cursor<Method extends APIRouteBase["method"], Path> = string & {
   " method": Method;

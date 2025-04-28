@@ -6,9 +6,15 @@ export type { Cleanup } from './Cleanup';
 export type { Ensure } from './Ensure';
 export type { Expand } from './Expand';
 export type { ExpandRecursively } from './ExpandRecursively';
-export type { IsSameType } from './IsSameType'
+export type { IsOptionalKey } from './IsOptionalKey';
+export type { IsRequiredKey } from './IsRequiredKey';
+export type { IsSameType } from './IsSameType';
+export type { MergeTwo, Merge } from './Merge';
+export type { OptionalKeys } from './OptionalKeys';
 export type { RemoveFirst } from './RemoveFirst';
+export type { RequiredKeys } from './RequiredKeys';
 export type { Result, ResultError, ResultOk } from './Result';
+export type { StringJoin } from './StringJoin';
 export type { StringUnionToString } from './StringUnionToString';
 export type { UnionAny } from './UnionAny';
 export type { UnionToIntersection } from './UnionToIntersection';
