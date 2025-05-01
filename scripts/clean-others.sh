@@ -2,5 +2,5 @@
 
 set -e
 
-git ls-files -o | grep -v node_modules | xargs rm
+git ls-files -o | xargs rm -f
 find . -type d -empty -delete

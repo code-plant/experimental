@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "@this-project/development-codegen-ts-auto-index",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
@@ -8,13 +9,13 @@
     "ts-auto-index": "index.js"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "@types/node": "^22.14.0"
   },
   "dependencies": {
-    "@this-project/development-util-args": "file:../../util/args",
+    "@this-project/development-util-args": "workspace:*",
     "typescript": "^5.8.3"
   }
 }

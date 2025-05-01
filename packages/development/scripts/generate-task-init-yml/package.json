@@ -1,14 +1,18 @@
 {
   "private": true,
   "name": "@this-project/development-scripts-generate-task-init-yml",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "tsc",
-    "start": "node ."
+    "build": "yarn tsc",
+    "start": "yarn node ."
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "glob": "^11.0.2"
   }
 }

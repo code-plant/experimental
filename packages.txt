@@ -1,5 +1,6 @@
 packages/application/logic/authorization
 packages/application/logic/core
+packages/development/scripts/generate-task-init-yml
 packages/development/util/args
 packages/development/codegen/ts-auto-index
 packages/application/api/graphql
@@ -20,6 +21,7 @@ packages/application/api/v1
 packages/backend/application/adapter
 packages/backend/application/transaction
 packages/backend/scripts/clean-failed-transactions
+packages/backend/util/di
 packages/editor/core/types
 packages/editor/core/builder
 packages/editor/core/parser

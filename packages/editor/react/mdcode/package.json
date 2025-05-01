@@ -1,21 +1,22 @@
 {
   "private": true,
   "name": "@this-project/editor-react-mdcode",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "@types/react": "^19.1.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/editor-core-types": "file:../../core/types",
-    "@this-project/editor-react-types": "file:../types",
-    "@this-project/util-atomic-unwrap": "file:../../../util/atomic/unwrap",
-    "@this-project/util-common-types": "file:../../../util/common/types",
+    "@this-project/editor-core-types": "workspace:*",
+    "@this-project/editor-react-types": "workspace:*",
+    "@this-project/util-atomic-unwrap": "workspace:*",
+    "@this-project/util-common-types": "workspace:*",
     "react": "^19.1.0"
   }
 }

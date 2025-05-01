@@ -5,15 +5,9 @@ tasks:
     desc: Initialize all packages
     deps: [init:init]
 
-  install:
-    desc: Install all packages
-    cmds:
-      - sh ./scripts/for-each-package.sh npm install
-
   build:
     desc: Build all packages
-    cmds:
-      - sh ./scripts/for-each-package.sh npm run build
+    deps: [init:build]
 
   test:
     desc: Test all packages

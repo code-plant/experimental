@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "@this-project/viuc-main-cli-with-all",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
@@ -8,21 +9,21 @@
     "viuc": "index.js"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "@types/node": "^22.14.0"
   },
   "dependencies": {
-    "@this-project/viuc-main-core": "file:../core",
-    "@this-project/viuc-main-node": "file:../node",
-    "@this-project/viuc-type-plugins-color": "file:../../type-plugins/color",
-    "@this-project/viuc-type-plugins-margin": "file:../../type-plugins/margin",
-    "@this-project/viuc-type-plugins-padding": "file:../../type-plugins/padding",
-    "@this-project/viuc-variant-plugins-a-state": "file:../../variant-plugins/a-state",
-    "@this-project/viuc-variant-plugins-group": "file:../../variant-plugins/group",
-    "@this-project/viuc-variant-plugins-media": "file:../../variant-plugins/media",
-    "@this-project/development-util-args": "file:../../../development/util/args",
+    "@this-project/development-util-args": "workspace:*",
+    "@this-project/viuc-main-core": "workspace:*",
+    "@this-project/viuc-main-node": "workspace:*",
+    "@this-project/viuc-type-plugins-color": "workspace:*",
+    "@this-project/viuc-type-plugins-margin": "workspace:*",
+    "@this-project/viuc-type-plugins-padding": "workspace:*",
+    "@this-project/viuc-variant-plugins-a-state": "workspace:*",
+    "@this-project/viuc-variant-plugins-group": "workspace:*",
+    "@this-project/viuc-variant-plugins-media": "workspace:*",
     "typescript": "^5.8.3"
   }
 }

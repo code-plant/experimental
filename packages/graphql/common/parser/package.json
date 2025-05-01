@@ -1,16 +1,17 @@
 {
   "private": true,
   "name": "@this-project/graphql-common-parser",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/graphql-common-lexer": "file:../lexer"
+    "@this-project/graphql-common-lexer": "workspace:*"
   }
 }

@@ -1,6 +1,9 @@
-import { globSync, readFileSync, writeFileSync } from "fs";
+import { globSync } from "glob";
+import { readFileSync, writeFileSync } from "node:fs";
 
-const packages = globSync("../../../*/*/*/package.json").sort();
+const packages = globSync("../../../*/*/*/package.json", {
+  absolute: true,
+}).sort();
 const nodes = packages.map((p) => {
   const json = JSON.parse(readFileSync(p).toString());
   const dependencies = Object.keys(json.dependencies ?? {})
@@ -24,12 +27,11 @@ const nodes = packages.map((p) => {
 });
 
 const output = nodes.map(
-  (n) => `  init-${n.name}:
-    desc: Initialize ${n.path}
-    deps: [${n.dependencies.map((d) => `init-${d}`).join(", ")}]
+  (n) => `  build-${n.name}:
+    desc: Build ${n.path}
+    deps: [${n.dependencies.map((d) => `build-${d}`).join(", ")}]
     cmds:
-      - (cd ${n.path} && npm install)
-      - (cd ${n.path} && npm run build)
+      - (cd ${n.path} && yarn build)
     run: once
 `
 );
@@ -43,7 +45,13 @@ version: '3'
 tasks:
   init:
     desc: Initialize all packages
-    deps: [${nodes.map((n) => `init-${n.name}`).join(", ")}]
+    cmds:
+      - yarn install
+      - task: build
+    run: once
+  build:
+    desc: Build all packages
+    deps: [${nodes.map((n) => `build-${n.name}`).join(", ")}]
     run: once
 
 ${output.join("")}`

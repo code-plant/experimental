@@ -1,11 +1,12 @@
 {
   "private": true,
   "name": "@this-project/development-util-args",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn tsc",
     "test": "tsx test"
   },
   "devDependencies": {

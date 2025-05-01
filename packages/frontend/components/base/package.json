@@ -1,11 +1,12 @@
 {
   "private": true,
   "name": "@this-project/frontend-components-base",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "@types/react": "^19.1.0",
@@ -13,10 +14,10 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/util-common-types": "file:../../../util/common/types",
-    "@this-project/util-common-util": "file:../../../util/common/util",
-    "@this-project/frontend-util-dom-util": "file:../../util/dom-util",
-    "@this-project/frontend-util-react-util": "file:../../util/react-util",
+    "@this-project/frontend-util-dom-util": "workspace:*",
+    "@this-project/frontend-util-react-util": "workspace:*",
+    "@this-project/util-common-types": "workspace:*",
+    "@this-project/util-common-util": "workspace:*",
     "next": "^15.3.0",
     "react-dom": "^19.1.0"
   }

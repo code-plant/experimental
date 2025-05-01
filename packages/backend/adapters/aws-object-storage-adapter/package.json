@@ -1,11 +1,12 @@
 {
   "private": true,
   "name": "@this-project/aws-object-storage-adapter",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn tsc",
     "generate": "ts-auto-index -t ."
   },
   "devDependencies": {
@@ -13,9 +14,9 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/backend-application-adapter": "file:../../application/adapter",
-    "@this-project/util-common-types": "file:../../../util/common/types",
-    "@this-project/util-common-util": "file:../../../util/common/util",
+    "@this-project/backend-application-adapter": "workspace:*",
+    "@this-project/util-common-types": "workspace:*",
+    "@this-project/util-common-util": "workspace:*",
     "aws-sdk": "^2.1692.0"
   }
 }

@@ -5,384 +5,336 @@ version: '3'
 tasks:
   init:
     desc: Initialize all packages
-    deps: [init-application-api-common, init-application-api-graphql, init-application-api-v1, init-common-application-authorization, init-common-application-core, init-aws-object-storage-adapter, init-backend-application-adapter, init-backend-application-transaction, init-backend-scripts-clean-failed-transactions, init-backend-scripts-main, init-backend-util-di, init-development-codegen-env-typegen, init-development-codegen-ts-auto-index, init-development-scripts-generate-task-init-yml, init-development-scripts-list-packages-topo-order, init-development-util-args, init-development-util-dotenv-parser, init-development-util-topo-order, init-editor-core-builder, init-editor-core-parser, init-editor-core-types, init-editor-plugins-section, init-editor-plugins-test, init-editor-plugins-util, init-editor-react-mdcode, init-editor-react-test, init-editor-react-types, init-frontend-apps-dev, init-frontend-apps-main, init-frontend-components-base, init-frontend-components-widgets, init-frontend-util-dom-util, init-frontend-util-mode-codegen, init-frontend-util-mode-next, init-frontend-util-mode, init-frontend-util-react-util, init-graphql-common-lexer, init-graphql-common-parser, init-graphql-types-core, init-graphql-types-parse, init-util-atomic-unwrap, init-util-client-graphql-client, init-util-client-rest-client, init-util-common-types, init-util-common-util, init-viuc-main-cli-with-all, init-viuc-main-core, init-viuc-main-node, init-viuc-type-plugins-color, init-viuc-type-plugins-margin, init-viuc-type-plugins-padding, init-viuc-variant-plugins-a-state, init-viuc-variant-plugins-group, init-viuc-variant-plugins-media]
+    cmds:
+      - yarn install
+      - task: build
+    run: once
+  build:
+    desc: Build all packages
+    deps: [build-application-api-common, build-application-api-graphql, build-application-api-v1, build-common-application-authorization, build-common-application-core, build-aws-object-storage-adapter, build-backend-application-adapter, build-backend-application-transaction, build-backend-scripts-clean-failed-transactions, build-backend-scripts-main, build-backend-util-di, build-development-codegen-env-typegen, build-development-codegen-ts-auto-index, build-development-scripts-generate-task-init-yml, build-development-scripts-list-packages-topo-order, build-development-util-args, build-development-util-dotenv-parser, build-development-util-topo-order, build-editor-core-builder, build-editor-core-parser, build-editor-core-types, build-editor-plugins-section, build-editor-plugins-test, build-editor-plugins-util, build-editor-react-mdcode, build-editor-react-test, build-editor-react-types, build-frontend-apps-dev, build-frontend-apps-main, build-frontend-components-base, build-frontend-components-widgets, build-frontend-util-dom-util, build-frontend-util-mode-codegen, build-frontend-util-mode-next, build-frontend-util-mode, build-frontend-util-react-util, build-graphql-common-lexer, build-graphql-common-parser, build-graphql-types-core, build-graphql-types-parse, build-util-atomic-unwrap, build-util-client-graphql-client, build-util-client-rest-client, build-util-common-types, build-util-common-util, build-viuc-main-cli-with-all, build-viuc-main-core, build-viuc-main-node, build-viuc-type-plugins-color, build-viuc-type-plugins-margin, build-viuc-type-plugins-padding, build-viuc-variant-plugins-a-state, build-viuc-variant-plugins-group, build-viuc-variant-plugins-media]
     run: once
 
-  init-application-api-common:
-    desc: Initialize packages/application/api/common
-    deps: [init-util-common-types]
+  build-application-api-common:
+    desc: Build packages/application/api/common
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/application/api/common && npm install)
-      - (cd packages/application/api/common && npm run build)
+      - (cd packages/application/api/common && yarn build)
     run: once
-  init-application-api-graphql:
-    desc: Initialize packages/application/api/graphql
-    deps: [init-development-codegen-ts-auto-index]
+  build-application-api-graphql:
+    desc: Build packages/application/api/graphql
+    deps: [build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/application/api/graphql && npm install)
-      - (cd packages/application/api/graphql && npm run build)
+      - (cd packages/application/api/graphql && yarn build)
     run: once
-  init-application-api-v1:
-    desc: Initialize packages/application/api/v1
-    deps: [init-application-api-common, init-util-common-types, init-development-codegen-ts-auto-index]
+  build-application-api-v1:
+    desc: Build packages/application/api/v1
+    deps: [build-application-api-common, build-util-common-types, build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/application/api/v1 && npm install)
-      - (cd packages/application/api/v1 && npm run build)
+      - (cd packages/application/api/v1 && yarn build)
     run: once
-  init-common-application-authorization:
-    desc: Initialize packages/application/logic/authorization
+  build-common-application-authorization:
+    desc: Build packages/application/logic/authorization
     deps: []
     cmds:
-      - (cd packages/application/logic/authorization && npm install)
-      - (cd packages/application/logic/authorization && npm run build)
+      - (cd packages/application/logic/authorization && yarn build)
     run: once
-  init-common-application-core:
-    desc: Initialize packages/application/logic/core
+  build-common-application-core:
+    desc: Build packages/application/logic/core
     deps: []
     cmds:
-      - (cd packages/application/logic/core && npm install)
-      - (cd packages/application/logic/core && npm run build)
+      - (cd packages/application/logic/core && yarn build)
     run: once
-  init-aws-object-storage-adapter:
-    desc: Initialize packages/backend/adapters/aws-object-storage-adapter
-    deps: [init-backend-application-adapter, init-util-common-types, init-util-common-util]
+  build-aws-object-storage-adapter:
+    desc: Build packages/backend/adapters/aws-object-storage-adapter
+    deps: [build-backend-application-adapter, build-util-common-types, build-util-common-util]
     cmds:
-      - (cd packages/backend/adapters/aws-object-storage-adapter && npm install)
-      - (cd packages/backend/adapters/aws-object-storage-adapter && npm run build)
+      - (cd packages/backend/adapters/aws-object-storage-adapter && yarn build)
     run: once
-  init-backend-application-adapter:
-    desc: Initialize packages/backend/application/adapter
-    deps: [init-util-common-types, init-development-codegen-ts-auto-index]
+  build-backend-application-adapter:
+    desc: Build packages/backend/application/adapter
+    deps: [build-util-common-types, build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/backend/application/adapter && npm install)
-      - (cd packages/backend/application/adapter && npm run build)
+      - (cd packages/backend/application/adapter && yarn build)
     run: once
-  init-backend-application-transaction:
-    desc: Initialize packages/backend/application/transaction
-    deps: [init-util-common-types, init-development-codegen-ts-auto-index]
+  build-backend-application-transaction:
+    desc: Build packages/backend/application/transaction
+    deps: [build-util-common-types, build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/backend/application/transaction && npm install)
-      - (cd packages/backend/application/transaction && npm run build)
+      - (cd packages/backend/application/transaction && yarn build)
     run: once
-  init-backend-scripts-clean-failed-transactions:
-    desc: Initialize packages/backend/scripts/clean-failed-transactions
-    deps: [init-backend-application-adapter, init-backend-application-transaction]
+  build-backend-scripts-clean-failed-transactions:
+    desc: Build packages/backend/scripts/clean-failed-transactions
+    deps: [build-backend-application-adapter, build-backend-application-transaction]
     cmds:
-      - (cd packages/backend/scripts/clean-failed-transactions && npm install)
-      - (cd packages/backend/scripts/clean-failed-transactions && npm run build)
+      - (cd packages/backend/scripts/clean-failed-transactions && yarn build)
     run: once
-  init-backend-scripts-main:
-    desc: Initialize packages/backend/scripts/main
-    deps: [init-util-common-util, init-development-codegen-env-typegen]
+  build-backend-scripts-main:
+    desc: Build packages/backend/scripts/main
+    deps: [build-util-common-util, build-development-codegen-env-typegen]
     cmds:
-      - (cd packages/backend/scripts/main && npm install)
-      - (cd packages/backend/scripts/main && npm run build)
+      - (cd packages/backend/scripts/main && yarn build)
     run: once
-  init-backend-util-di:
-    desc: Initialize packages/backend/util/di
-    deps: [init-util-common-types]
+  build-backend-util-di:
+    desc: Build packages/backend/util/di
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/backend/util/di && npm install)
-      - (cd packages/backend/util/di && npm run build)
+      - (cd packages/backend/util/di && yarn build)
     run: once
-  init-development-codegen-env-typegen:
-    desc: Initialize packages/development/codegen/env-typegen
-    deps: [init-development-util-dotenv-parser]
+  build-development-codegen-env-typegen:
+    desc: Build packages/development/codegen/env-typegen
+    deps: [build-development-util-dotenv-parser]
     cmds:
-      - (cd packages/development/codegen/env-typegen && npm install)
-      - (cd packages/development/codegen/env-typegen && npm run build)
+      - (cd packages/development/codegen/env-typegen && yarn build)
     run: once
-  init-development-codegen-ts-auto-index:
-    desc: Initialize packages/development/codegen/ts-auto-index
-    deps: [init-development-util-args]
+  build-development-codegen-ts-auto-index:
+    desc: Build packages/development/codegen/ts-auto-index
+    deps: [build-development-util-args]
     cmds:
-      - (cd packages/development/codegen/ts-auto-index && npm install)
-      - (cd packages/development/codegen/ts-auto-index && npm run build)
+      - (cd packages/development/codegen/ts-auto-index && yarn build)
     run: once
-  init-development-scripts-generate-task-init-yml:
-    desc: Initialize packages/development/scripts/generate-task-init-yml
+  build-development-scripts-generate-task-init-yml:
+    desc: Build packages/development/scripts/generate-task-init-yml
     deps: []
     cmds:
-      - (cd packages/development/scripts/generate-task-init-yml && npm install)
-      - (cd packages/development/scripts/generate-task-init-yml && npm run build)
+      - (cd packages/development/scripts/generate-task-init-yml && yarn build)
     run: once
-  init-development-scripts-list-packages-topo-order:
-    desc: Initialize packages/development/scripts/list-packages-topo-order
-    deps: [init-development-util-topo-order]
+  build-development-scripts-list-packages-topo-order:
+    desc: Build packages/development/scripts/list-packages-topo-order
+    deps: [build-development-util-topo-order]
     cmds:
-      - (cd packages/development/scripts/list-packages-topo-order && npm install)
-      - (cd packages/development/scripts/list-packages-topo-order && npm run build)
+      - (cd packages/development/scripts/list-packages-topo-order && yarn build)
     run: once
-  init-development-util-args:
-    desc: Initialize packages/development/util/args
+  build-development-util-args:
+    desc: Build packages/development/util/args
     deps: []
     cmds:
-      - (cd packages/development/util/args && npm install)
-      - (cd packages/development/util/args && npm run build)
+      - (cd packages/development/util/args && yarn build)
     run: once
-  init-development-util-dotenv-parser:
-    desc: Initialize packages/development/util/dotenv-parser
+  build-development-util-dotenv-parser:
+    desc: Build packages/development/util/dotenv-parser
     deps: []
     cmds:
-      - (cd packages/development/util/dotenv-parser && npm install)
-      - (cd packages/development/util/dotenv-parser && npm run build)
+      - (cd packages/development/util/dotenv-parser && yarn build)
     run: once
-  init-development-util-topo-order:
-    desc: Initialize packages/development/util/topo-order
+  build-development-util-topo-order:
+    desc: Build packages/development/util/topo-order
     deps: []
     cmds:
-      - (cd packages/development/util/topo-order && npm install)
-      - (cd packages/development/util/topo-order && npm run build)
+      - (cd packages/development/util/topo-order && yarn build)
     run: once
-  init-editor-core-builder:
-    desc: Initialize packages/editor/core/builder
-    deps: [init-util-common-types, init-editor-core-types]
+  build-editor-core-builder:
+    desc: Build packages/editor/core/builder
+    deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/core/builder && npm install)
-      - (cd packages/editor/core/builder && npm run build)
+      - (cd packages/editor/core/builder && yarn build)
     run: once
-  init-editor-core-parser:
-    desc: Initialize packages/editor/core/parser
-    deps: [init-util-common-types, init-editor-core-types]
+  build-editor-core-parser:
+    desc: Build packages/editor/core/parser
+    deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/core/parser && npm install)
-      - (cd packages/editor/core/parser && npm run build)
+      - (cd packages/editor/core/parser && yarn build)
     run: once
-  init-editor-core-types:
-    desc: Initialize packages/editor/core/types
-    deps: [init-util-common-types]
+  build-editor-core-types:
+    desc: Build packages/editor/core/types
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/editor/core/types && npm install)
-      - (cd packages/editor/core/types && npm run build)
+      - (cd packages/editor/core/types && yarn build)
     run: once
-  init-editor-plugins-section:
-    desc: Initialize packages/editor/plugins/section
-    deps: [init-editor-core-types, init-editor-plugins-util, init-util-common-types]
+  build-editor-plugins-section:
+    desc: Build packages/editor/plugins/section
+    deps: [build-editor-core-types, build-editor-plugins-util, build-util-common-types]
     cmds:
-      - (cd packages/editor/plugins/section && npm install)
-      - (cd packages/editor/plugins/section && npm run build)
+      - (cd packages/editor/plugins/section && yarn build)
     run: once
-  init-editor-plugins-test:
-    desc: Initialize packages/editor/plugins/test
-    deps: [init-util-common-types, init-editor-core-builder, init-editor-core-parser, init-editor-core-types, init-editor-plugins-section]
+  build-editor-plugins-test:
+    desc: Build packages/editor/plugins/test
+    deps: [build-editor-core-builder, build-editor-core-parser, build-editor-core-types, build-editor-plugins-section, build-util-common-types]
     cmds:
-      - (cd packages/editor/plugins/test && npm install)
-      - (cd packages/editor/plugins/test && npm run build)
+      - (cd packages/editor/plugins/test && yarn build)
     run: once
-  init-editor-plugins-util:
-    desc: Initialize packages/editor/plugins/util
-    deps: [init-util-common-types, init-editor-core-types]
+  build-editor-plugins-util:
+    desc: Build packages/editor/plugins/util
+    deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/plugins/util && npm install)
-      - (cd packages/editor/plugins/util && npm run build)
+      - (cd packages/editor/plugins/util && yarn build)
     run: once
-  init-editor-react-mdcode:
-    desc: Initialize packages/editor/react/mdcode
-    deps: [init-editor-core-types, init-editor-react-types, init-util-atomic-unwrap, init-util-common-types]
+  build-editor-react-mdcode:
+    desc: Build packages/editor/react/mdcode
+    deps: [build-editor-core-types, build-editor-react-types, build-util-atomic-unwrap, build-util-common-types]
     cmds:
-      - (cd packages/editor/react/mdcode && npm install)
-      - (cd packages/editor/react/mdcode && npm run build)
+      - (cd packages/editor/react/mdcode && yarn build)
     run: once
-  init-editor-react-test:
-    desc: Initialize packages/editor/react/test
-    deps: [init-editor-core-builder, init-editor-core-parser, init-editor-core-types, init-editor-plugins-section, init-editor-react-mdcode, init-editor-react-types, init-util-atomic-unwrap, init-util-common-types]
+  build-editor-react-test:
+    desc: Build packages/editor/react/test
+    deps: [build-editor-core-builder, build-editor-core-parser, build-editor-core-types, build-editor-plugins-section, build-editor-react-mdcode, build-editor-react-types, build-util-atomic-unwrap, build-util-common-types]
     cmds:
-      - (cd packages/editor/react/test && npm install)
-      - (cd packages/editor/react/test && npm run build)
+      - (cd packages/editor/react/test && yarn build)
     run: once
-  init-editor-react-types:
-    desc: Initialize packages/editor/react/types
-    deps: [init-editor-core-types, init-util-common-types]
+  build-editor-react-types:
+    desc: Build packages/editor/react/types
+    deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/react/types && npm install)
-      - (cd packages/editor/react/types && npm run build)
+      - (cd packages/editor/react/types && yarn build)
     run: once
-  init-frontend-apps-dev:
-    desc: Initialize packages/frontend/apps/dev
-    deps: [init-frontend-components-base, init-frontend-components-widgets, init-frontend-util-mode-next, init-frontend-util-mode-codegen, init-viuc-main-cli-with-all]
+  build-frontend-apps-dev:
+    desc: Build packages/frontend/apps/dev
+    deps: [build-frontend-components-base, build-frontend-components-widgets, build-frontend-util-mode-next, build-frontend-util-mode-codegen, build-viuc-main-cli-with-all]
     cmds:
-      - (cd packages/frontend/apps/dev && npm install)
-      - (cd packages/frontend/apps/dev && npm run build)
+      - (cd packages/frontend/apps/dev && yarn build)
     run: once
-  init-frontend-apps-main:
-    desc: Initialize packages/frontend/apps/main
-    deps: [init-frontend-util-mode-next, init-frontend-util-mode-codegen]
+  build-frontend-apps-main:
+    desc: Build packages/frontend/apps/main
+    deps: [build-frontend-util-mode-next, build-frontend-util-mode-codegen]
     cmds:
-      - (cd packages/frontend/apps/main && npm install)
-      - (cd packages/frontend/apps/main && npm run build)
+      - (cd packages/frontend/apps/main && yarn build)
     run: once
-  init-frontend-components-base:
-    desc: Initialize packages/frontend/components/base
-    deps: [init-util-common-types, init-util-common-util, init-frontend-util-dom-util, init-frontend-util-react-util]
+  build-frontend-components-base:
+    desc: Build packages/frontend/components/base
+    deps: [build-frontend-util-dom-util, build-frontend-util-react-util, build-util-common-types, build-util-common-util]
     cmds:
-      - (cd packages/frontend/components/base && npm install)
-      - (cd packages/frontend/components/base && npm run build)
+      - (cd packages/frontend/components/base && yarn build)
     run: once
-  init-frontend-components-widgets:
-    desc: Initialize packages/frontend/components/widgets
-    deps: [init-frontend-components-base]
+  build-frontend-components-widgets:
+    desc: Build packages/frontend/components/widgets
+    deps: [build-frontend-components-base]
     cmds:
-      - (cd packages/frontend/components/widgets && npm install)
-      - (cd packages/frontend/components/widgets && npm run build)
+      - (cd packages/frontend/components/widgets && yarn build)
     run: once
-  init-frontend-util-dom-util:
-    desc: Initialize packages/frontend/util/dom-util
-    deps: [init-util-common-types]
+  build-frontend-util-dom-util:
+    desc: Build packages/frontend/util/dom-util
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/frontend/util/dom-util && npm install)
-      - (cd packages/frontend/util/dom-util && npm run build)
+      - (cd packages/frontend/util/dom-util && yarn build)
     run: once
-  init-frontend-util-mode-codegen:
-    desc: Initialize packages/frontend/util/mode-codegen
-    deps: [init-frontend-util-mode]
+  build-frontend-util-mode-codegen:
+    desc: Build packages/frontend/util/mode-codegen
+    deps: [build-frontend-util-mode]
     cmds:
-      - (cd packages/frontend/util/mode-codegen && npm install)
-      - (cd packages/frontend/util/mode-codegen && npm run build)
+      - (cd packages/frontend/util/mode-codegen && yarn build)
     run: once
-  init-frontend-util-mode-next:
-    desc: Initialize packages/frontend/util/mode-next
+  build-frontend-util-mode-next:
+    desc: Build packages/frontend/util/mode-next
     deps: []
     cmds:
-      - (cd packages/frontend/util/mode-next && npm install)
-      - (cd packages/frontend/util/mode-next && npm run build)
+      - (cd packages/frontend/util/mode-next && yarn build)
     run: once
-  init-frontend-util-mode:
-    desc: Initialize packages/frontend/util/mode
+  build-frontend-util-mode:
+    desc: Build packages/frontend/util/mode
     deps: []
     cmds:
-      - (cd packages/frontend/util/mode && npm install)
-      - (cd packages/frontend/util/mode && npm run build)
+      - (cd packages/frontend/util/mode && yarn build)
     run: once
-  init-frontend-util-react-util:
-    desc: Initialize packages/frontend/util/react-util
-    deps: [init-util-common-types]
+  build-frontend-util-react-util:
+    desc: Build packages/frontend/util/react-util
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/frontend/util/react-util && npm install)
-      - (cd packages/frontend/util/react-util && npm run build)
+      - (cd packages/frontend/util/react-util && yarn build)
     run: once
-  init-graphql-common-lexer:
-    desc: Initialize packages/graphql/common/lexer
+  build-graphql-common-lexer:
+    desc: Build packages/graphql/common/lexer
     deps: []
     cmds:
-      - (cd packages/graphql/common/lexer && npm install)
-      - (cd packages/graphql/common/lexer && npm run build)
+      - (cd packages/graphql/common/lexer && yarn build)
     run: once
-  init-graphql-common-parser:
-    desc: Initialize packages/graphql/common/parser
-    deps: [init-graphql-common-lexer]
+  build-graphql-common-parser:
+    desc: Build packages/graphql/common/parser
+    deps: [build-graphql-common-lexer]
     cmds:
-      - (cd packages/graphql/common/parser && npm install)
-      - (cd packages/graphql/common/parser && npm run build)
+      - (cd packages/graphql/common/parser && yarn build)
     run: once
-  init-graphql-types-core:
-    desc: Initialize packages/graphql/types/core
+  build-graphql-types-core:
+    desc: Build packages/graphql/types/core
     deps: []
     cmds:
-      - (cd packages/graphql/types/core && npm install)
-      - (cd packages/graphql/types/core && npm run build)
+      - (cd packages/graphql/types/core && yarn build)
     run: once
-  init-graphql-types-parse:
-    desc: Initialize packages/graphql/types/parse
-    deps: [init-util-common-types]
+  build-graphql-types-parse:
+    desc: Build packages/graphql/types/parse
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/graphql/types/parse && npm install)
-      - (cd packages/graphql/types/parse && npm run build)
+      - (cd packages/graphql/types/parse && yarn build)
     run: once
-  init-util-atomic-unwrap:
-    desc: Initialize packages/util/atomic/unwrap
-    deps: [init-util-common-types]
+  build-util-atomic-unwrap:
+    desc: Build packages/util/atomic/unwrap
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/atomic/unwrap && npm install)
-      - (cd packages/util/atomic/unwrap && npm run build)
+      - (cd packages/util/atomic/unwrap && yarn build)
     run: once
-  init-util-client-graphql-client:
-    desc: Initialize packages/util/client/graphql-client
-    deps: [init-util-common-types]
+  build-util-client-graphql-client:
+    desc: Build packages/util/client/graphql-client
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/client/graphql-client && npm install)
-      - (cd packages/util/client/graphql-client && npm run build)
+      - (cd packages/util/client/graphql-client && yarn build)
     run: once
-  init-util-client-rest-client:
-    desc: Initialize packages/util/client/rest-client
-    deps: [init-util-common-types]
+  build-util-client-rest-client:
+    desc: Build packages/util/client/rest-client
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/client/rest-client && npm install)
-      - (cd packages/util/client/rest-client && npm run build)
+      - (cd packages/util/client/rest-client && yarn build)
     run: once
-  init-util-common-types:
-    desc: Initialize packages/util/common/types
-    deps: [init-development-codegen-ts-auto-index]
+  build-util-common-types:
+    desc: Build packages/util/common/types
+    deps: [build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/util/common/types && npm install)
-      - (cd packages/util/common/types && npm run build)
+      - (cd packages/util/common/types && yarn build)
     run: once
-  init-util-common-util:
-    desc: Initialize packages/util/common/util
-    deps: [init-util-common-types]
+  build-util-common-util:
+    desc: Build packages/util/common/util
+    deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/common/util && npm install)
-      - (cd packages/util/common/util && npm run build)
+      - (cd packages/util/common/util && yarn build)
     run: once
-  init-viuc-main-cli-with-all:
-    desc: Initialize packages/viuc/main/cli-with-all
-    deps: [init-viuc-main-core, init-viuc-main-node, init-viuc-type-plugins-color, init-viuc-type-plugins-margin, init-viuc-type-plugins-padding, init-viuc-variant-plugins-a-state, init-viuc-variant-plugins-group, init-viuc-variant-plugins-media, init-development-util-args]
+  build-viuc-main-cli-with-all:
+    desc: Build packages/viuc/main/cli-with-all
+    deps: [build-development-util-args, build-viuc-main-core, build-viuc-main-node, build-viuc-type-plugins-color, build-viuc-type-plugins-margin, build-viuc-type-plugins-padding, build-viuc-variant-plugins-a-state, build-viuc-variant-plugins-group, build-viuc-variant-plugins-media]
     cmds:
-      - (cd packages/viuc/main/cli-with-all && npm install)
-      - (cd packages/viuc/main/cli-with-all && npm run build)
+      - (cd packages/viuc/main/cli-with-all && yarn build)
     run: once
-  init-viuc-main-core:
-    desc: Initialize packages/viuc/main/core
+  build-viuc-main-core:
+    desc: Build packages/viuc/main/core
     deps: []
     cmds:
-      - (cd packages/viuc/main/core && npm install)
-      - (cd packages/viuc/main/core && npm run build)
+      - (cd packages/viuc/main/core && yarn build)
     run: once
-  init-viuc-main-node:
-    desc: Initialize packages/viuc/main/node
-    deps: [init-util-common-types, init-viuc-main-core]
+  build-viuc-main-node:
+    desc: Build packages/viuc/main/node
+    deps: [build-util-common-types, build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/main/node && npm install)
-      - (cd packages/viuc/main/node && npm run build)
+      - (cd packages/viuc/main/node && yarn build)
     run: once
-  init-viuc-type-plugins-color:
-    desc: Initialize packages/viuc/type-plugins/color
-    deps: [init-viuc-main-core]
+  build-viuc-type-plugins-color:
+    desc: Build packages/viuc/type-plugins/color
+    deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/type-plugins/color && npm install)
-      - (cd packages/viuc/type-plugins/color && npm run build)
+      - (cd packages/viuc/type-plugins/color && yarn build)
     run: once
-  init-viuc-type-plugins-margin:
-    desc: Initialize packages/viuc/type-plugins/margin
-    deps: [init-viuc-main-core]
+  build-viuc-type-plugins-margin:
+    desc: Build packages/viuc/type-plugins/margin
+    deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/type-plugins/margin && npm install)
-      - (cd packages/viuc/type-plugins/margin && npm run build)
+      - (cd packages/viuc/type-plugins/margin && yarn build)
     run: once
-  init-viuc-type-plugins-padding:
-    desc: Initialize packages/viuc/type-plugins/padding
-    deps: [init-viuc-main-core]
+  build-viuc-type-plugins-padding:
+    desc: Build packages/viuc/type-plugins/padding
+    deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/type-plugins/padding && npm install)
-      - (cd packages/viuc/type-plugins/padding && npm run build)
+      - (cd packages/viuc/type-plugins/padding && yarn build)
     run: once
-  init-viuc-variant-plugins-a-state:
-    desc: Initialize packages/viuc/variant-plugins/a-state
-    deps: [init-viuc-main-core]
+  build-viuc-variant-plugins-a-state:
+    desc: Build packages/viuc/variant-plugins/a-state
+    deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/variant-plugins/a-state && npm install)
-      - (cd packages/viuc/variant-plugins/a-state && npm run build)
+      - (cd packages/viuc/variant-plugins/a-state && yarn build)
     run: once
-  init-viuc-variant-plugins-group:
-    desc: Initialize packages/viuc/variant-plugins/group
-    deps: [init-viuc-main-core]
+  build-viuc-variant-plugins-group:
+    desc: Build packages/viuc/variant-plugins/group
+    deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/variant-plugins/group && npm install)
-      - (cd packages/viuc/variant-plugins/group && npm run build)
+      - (cd packages/viuc/variant-plugins/group && yarn build)
     run: once
-  init-viuc-variant-plugins-media:
-    desc: Initialize packages/viuc/variant-plugins/media
-    deps: [init-viuc-main-core]
+  build-viuc-variant-plugins-media:
+    desc: Build packages/viuc/variant-plugins/media
+    deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/variant-plugins/media && npm install)
-      - (cd packages/viuc/variant-plugins/media && npm run build)
+      - (cd packages/viuc/variant-plugins/media && yarn build)
     run: once

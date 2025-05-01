@@ -1,15 +1,16 @@
 {
   "private": true,
   "name": "@this-project/backend-scripts-main",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn tsc",
     "generate": "env-typegen"
   },
   "devDependencies": {
-    "@this-project/development-codegen-env-typegen": "file:../../../development/codegen/env-typegen",
+    "@this-project/development-codegen-env-typegen": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/graphql-upload": "^17.0.0",
@@ -18,7 +19,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.12.0",
-    "@this-project/util-common-util": "file:../../../util/common/util",
+    "@this-project/util-common-util": "workspace:*",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "graphql": "^16.10.0",

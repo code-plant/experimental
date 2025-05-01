@@ -1,16 +1,17 @@
 {
   "private": true,
   "name": "@this-project/application-api-common",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/util-common-types": "file:../../../util/common/types"
+    "@this-project/util-common-types": "workspace:*"
   }
 }

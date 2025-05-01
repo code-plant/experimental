@@ -1,7 +1,18 @@
-node_modules/
-package-lock.json
+# build
 tsconfig.tsbuildinfo
 *.js
 [!_]*.d.ts
+
+# env
 .env*
 !.env*.example
+
+# yarn
+.yarn
+.pnp.cjs
+.pnp.loader.mjs
+yarn.lock
+/.yarnrc.yml
+
+# etc
+node_modules

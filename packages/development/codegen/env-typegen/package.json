@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "@this-project/development-codegen-env-typegen",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
@@ -8,13 +9,13 @@
     "env-typegen": "index.js"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/development-util-dotenv-parser": "file:../../util/dotenv-parser"
+    "@this-project/development-util-dotenv-parser": "workspace:*"
   }
 }

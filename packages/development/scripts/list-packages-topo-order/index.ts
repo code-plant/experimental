@@ -1,7 +1,10 @@
 import { topoOrder } from "@this-project/development-util-topo-order";
-import { globSync, readFileSync, writeFileSync } from "fs";
+import { globSync } from "glob";
+import { readFileSync, writeFileSync } from "node:fs";
 
-const packages = globSync("../../../*/*/*/package.json").sort();
+const packages = globSync("../../../*/*/*/package.json", {
+  absolute: true,
+}).sort();
 const nodes = packages.map((p) => {
   const json = JSON.parse(readFileSync(p).toString());
   const dependencies = Object.keys(json.dependencies ?? {})

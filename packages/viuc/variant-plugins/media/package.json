@@ -1,16 +1,17 @@
 {
   "private": true,
   "name": "@this-project/viuc-variant-plugins-media",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/viuc-main-core": "file:../../main/core"
+    "@this-project/viuc-main-core": "workspace:*"
   }
 }

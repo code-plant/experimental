@@ -1,19 +1,20 @@
 {
   "private": true,
   "name": "@this-project/viuc-main-node",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/util-common-types": "file:../../../util/common/types",
-    "@this-project/viuc-main-core": "file:../core",
+    "@this-project/util-common-types": "workspace:*",
+    "@this-project/viuc-main-core": "workspace:*",
     "glob": "^11.0.1"
   }
 }

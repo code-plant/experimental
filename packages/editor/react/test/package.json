@@ -1,22 +1,23 @@
 {
   "private": true,
   "name": "@this-project/editor-react-test",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "yarn vite",
+    "build": "yarn vite build"
   },
   "devDependencies": {
-    "@this-project/editor-core-builder": "file:../../core/builder",
-    "@this-project/editor-core-parser": "file:../../core/parser",
-    "@this-project/editor-core-types": "file:../../core/types",
-    "@this-project/editor-plugins-section": "file:../../plugins/section",
-    "@this-project/editor-react-mdcode": "file:../mdcode",
-    "@this-project/editor-react-types": "file:../types",
-    "@this-project/util-atomic-unwrap": "file:../../../util/atomic/unwrap",
-    "@this-project/util-common-types": "file:../../../util/common/types",
+    "@this-project/editor-core-builder": "workspace:*",
+    "@this-project/editor-core-parser": "workspace:*",
+    "@this-project/editor-core-types": "workspace:*",
+    "@this-project/editor-plugins-section": "workspace:*",
+    "@this-project/editor-react-mdcode": "workspace:*",
+    "@this-project/editor-react-types": "workspace:*",
+    "@this-project/util-atomic-unwrap": "workspace:*",
+    "@this-project/util-common-types": "workspace:*",
     "@types/node": "^22.15.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",

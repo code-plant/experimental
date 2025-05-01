@@ -1,18 +1,19 @@
 {
   "private": true,
   "name": "@this-project/backend-application-transaction",
+  "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn tsc",
     "generate": "ts-auto-index -t ."
   },
   "devDependencies": {
-    "@this-project/development-codegen-ts-auto-index": "file:../../../development/codegen/ts-auto-index",
+    "@this-project/development-codegen-ts-auto-index": "workspace:*",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/util-common-types": "file:../../../util/common/types"
+    "@this-project/util-common-types": "workspace:*"
   }
 }

@@ -6,8 +6,11 @@ The current stage of this project is in active development. As such, commits may
 
 ## Prerequisites
 
-Use [mise](https://mise.jdx.dev). It will automatically install all the dependencies you need.  
-Don't have mise? Check `mise.toml` and install them manually.
+1. Use [mise](https://mise.jdx.dev).  
+    Don't have mise? Check `mise.toml` and install them manually.
+2. Install yarn.  
+    If you're using mise, install yarn by `npm i -g yarn && yarn set version stable`.
+3. (optional) Setup yarn sdk for vscode by `yarn dlx @yarnpkg/sdks vscode`.
 
 ## Getting Started
 
