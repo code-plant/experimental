@@ -18,323 +18,323 @@ tasks:
     desc: Build packages/application/api/common
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/application/api/common && yarn build)
+      - yarn workspace @this-project/application-api-common build
     run: once
   build-application-api-graphql:
     desc: Build packages/application/api/graphql
     deps: [build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/application/api/graphql && yarn build)
+      - yarn workspace @this-project/application-api-graphql build
     run: once
   build-application-api-v1:
     desc: Build packages/application/api/v1
     deps: [build-application-api-common, build-util-common-types, build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/application/api/v1 && yarn build)
+      - yarn workspace @this-project/application-api-v1 build
     run: once
   build-common-application-authorization:
     desc: Build packages/application/logic/authorization
     deps: []
     cmds:
-      - (cd packages/application/logic/authorization && yarn build)
+      - yarn workspace @this-project/common-application-authorization build
     run: once
   build-common-application-core:
     desc: Build packages/application/logic/core
     deps: []
     cmds:
-      - (cd packages/application/logic/core && yarn build)
+      - yarn workspace @this-project/common-application-core build
     run: once
   build-aws-object-storage-adapter:
     desc: Build packages/backend/adapters/aws-object-storage-adapter
     deps: [build-backend-application-adapter, build-util-common-types, build-util-common-util]
     cmds:
-      - (cd packages/backend/adapters/aws-object-storage-adapter && yarn build)
+      - yarn workspace @this-project/aws-object-storage-adapter build
     run: once
   build-backend-application-adapter:
     desc: Build packages/backend/application/adapter
     deps: [build-util-common-types, build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/backend/application/adapter && yarn build)
+      - yarn workspace @this-project/backend-application-adapter build
     run: once
   build-backend-application-transaction:
     desc: Build packages/backend/application/transaction
     deps: [build-util-common-types, build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/backend/application/transaction && yarn build)
+      - yarn workspace @this-project/backend-application-transaction build
     run: once
   build-backend-scripts-clean-failed-transactions:
     desc: Build packages/backend/scripts/clean-failed-transactions
     deps: [build-backend-application-adapter, build-backend-application-transaction]
     cmds:
-      - (cd packages/backend/scripts/clean-failed-transactions && yarn build)
+      - yarn workspace @this-project/backend-scripts-clean-failed-transactions build
     run: once
   build-backend-scripts-main:
     desc: Build packages/backend/scripts/main
     deps: [build-util-common-util, build-development-codegen-env-typegen]
     cmds:
-      - (cd packages/backend/scripts/main && yarn build)
+      - yarn workspace @this-project/backend-scripts-main build
     run: once
   build-backend-util-di:
     desc: Build packages/backend/util/di
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/backend/util/di && yarn build)
+      - yarn workspace @this-project/backend-util-di build
     run: once
   build-development-codegen-env-typegen:
     desc: Build packages/development/codegen/env-typegen
     deps: [build-development-util-dotenv-parser]
     cmds:
-      - (cd packages/development/codegen/env-typegen && yarn build)
+      - yarn workspace @this-project/development-codegen-env-typegen build
     run: once
   build-development-codegen-ts-auto-index:
     desc: Build packages/development/codegen/ts-auto-index
     deps: [build-development-util-args]
     cmds:
-      - (cd packages/development/codegen/ts-auto-index && yarn build)
+      - yarn workspace @this-project/development-codegen-ts-auto-index build
     run: once
   build-development-scripts-generate-task-init-yml:
     desc: Build packages/development/scripts/generate-task-init-yml
     deps: []
     cmds:
-      - (cd packages/development/scripts/generate-task-init-yml && yarn build)
+      - yarn workspace @this-project/development-scripts-generate-task-init-yml build
     run: once
   build-development-scripts-list-packages-topo-order:
     desc: Build packages/development/scripts/list-packages-topo-order
     deps: [build-development-util-topo-order]
     cmds:
-      - (cd packages/development/scripts/list-packages-topo-order && yarn build)
+      - yarn workspace @this-project/development-scripts-list-packages-topo-order build
     run: once
   build-development-util-args:
     desc: Build packages/development/util/args
     deps: []
     cmds:
-      - (cd packages/development/util/args && yarn build)
+      - yarn workspace @this-project/development-util-args build
     run: once
   build-development-util-dotenv-parser:
     desc: Build packages/development/util/dotenv-parser
     deps: []
     cmds:
-      - (cd packages/development/util/dotenv-parser && yarn build)
+      - yarn workspace @this-project/development-util-dotenv-parser build
     run: once
   build-development-util-topo-order:
     desc: Build packages/development/util/topo-order
     deps: []
     cmds:
-      - (cd packages/development/util/topo-order && yarn build)
+      - yarn workspace @this-project/development-util-topo-order build
     run: once
   build-editor-core-builder:
     desc: Build packages/editor/core/builder
     deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/core/builder && yarn build)
+      - yarn workspace @this-project/editor-core-builder build
     run: once
   build-editor-core-parser:
     desc: Build packages/editor/core/parser
     deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/core/parser && yarn build)
+      - yarn workspace @this-project/editor-core-parser build
     run: once
   build-editor-core-types:
     desc: Build packages/editor/core/types
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/editor/core/types && yarn build)
+      - yarn workspace @this-project/editor-core-types build
     run: once
   build-editor-plugins-section:
     desc: Build packages/editor/plugins/section
     deps: [build-editor-core-types, build-editor-plugins-util, build-util-common-types]
     cmds:
-      - (cd packages/editor/plugins/section && yarn build)
+      - yarn workspace @this-project/editor-plugins-section build
     run: once
   build-editor-plugins-test:
     desc: Build packages/editor/plugins/test
     deps: [build-editor-core-builder, build-editor-core-parser, build-editor-core-types, build-editor-plugins-section, build-util-common-types]
     cmds:
-      - (cd packages/editor/plugins/test && yarn build)
+      - yarn workspace @this-project/editor-plugins-test build
     run: once
   build-editor-plugins-util:
     desc: Build packages/editor/plugins/util
     deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/plugins/util && yarn build)
+      - yarn workspace @this-project/editor-plugins-util build
     run: once
   build-editor-react-mdcode:
     desc: Build packages/editor/react/mdcode
     deps: [build-editor-core-types, build-editor-react-types, build-util-atomic-unwrap, build-util-common-types]
     cmds:
-      - (cd packages/editor/react/mdcode && yarn build)
+      - yarn workspace @this-project/editor-react-mdcode build
     run: once
   build-editor-react-test:
     desc: Build packages/editor/react/test
     deps: [build-editor-core-builder, build-editor-core-parser, build-editor-core-types, build-editor-plugins-section, build-editor-react-mdcode, build-editor-react-types, build-util-atomic-unwrap, build-util-common-types]
     cmds:
-      - (cd packages/editor/react/test && yarn build)
+      - yarn workspace @this-project/editor-react-test build
     run: once
   build-editor-react-types:
     desc: Build packages/editor/react/types
     deps: [build-editor-core-types, build-util-common-types]
     cmds:
-      - (cd packages/editor/react/types && yarn build)
+      - yarn workspace @this-project/editor-react-types build
     run: once
   build-frontend-apps-dev:
     desc: Build packages/frontend/apps/dev
     deps: [build-frontend-components-base, build-frontend-components-widgets, build-frontend-util-mode-next, build-frontend-util-mode-codegen, build-viuc-main-cli-with-all]
     cmds:
-      - (cd packages/frontend/apps/dev && yarn build)
+      - yarn workspace @this-project/frontend-apps-dev build
     run: once
   build-frontend-apps-main:
     desc: Build packages/frontend/apps/main
     deps: [build-frontend-util-mode-next, build-frontend-util-mode-codegen]
     cmds:
-      - (cd packages/frontend/apps/main && yarn build)
+      - yarn workspace @this-project/frontend-apps-main build
     run: once
   build-frontend-components-base:
     desc: Build packages/frontend/components/base
     deps: [build-frontend-util-dom-util, build-frontend-util-react-util, build-util-common-types, build-util-common-util]
     cmds:
-      - (cd packages/frontend/components/base && yarn build)
+      - yarn workspace @this-project/frontend-components-base build
     run: once
   build-frontend-components-widgets:
     desc: Build packages/frontend/components/widgets
     deps: [build-frontend-components-base]
     cmds:
-      - (cd packages/frontend/components/widgets && yarn build)
+      - yarn workspace @this-project/frontend-components-widgets build
     run: once
   build-frontend-util-dom-util:
     desc: Build packages/frontend/util/dom-util
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/frontend/util/dom-util && yarn build)
+      - yarn workspace @this-project/frontend-util-dom-util build
     run: once
   build-frontend-util-mode-codegen:
     desc: Build packages/frontend/util/mode-codegen
     deps: [build-frontend-util-mode]
     cmds:
-      - (cd packages/frontend/util/mode-codegen && yarn build)
+      - yarn workspace @this-project/frontend-util-mode-codegen build
     run: once
   build-frontend-util-mode-next:
     desc: Build packages/frontend/util/mode-next
     deps: []
     cmds:
-      - (cd packages/frontend/util/mode-next && yarn build)
+      - yarn workspace @this-project/frontend-util-mode-next build
     run: once
   build-frontend-util-mode:
     desc: Build packages/frontend/util/mode
     deps: []
     cmds:
-      - (cd packages/frontend/util/mode && yarn build)
+      - yarn workspace @this-project/frontend-util-mode build
     run: once
   build-frontend-util-react-util:
     desc: Build packages/frontend/util/react-util
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/frontend/util/react-util && yarn build)
+      - yarn workspace @this-project/frontend-util-react-util build
     run: once
   build-graphql-common-lexer:
     desc: Build packages/graphql/common/lexer
     deps: []
     cmds:
-      - (cd packages/graphql/common/lexer && yarn build)
+      - yarn workspace @this-project/graphql-common-lexer build
     run: once
   build-graphql-common-parser:
     desc: Build packages/graphql/common/parser
     deps: [build-graphql-common-lexer]
     cmds:
-      - (cd packages/graphql/common/parser && yarn build)
+      - yarn workspace @this-project/graphql-common-parser build
     run: once
   build-graphql-types-core:
     desc: Build packages/graphql/types/core
     deps: []
     cmds:
-      - (cd packages/graphql/types/core && yarn build)
+      - yarn workspace @this-project/graphql-types-core build
     run: once
   build-graphql-types-parse:
     desc: Build packages/graphql/types/parse
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/graphql/types/parse && yarn build)
+      - yarn workspace @this-project/graphql-types-parse build
     run: once
   build-util-atomic-unwrap:
     desc: Build packages/util/atomic/unwrap
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/atomic/unwrap && yarn build)
+      - yarn workspace @this-project/util-atomic-unwrap build
     run: once
   build-util-client-graphql-client:
     desc: Build packages/util/client/graphql-client
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/client/graphql-client && yarn build)
+      - yarn workspace @this-project/util-client-graphql-client build
     run: once
   build-util-client-rest-client:
     desc: Build packages/util/client/rest-client
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/client/rest-client && yarn build)
+      - yarn workspace @this-project/util-client-rest-client build
     run: once
   build-util-common-types:
     desc: Build packages/util/common/types
     deps: [build-development-codegen-ts-auto-index]
     cmds:
-      - (cd packages/util/common/types && yarn build)
+      - yarn workspace @this-project/util-common-types build
     run: once
   build-util-common-util:
     desc: Build packages/util/common/util
     deps: [build-util-common-types]
     cmds:
-      - (cd packages/util/common/util && yarn build)
+      - yarn workspace @this-project/util-common-util build
     run: once
   build-viuc-main-cli-with-all:
     desc: Build packages/viuc/main/cli-with-all
     deps: [build-development-util-args, build-viuc-main-core, build-viuc-main-node, build-viuc-type-plugins-color, build-viuc-type-plugins-margin, build-viuc-type-plugins-padding, build-viuc-variant-plugins-a-state, build-viuc-variant-plugins-group, build-viuc-variant-plugins-media]
     cmds:
-      - (cd packages/viuc/main/cli-with-all && yarn build)
+      - yarn workspace @this-project/viuc-main-cli-with-all build
     run: once
   build-viuc-main-core:
     desc: Build packages/viuc/main/core
     deps: []
     cmds:
-      - (cd packages/viuc/main/core && yarn build)
+      - yarn workspace @this-project/viuc-main-core build
     run: once
   build-viuc-main-node:
     desc: Build packages/viuc/main/node
     deps: [build-util-common-types, build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/main/node && yarn build)
+      - yarn workspace @this-project/viuc-main-node build
     run: once
   build-viuc-type-plugins-color:
     desc: Build packages/viuc/type-plugins/color
     deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/type-plugins/color && yarn build)
+      - yarn workspace @this-project/viuc-type-plugins-color build
     run: once
   build-viuc-type-plugins-margin:
     desc: Build packages/viuc/type-plugins/margin
     deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/type-plugins/margin && yarn build)
+      - yarn workspace @this-project/viuc-type-plugins-margin build
     run: once
   build-viuc-type-plugins-padding:
     desc: Build packages/viuc/type-plugins/padding
     deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/type-plugins/padding && yarn build)
+      - yarn workspace @this-project/viuc-type-plugins-padding build
     run: once
   build-viuc-variant-plugins-a-state:
     desc: Build packages/viuc/variant-plugins/a-state
     deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/variant-plugins/a-state && yarn build)
+      - yarn workspace @this-project/viuc-variant-plugins-a-state build
     run: once
   build-viuc-variant-plugins-group:
     desc: Build packages/viuc/variant-plugins/group
     deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/variant-plugins/group && yarn build)
+      - yarn workspace @this-project/viuc-variant-plugins-group build
     run: once
   build-viuc-variant-plugins-media:
     desc: Build packages/viuc/variant-plugins/media
     deps: [build-viuc-main-core]
     cmds:
-      - (cd packages/viuc/variant-plugins/media && yarn build)
+      - yarn workspace @this-project/viuc-variant-plugins-media build
     run: once

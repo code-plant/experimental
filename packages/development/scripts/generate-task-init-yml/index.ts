@@ -31,7 +31,7 @@ const output = nodes.map(
     desc: Build ${n.path}
     deps: [${n.dependencies.map((d) => `build-${d}`).join(", ")}]
     cmds:
-      - (cd ${n.path} && yarn build)
+      - yarn workspace @this-project/${n.name} build
     run: once
 `
 );
