@@ -12,7 +12,6 @@ tsconfig.tsbuildinfo
 .pnp.cjs
 .pnp.loader.mjs
 yarn.lock
-/.yarnrc.yml
 
 # etc
 node_modules
