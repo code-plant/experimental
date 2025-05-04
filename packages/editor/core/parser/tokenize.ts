@@ -51,6 +51,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
           type: "codeBlock",
           line: state.line,
           col: state.precedingWhitespaces.length,
+          indent: state.precedingWhitespaces,
           lang: state.lang,
           content: state.content.join("\n"),
         });
@@ -102,9 +103,12 @@ export function tokenize(source: string): Token[] | TokenizeError {
     let skipped = 0;
 
     // Escaped Code Block Start
-    if (state.type === "text" && line.match(/^\s*\\```/)) {
-      left = left.slice(1);
-      skipped += 1;
+    let match: RegExpMatchArray | null;
+    if (state.type === "text" && (match = line.match(/^(\s*)\\```/))) {
+      const [, precedingWhitespaces] = match;
+      const skip = precedingWhitespaces.length + 1;
+      left = left.slice(skip);
+      skipped += skip;
     }
 
     const currentLine: string[] = [];

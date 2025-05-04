@@ -48,6 +48,7 @@ export function parse(tokens: Token[]): Document | ParseError {
         type: "code",
         line: token.line,
         col: token.col,
+        indent: token.indent,
         lang: token.lang,
         content: token.content,
       });

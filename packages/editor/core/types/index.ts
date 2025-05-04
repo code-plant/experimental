@@ -26,6 +26,7 @@ export interface NodeTag<T extends NodeBase> extends NodeBase {
 
 export interface NodeCodeBlock extends NodeBase {
   type: "code";
+  indent: string;
   lang: string;
   content: string;
 }

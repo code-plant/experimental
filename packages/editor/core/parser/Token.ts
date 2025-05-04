@@ -26,6 +26,7 @@ export interface TokenTagEnd extends TokenBase {
 
 export interface TokenCodeBlock extends TokenBase {
   type: "codeBlock";
+  indent: string;
   lang: string;
   content: string;
 }
