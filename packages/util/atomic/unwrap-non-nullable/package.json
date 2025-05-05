@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "@this-project/util-atomic-unwrap-non-nullable",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "main": "index.js",
+  "scripts": {
+    "build": "yarn tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

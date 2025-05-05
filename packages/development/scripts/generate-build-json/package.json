@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@this-project/development-scripts-generate-task-init-yml",
+  "name": "@this-project/development-scripts-generate-build-json",
   "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",

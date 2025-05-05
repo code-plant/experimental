@@ -29,16 +29,25 @@ export class Args<
     parse: (value: string) => T,
     required?: true
   ): args["length"] extends requiredArgsCount
-    ? Args<[...args, T]["length"], [...args, T], kwargs, short, extra>
+    ? [extra] extends [never]
+      ? Args<[...args, T]["length"], [...args, T], kwargs, short, extra>
+      : never
     : never;
   public positional<T>(
     parse: (value: string) => T,
     required: false
-  ): Args<requiredArgsCount, [...args, optional?: T], kwargs, short, extra>;
+  ): [extra] extends [never]
+    ? Args<requiredArgsCount, [...args, optional?: T], kwargs, short, extra>
+    : never;
   public positional<T>(
     parse: (value: string) => T,
     required = false
   ): Args<any, any[], kwargs, short, extra> {
+    if (this._extra) {
+      throw new Error(
+        "Extra and optional positional arguments are mutually exclusive"
+      );
+    }
     return new Args(
       this.requiredArgsCount + +required,
       [...this._positional, parse],
@@ -153,11 +162,18 @@ export class Args<
 
   public extra<const E>(
     parser: (str: string) => E
-  ): [extra] extends [never]
-    ? Args<requiredArgsCount, args, kwargs, short, E>
+  ): args["length"] extends requiredArgsCount
+    ? [extra] extends [never]
+      ? Args<requiredArgsCount, args, kwargs, short, E>
+      : never
     : never {
     if (this._extra) {
       throw new Error("Extra parser registered multiple times");
+    }
+    if (this._positional.length !== this.requiredArgsCount) {
+      throw new Error(
+        "Extra and optional positional arguments are mutually exclusive"
+      );
     }
     return new Args(
       this.requiredArgsCount,
@@ -508,7 +524,7 @@ export class Args<
     } // end for-loop
 
     // 7) After loop, check if we used all required positional parsers
-    if (posIndex < this.requiredArgsCount) {
+    if (posIndex <= this.requiredArgsCount) {
       return {
         type: "error",
         reason: "Positional arguments mismatch",

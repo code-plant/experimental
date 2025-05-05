@@ -4,6 +4,9 @@
   "workspaces": [
     "packages/*/*/*"
   ],
+  "scripts": {
+    "task": "yarn workspace @this-project/development-scripts-task start -C ../../../.."
+  },
   "devDependencies": {
     "typescript": "^5.8.3"
   }

@@ -1,6 +1,6 @@
 packages/application/logic/authorization
 packages/application/logic/core
-packages/development/scripts/generate-task-init-yml
+packages/development/scripts/generate-build-json
 packages/development/util/args
 packages/development/codegen/ts-auto-index
 packages/application/api/graphql
@@ -15,6 +15,10 @@ packages/frontend/apps/main
 packages/graphql/common/lexer
 packages/graphql/common/parser
 packages/graphql/types/core
+packages/util/atomic/env
+packages/util/atomic/event-bus
+packages/util/atomic/unreachable
+packages/util/atomic/unwrap-non-nullable
 packages/util/common/types
 packages/application/api/common
 packages/application/api/v1
@@ -32,6 +36,8 @@ packages/editor/react/types
 packages/frontend/util/dom-util
 packages/frontend/util/react-util
 packages/graphql/types/parse
+packages/util/atomic/throttled-pool
+packages/development/scripts/task
 packages/util/atomic/unwrap
 packages/editor/react/mdcode
 packages/editor/react/test

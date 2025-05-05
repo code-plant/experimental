@@ -1,0 +1,450 @@
+{
+  "build": {
+    "deps": [
+      "build-application-api-common",
+      "build-application-api-graphql",
+      "build-application-api-v1",
+      "build-common-application-authorization",
+      "build-common-application-core",
+      "build-aws-object-storage-adapter",
+      "build-backend-application-adapter",
+      "build-backend-application-transaction",
+      "build-backend-scripts-clean-failed-transactions",
+      "build-backend-scripts-main",
+      "build-backend-util-di",
+      "build-development-codegen-env-typegen",
+      "build-development-codegen-ts-auto-index",
+      "build-development-scripts-generate-build-json",
+      "build-development-scripts-list-packages-topo-order",
+      "build-development-scripts-task",
+      "build-development-util-args",
+      "build-development-util-dotenv-parser",
+      "build-development-util-topo-order",
+      "build-editor-core-builder",
+      "build-editor-core-parser",
+      "build-editor-core-types",
+      "build-editor-plugins-section",
+      "build-editor-plugins-test",
+      "build-editor-plugins-util",
+      "build-editor-react-mdcode",
+      "build-editor-react-test",
+      "build-editor-react-types",
+      "build-frontend-apps-dev",
+      "build-frontend-apps-main",
+      "build-frontend-components-base",
+      "build-frontend-components-widgets",
+      "build-frontend-util-dom-util",
+      "build-frontend-util-mode-codegen",
+      "build-frontend-util-mode-next",
+      "build-frontend-util-mode",
+      "build-frontend-util-react-util",
+      "build-graphql-common-lexer",
+      "build-graphql-common-parser",
+      "build-graphql-types-core",
+      "build-graphql-types-parse",
+      "build-util-atomic-env",
+      "build-util-atomic-event-bus",
+      "build-util-atomic-throttled-pool",
+      "build-util-atomic-unreachable",
+      "build-util-atomic-unwrap-non-nullable",
+      "build-util-atomic-unwrap",
+      "build-util-client-graphql-client",
+      "build-util-client-rest-client",
+      "build-util-common-types",
+      "build-util-common-util",
+      "build-viuc-main-cli-with-all",
+      "build-viuc-main-core",
+      "build-viuc-main-node",
+      "build-viuc-type-plugins-color",
+      "build-viuc-type-plugins-margin",
+      "build-viuc-type-plugins-padding",
+      "build-viuc-variant-plugins-a-state",
+      "build-viuc-variant-plugins-group",
+      "build-viuc-variant-plugins-media"
+    ],
+    "cmd": "echo \"done\""
+  },
+  "build-application-api-common": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/application-api-common build"
+  },
+  "build-application-api-graphql": {
+    "deps": [
+      "build-development-codegen-ts-auto-index"
+    ],
+    "cmd": "yarn workspace @this-project/application-api-graphql build"
+  },
+  "build-application-api-v1": {
+    "deps": [
+      "build-application-api-common",
+      "build-util-common-types",
+      "build-development-codegen-ts-auto-index"
+    ],
+    "cmd": "yarn workspace @this-project/application-api-v1 build"
+  },
+  "build-common-application-authorization": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/common-application-authorization build"
+  },
+  "build-common-application-core": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/common-application-core build"
+  },
+  "build-aws-object-storage-adapter": {
+    "deps": [
+      "build-backend-application-adapter",
+      "build-util-common-types",
+      "build-util-common-util"
+    ],
+    "cmd": "yarn workspace @this-project/aws-object-storage-adapter build"
+  },
+  "build-backend-application-adapter": {
+    "deps": [
+      "build-util-common-types",
+      "build-development-codegen-ts-auto-index"
+    ],
+    "cmd": "yarn workspace @this-project/backend-application-adapter build"
+  },
+  "build-backend-application-transaction": {
+    "deps": [
+      "build-util-common-types",
+      "build-development-codegen-ts-auto-index"
+    ],
+    "cmd": "yarn workspace @this-project/backend-application-transaction build"
+  },
+  "build-backend-scripts-clean-failed-transactions": {
+    "deps": [
+      "build-backend-application-adapter",
+      "build-backend-application-transaction"
+    ],
+    "cmd": "yarn workspace @this-project/backend-scripts-clean-failed-transactions build"
+  },
+  "build-backend-scripts-main": {
+    "deps": [
+      "build-util-common-util",
+      "build-development-codegen-env-typegen"
+    ],
+    "cmd": "yarn workspace @this-project/backend-scripts-main build"
+  },
+  "build-backend-util-di": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/backend-util-di build"
+  },
+  "build-development-codegen-env-typegen": {
+    "deps": [
+      "build-development-util-dotenv-parser"
+    ],
+    "cmd": "yarn workspace @this-project/development-codegen-env-typegen build"
+  },
+  "build-development-codegen-ts-auto-index": {
+    "deps": [
+      "build-development-util-args"
+    ],
+    "cmd": "yarn workspace @this-project/development-codegen-ts-auto-index build"
+  },
+  "build-development-scripts-generate-build-json": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/development-scripts-generate-build-json build"
+  },
+  "build-development-scripts-list-packages-topo-order": {
+    "deps": [
+      "build-development-util-topo-order"
+    ],
+    "cmd": "yarn workspace @this-project/development-scripts-list-packages-topo-order build"
+  },
+  "build-development-scripts-task": {
+    "deps": [
+      "build-development-util-args",
+      "build-util-atomic-env",
+      "build-util-atomic-event-bus",
+      "build-util-atomic-throttled-pool",
+      "build-util-atomic-unreachable",
+      "build-util-atomic-unwrap-non-nullable"
+    ],
+    "cmd": "yarn workspace @this-project/development-scripts-task build"
+  },
+  "build-development-util-args": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/development-util-args build"
+  },
+  "build-development-util-dotenv-parser": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/development-util-dotenv-parser build"
+  },
+  "build-development-util-topo-order": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/development-util-topo-order build"
+  },
+  "build-editor-core-builder": {
+    "deps": [
+      "build-editor-core-types",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-core-builder build"
+  },
+  "build-editor-core-parser": {
+    "deps": [
+      "build-editor-core-types",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-core-parser build"
+  },
+  "build-editor-core-types": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-core-types build"
+  },
+  "build-editor-plugins-section": {
+    "deps": [
+      "build-editor-core-types",
+      "build-editor-plugins-util",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-plugins-section build"
+  },
+  "build-editor-plugins-test": {
+    "deps": [
+      "build-editor-core-builder",
+      "build-editor-core-parser",
+      "build-editor-core-types",
+      "build-editor-plugins-section",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-plugins-test build"
+  },
+  "build-editor-plugins-util": {
+    "deps": [
+      "build-editor-core-types",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-plugins-util build"
+  },
+  "build-editor-react-mdcode": {
+    "deps": [
+      "build-editor-core-types",
+      "build-editor-react-types",
+      "build-util-atomic-unwrap",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-react-mdcode build"
+  },
+  "build-editor-react-test": {
+    "deps": [
+      "build-editor-core-builder",
+      "build-editor-core-parser",
+      "build-editor-core-types",
+      "build-editor-plugins-section",
+      "build-editor-react-mdcode",
+      "build-editor-react-types",
+      "build-util-atomic-unwrap",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-react-test build"
+  },
+  "build-editor-react-types": {
+    "deps": [
+      "build-editor-core-types",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/editor-react-types build"
+  },
+  "build-frontend-apps-dev": {
+    "deps": [
+      "build-frontend-components-base",
+      "build-frontend-components-widgets",
+      "build-frontend-util-mode",
+      "build-frontend-util-mode-next",
+      "build-frontend-util-mode-codegen",
+      "build-viuc-main-cli-with-all"
+    ],
+    "cmd": "yarn workspace @this-project/frontend-apps-dev build"
+  },
+  "build-frontend-apps-main": {
+    "deps": [
+      "build-frontend-util-mode",
+      "build-frontend-util-mode-next",
+      "build-frontend-util-mode-codegen"
+    ],
+    "cmd": "yarn workspace @this-project/frontend-apps-main build"
+  },
+  "build-frontend-components-base": {
+    "deps": [
+      "build-frontend-util-dom-util",
+      "build-frontend-util-react-util",
+      "build-util-common-types",
+      "build-util-common-util"
+    ],
+    "cmd": "yarn workspace @this-project/frontend-components-base build"
+  },
+  "build-frontend-components-widgets": {
+    "deps": [
+      "build-frontend-components-base"
+    ],
+    "cmd": "yarn workspace @this-project/frontend-components-widgets build"
+  },
+  "build-frontend-util-dom-util": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/frontend-util-dom-util build"
+  },
+  "build-frontend-util-mode-codegen": {
+    "deps": [
+      "build-frontend-util-mode"
+    ],
+    "cmd": "yarn workspace @this-project/frontend-util-mode-codegen build"
+  },
+  "build-frontend-util-mode-next": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/frontend-util-mode-next build"
+  },
+  "build-frontend-util-mode": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/frontend-util-mode build"
+  },
+  "build-frontend-util-react-util": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/frontend-util-react-util build"
+  },
+  "build-graphql-common-lexer": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/graphql-common-lexer build"
+  },
+  "build-graphql-common-parser": {
+    "deps": [
+      "build-graphql-common-lexer"
+    ],
+    "cmd": "yarn workspace @this-project/graphql-common-parser build"
+  },
+  "build-graphql-types-core": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/graphql-types-core build"
+  },
+  "build-graphql-types-parse": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/graphql-types-parse build"
+  },
+  "build-util-atomic-env": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/util-atomic-env build"
+  },
+  "build-util-atomic-event-bus": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/util-atomic-event-bus build"
+  },
+  "build-util-atomic-throttled-pool": {
+    "deps": [
+      "build-util-atomic-event-bus",
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/util-atomic-throttled-pool build"
+  },
+  "build-util-atomic-unreachable": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/util-atomic-unreachable build"
+  },
+  "build-util-atomic-unwrap-non-nullable": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/util-atomic-unwrap-non-nullable build"
+  },
+  "build-util-atomic-unwrap": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/util-atomic-unwrap build"
+  },
+  "build-util-client-graphql-client": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/util-client-graphql-client build"
+  },
+  "build-util-client-rest-client": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/util-client-rest-client build"
+  },
+  "build-util-common-types": {
+    "deps": [
+      "build-development-codegen-ts-auto-index"
+    ],
+    "cmd": "yarn workspace @this-project/util-common-types build"
+  },
+  "build-util-common-util": {
+    "deps": [
+      "build-util-common-types"
+    ],
+    "cmd": "yarn workspace @this-project/util-common-util build"
+  },
+  "build-viuc-main-cli-with-all": {
+    "deps": [
+      "build-development-util-args",
+      "build-viuc-main-core",
+      "build-viuc-main-node",
+      "build-viuc-type-plugins-color",
+      "build-viuc-type-plugins-margin",
+      "build-viuc-type-plugins-padding",
+      "build-viuc-variant-plugins-a-state",
+      "build-viuc-variant-plugins-group",
+      "build-viuc-variant-plugins-media"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-main-cli-with-all build"
+  },
+  "build-viuc-main-core": {
+    "deps": [],
+    "cmd": "yarn workspace @this-project/viuc-main-core build"
+  },
+  "build-viuc-main-node": {
+    "deps": [
+      "build-util-common-types",
+      "build-viuc-main-core"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-main-node build"
+  },
+  "build-viuc-type-plugins-color": {
+    "deps": [
+      "build-viuc-main-core"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-type-plugins-color build"
+  },
+  "build-viuc-type-plugins-margin": {
+    "deps": [
+      "build-viuc-main-core"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-type-plugins-margin build"
+  },
+  "build-viuc-type-plugins-padding": {
+    "deps": [
+      "build-viuc-main-core"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-type-plugins-padding build"
+  },
+  "build-viuc-variant-plugins-a-state": {
+    "deps": [
+      "build-viuc-main-core"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-variant-plugins-a-state build"
+  },
+  "build-viuc-variant-plugins-group": {
+    "deps": [
+      "build-viuc-main-core"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-variant-plugins-group build"
+  },
+  "build-viuc-variant-plugins-media": {
+    "deps": [
+      "build-viuc-main-core"
+    ],
+    "cmd": "yarn workspace @this-project/viuc-variant-plugins-media build"
+  }
+}

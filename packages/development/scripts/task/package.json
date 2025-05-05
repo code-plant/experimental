@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "@this-project/development-scripts-task",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "bin": {
+    "task": "index.js"
+  },
+  "scripts": {
+    "build": "yarn tsc",
+    "start": "yarn tsx ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@this-project/development-util-args": "workspace:*",
+    "@this-project/util-atomic-env": "workspace:*",
+    "@this-project/util-atomic-event-bus": "workspace:*",
+    "@this-project/util-atomic-throttled-pool": "workspace:*",
+    "@this-project/util-atomic-unreachable": "workspace:*",
+    "@this-project/util-atomic-unwrap-non-nullable": "workspace:*"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "@this-project/util-atomic-event-bus",
+  "type": "module",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "yarn tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
