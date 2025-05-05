@@ -8,7 +8,6 @@ tsconfig.tsbuildinfo
 !.env*.example
 
 # yarn
-.yarn
 .pnp.cjs
 .pnp.loader.mjs
 yarn.lock
