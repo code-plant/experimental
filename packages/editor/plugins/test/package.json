@@ -16,6 +16,6 @@
     "@this-project/editor-core-parser": "workspace:*",
     "@this-project/editor-core-types": "workspace:*",
     "@this-project/editor-plugins-section": "workspace:*",
-    "@this-project/util-common-types": "workspace:*"
+    "@this-project/util-types-common": "workspace:*"
   }
 }

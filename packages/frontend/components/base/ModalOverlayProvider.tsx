@@ -1,11 +1,11 @@
 "use client";
 
-import { Cleanup } from "@this-project/util-common-types";
-import { Disposer } from "@this-project/util-common-util/Disposer";
+import { Disposer } from "@this-project/util-atomic-disposer";
 import {
   watchTarget,
   WatchTarget,
-} from "@this-project/util-common-util/watchTarget";
+} from "@this-project/util-atomic-watch-target";
+import { Cleanup } from "@this-project/util-types-common";
 import {
   createContext,
   memo,

@@ -1,5 +1,5 @@
 import { NodeBase } from "@this-project/editor-core-types";
-import { Result } from "@this-project/util-common-types";
+import { Result } from "@this-project/util-types-common";
 import { ReactNode } from "react";
 
 export interface RenderOptions<C> {

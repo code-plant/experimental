@@ -1,12 +1,16 @@
-import { EnsureAPIRoute } from "@this-project/util-common-types";
+import { Ensure } from "@this-project/util-types-common";
+import { APIRouteBase } from "@this-project/util-types-rest";
 import { UserDetailView } from "./types";
 
-export type UserSlugMainGet = EnsureAPIRoute<{
-  method: "GET";
-  path: `/api/v1/users/slug/:slug`;
-  responseType: "json";
-  response: UserDetailView;
-}>;
+export type UserSlugMainGet = Ensure<
+  {
+    method: "GET";
+    path: `/api/v1/users/slug/:slug`;
+    responseType: "json";
+    response: UserDetailView;
+  },
+  APIRouteBase
+>;
 
 export type UserSlugMainRoutes = UserSlugMainGet;
 

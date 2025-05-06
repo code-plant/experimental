@@ -1,4 +1,4 @@
-import { Awaitable } from "@this-project/util-common-types";
+import { Awaitable } from "@this-project/util-types-common";
 
 export interface TransactionManager {
   commit: () => Promise<void>;

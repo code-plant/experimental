@@ -4,7 +4,7 @@ import {
   ObjectId,
   ObjectStorageAdapter,
 } from "@this-project/backend-application-adapter";
-import { env } from "@this-project/util-common-util/env";
+import { env } from "@this-project/util-atomic-env";
 import { S3 } from "aws-sdk";
 
 export class AWSObjectStorageAdapter implements ObjectStorageAdapter {

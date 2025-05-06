@@ -1,5 +1,5 @@
 import { eventBus, On, Trigger } from "@this-project/util-atomic-event-bus";
-import { Awaitable } from "@this-project/util-common-types";
+import { Awaitable } from "@this-project/util-types-common";
 
 export class ThrottledPool {
   private readonly onEnd: On<void>;

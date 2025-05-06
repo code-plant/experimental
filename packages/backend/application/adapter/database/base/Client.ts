@@ -1,4 +1,4 @@
-import { RemoveFirst, StringJoin, XOR } from "@this-project/util-common-types";
+import { RemoveFirst, StringJoin, XOR } from "@this-project/util-types-common";
 
 type Scalars<T> = T extends Record<"scalars", infer I> ? I : never;
 type Objects<T> = T extends Record<"objects", infer I> ? I : never;

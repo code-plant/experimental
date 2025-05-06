@@ -13,7 +13,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/util-common-types": "workspace:*",
+    "@this-project/util-types-common": "workspace:*",
     "@this-project/viuc-main-core": "workspace:*",
     "glob": "^11.0.1"
   }

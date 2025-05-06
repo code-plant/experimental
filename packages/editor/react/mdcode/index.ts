@@ -1,7 +1,7 @@
 import { Document, NodeBase } from "@this-project/editor-core-types";
 import { ReactPlugin, RenderOptions } from "@this-project/editor-react-types";
 import { unwrap, UnwrapError } from "@this-project/util-atomic-unwrap";
-import { Result, UnionToIntersection } from "@this-project/util-common-types";
+import { Result, UnionToIntersection } from "@this-project/util-types-common";
 import { createElement, Fragment, ReactNode } from "react";
 
 export interface SectionComponentProps<T> {

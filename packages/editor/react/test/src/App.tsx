@@ -2,7 +2,7 @@ import { Builder } from "@this-project/editor-core-builder";
 import { parse } from "@this-project/editor-core-parser";
 import { SectionPlugin } from "@this-project/editor-plugins-section";
 import { render } from "@this-project/editor-react-mdcode";
-import { Result } from "@this-project/util-common-types";
+import { Result } from "@this-project/util-types-common";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { unwrap } from "../../../../util/atomic/unwrap";
 import { DefaultSection } from "./DefaultSection";

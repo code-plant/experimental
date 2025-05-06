@@ -1,4 +1,4 @@
-import { Merge } from "@this-project/util-common-types/Merge";
+import { Merge } from "@this-project/util-types-common/Merge";
 
 import { CircularDependencyException } from "./CircularDependencyException";
 import { InvalidDependencyException } from "./InvalidDependencyException";

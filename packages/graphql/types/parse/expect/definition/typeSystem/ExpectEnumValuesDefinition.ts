@@ -1,6 +1,6 @@
 import { Directives } from "../../../types";
 
-import { Ensure } from "@this-project/util-common-types";
+import { Ensure } from "@this-project/util-types-common";
 import { ExpectResultError, ExpectResultOk } from "../../../internal-types";
 
 import { TrimStart } from "../../../internal-types";

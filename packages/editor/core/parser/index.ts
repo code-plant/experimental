@@ -1,5 +1,5 @@
 import { Document } from "@this-project/editor-core-types";
-import { Result } from "@this-project/util-common-types";
+import { Result } from "@this-project/util-types-common";
 import { parse as parseTokens } from "./parse";
 import { tokenize } from "./tokenize";
 

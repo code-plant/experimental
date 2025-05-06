@@ -6,7 +6,7 @@ import {
   ValidationError,
 } from "@this-project/editor-core-types";
 import { is } from "@this-project/editor-plugins-util";
-import { Result } from "@this-project/util-common-types";
+import { Result } from "@this-project/util-types-common";
 
 export type SectionPluginResultNode<T extends NodeBase> =
   | T

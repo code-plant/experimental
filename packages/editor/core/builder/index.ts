@@ -4,7 +4,7 @@ import {
   Plugin,
   ValidationError,
 } from "@this-project/editor-core-types";
-import { Result } from "@this-project/util-common-types";
+import { Result } from "@this-project/util-types-common";
 
 export class Builder<T extends NodeBase, E> {
   constructor(private readonly result: Result<Document<T>, E>) {}

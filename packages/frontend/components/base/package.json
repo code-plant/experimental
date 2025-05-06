@@ -16,8 +16,9 @@
   "dependencies": {
     "@this-project/frontend-util-dom-util": "workspace:*",
     "@this-project/frontend-util-react-util": "workspace:*",
-    "@this-project/util-common-types": "workspace:*",
-    "@this-project/util-common-util": "workspace:*",
+    "@this-project/util-atomic-disposer": "workspace:*",
+    "@this-project/util-atomic-watch-target": "workspace:*",
+    "@this-project/util-types-common": "workspace:*",
     "next": "^15.3.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

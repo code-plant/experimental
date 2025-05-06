@@ -1,4 +1,4 @@
-import { AnyCleanup } from "@this-project/util-common-types";
+import { AnyCleanup } from "@this-project/util-types-common";
 
 export type AnyDisposable = AnyCleanup | null | undefined | AnyDisposable[];
 

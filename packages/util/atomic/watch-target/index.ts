@@ -1,4 +1,4 @@
-import { Cleanup } from "@this-project/util-common-types";
+import { Cleanup } from "@this-project/util-types-common";
 
 export type Watcher<T> = (value: T) => void;
 

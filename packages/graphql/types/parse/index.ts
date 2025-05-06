@@ -1,4 +1,4 @@
-import { Ensure, Result } from "@this-project/util-common-types";
+import { Ensure, Result } from "@this-project/util-types-common";
 import { ExpectDefinition } from "./expect/definition/ExpectDefinition";
 import { TrimStart } from "./internal-types";
 import { Definition } from "./types";

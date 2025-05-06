@@ -1,23 +1,30 @@
-import { EnsureAPIRoute } from "@this-project/util-common-types";
+import { Ensure } from "@this-project/util-types-common";
+import { APIRouteBase } from "@this-project/util-types-rest";
 import { UserAuthorizedView } from "./types";
 
-export type UserMeGet = EnsureAPIRoute<{
-  method: "GET";
-  path: "/api/v1/users/me";
-  responseType: "json";
-  response: UserAuthorizedView;
-}>;
+export type UserMeGet = Ensure<
+  {
+    method: "GET";
+    path: "/api/v1/users/me";
+    responseType: "json";
+    response: UserAuthorizedView;
+  },
+  APIRouteBase
+>;
 
-export type UserMePatch = EnsureAPIRoute<{
-  method: "PATCH";
-  path: "/api/v1/users/me";
-  responseType: "json";
-  response: UserAuthorizedView;
-  requestType: "json";
-  request: {
-    nickname?: string;
-    status?: string | null;
-  };
-}>;
+export type UserMePatch = Ensure<
+  {
+    method: "PATCH";
+    path: "/api/v1/users/me";
+    responseType: "json";
+    response: UserAuthorizedView;
+    requestType: "json";
+    request: {
+      nickname?: string;
+      status?: string | null;
+    };
+  },
+  APIRouteBase
+>;
 
 export type UserMeRoutes = UserMeGet | UserMePatch;

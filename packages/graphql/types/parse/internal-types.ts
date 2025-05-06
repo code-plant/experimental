@@ -1,4 +1,4 @@
-import { ResultError, ResultOk } from "@this-project/util-common-types";
+import { ResultError, ResultOk } from "@this-project/util-types-common";
 
 export type NameStart = Letter | "_";
 export type NameContinue = Letter | Digit | "_";

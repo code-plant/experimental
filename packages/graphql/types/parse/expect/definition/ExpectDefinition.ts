@@ -1,4 +1,4 @@
-import { Ensure } from "@this-project/util-common-types";
+import { Ensure } from "@this-project/util-types-common";
 import { ExpectResultError } from "../../internal-types";
 import { ExpectName } from "../ExpectName";
 import { ExpectFragmentDefinition } from "./executable/ExpectFragmentDefinition";

@@ -1,4 +1,4 @@
-import { Awaitable } from "@this-project/util-common-types";
+import { Awaitable } from "@this-project/util-types-common";
 import { Config as GUCConfig, ThemeBase } from "@this-project/viuc-main-core";
 
 export interface Config<TTheme extends ThemeBase> extends GUCConfig<TTheme> {

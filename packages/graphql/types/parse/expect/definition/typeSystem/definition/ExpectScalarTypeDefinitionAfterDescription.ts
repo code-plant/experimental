@@ -1,4 +1,4 @@
-import { Ensure } from "@this-project/util-common-types";
+import { Ensure } from "@this-project/util-types-common";
 import { ExpectResultError, ExpectResultOk } from "../../../../internal-types";
 import { Directive, ScalarTypeDefinition } from "../../../../types";
 import { ExpectDirectives } from "../../../ExpectDirectives";

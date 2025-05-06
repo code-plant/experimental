@@ -1,4 +1,4 @@
-import { APIRouteBase } from "@this-project/util-common-types";
+import { APIRouteBase } from "@this-project/util-types-common";
 
 // branded types
 export type Id<T extends string> = string & { " id": T };

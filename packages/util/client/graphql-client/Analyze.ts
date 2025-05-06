@@ -1,4 +1,4 @@
-import { UnionAny } from "@this-project/util-common-types";
+import { UnionAny } from "@this-project/util-types-common";
 import {
   GraphQLEnumType,
   GraphQLField,

@@ -4,7 +4,7 @@ import {
   GraphQLObjectType,
   GraphQLSchema,
 } from "@this-project/util-common-graphql-common-types";
-import { Ensure } from "@this-project/util-common-types";
+import { Ensure } from "@this-project/util-types-common";
 import { AnalyzeSchema, AnalyzeSchemaResultOk } from "../Analyze";
 
 type ConnectionArgs = {

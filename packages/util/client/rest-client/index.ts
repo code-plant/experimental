@@ -3,7 +3,7 @@ import {
   ExtractVariablesFromPath,
   StringUnionToString,
   UnionToIntersection,
-} from "@this-project/util-common-types";
+} from "@this-project/util-types-common";
 
 export interface RestOptions {
   customFetch?: typeof fetch;

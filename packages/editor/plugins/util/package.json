@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "@this-project/editor-core-types": "workspace:*",
-    "@this-project/util-common-types": "workspace:*"
+    "@this-project/util-types-common": "workspace:*"
   }
 }

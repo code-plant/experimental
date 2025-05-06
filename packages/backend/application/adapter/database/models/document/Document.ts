@@ -1,4 +1,4 @@
-import { Ensure } from "@this-project/util-common-types";
+import { Ensure } from "@this-project/util-types-common";
 import { ModelBase } from "../../base/ModelBase";
 import { DocumentId } from "../IdTypes";
 import { User } from "../base/User";

@@ -1,18 +1,17 @@
 {
   "private": true,
-  "name": "@this-project/util-common-types",
+  "name": "@this-project/util-atomic-disposer",
   "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
-    "build": "yarn tsc",
-    "generate": "ts-auto-index -t ."
+    "build": "yarn tsc"
   },
   "devDependencies": {
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/development-codegen-ts-auto-index": "workspace:*"
+    "@this-project/util-types-common": "workspace:*"
   }
 }

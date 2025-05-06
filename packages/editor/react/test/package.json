@@ -17,7 +17,7 @@
     "@this-project/editor-react-mdcode": "workspace:*",
     "@this-project/editor-react-types": "workspace:*",
     "@this-project/util-atomic-unwrap": "workspace:*",
-    "@this-project/util-common-types": "workspace:*",
+    "@this-project/util-types-common": "workspace:*",
     "@types/node": "^22.15.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",

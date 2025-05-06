@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@this-project/backend-application-adapter": "workspace:*",
-    "@this-project/util-common-types": "workspace:*",
-    "@this-project/util-common-util": "workspace:*",
+    "@this-project/util-atomic-env": "workspace:*",
+    "@this-project/util-types-common": "workspace:*",
     "aws-sdk": "^2.1692.0"
   }
 }

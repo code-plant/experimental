@@ -16,7 +16,7 @@
     "@this-project/editor-core-types": "workspace:*",
     "@this-project/editor-react-types": "workspace:*",
     "@this-project/util-atomic-unwrap": "workspace:*",
-    "@this-project/util-common-types": "workspace:*",
+    "@this-project/util-types-common": "workspace:*",
     "react": "^19.1.0"
   }
 }

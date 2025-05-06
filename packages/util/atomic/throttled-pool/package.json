@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "@this-project/util-atomic-event-bus": "workspace:*",
-    "@this-project/util-common-types": "workspace:*"
+    "@this-project/util-types-common": "workspace:*"
   }
 }

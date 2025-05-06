@@ -42,16 +42,18 @@
       "build-graphql-common-parser",
       "build-graphql-types-core",
       "build-graphql-types-parse",
+      "build-util-atomic-disposer",
       "build-util-atomic-env",
       "build-util-atomic-event-bus",
       "build-util-atomic-throttled-pool",
       "build-util-atomic-unreachable",
       "build-util-atomic-unwrap-non-nullable",
       "build-util-atomic-unwrap",
+      "build-util-atomic-watch-target",
       "build-util-client-graphql-client",
       "build-util-client-rest-client",
-      "build-util-common-types",
-      "build-util-common-util",
+      "build-util-types-common",
+      "build-util-types-rest",
       "build-viuc-main-cli-with-all",
       "build-viuc-main-core",
       "build-viuc-main-node",
@@ -66,7 +68,7 @@
   },
   "build-application-api-common": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/application-api-common build"
   },
@@ -79,7 +81,8 @@
   "build-application-api-v1": {
     "deps": [
       "build-application-api-common",
-      "build-util-common-types",
+      "build-util-types-common",
+      "build-util-types-rest",
       "build-development-codegen-ts-auto-index"
     ],
     "cmd": "yarn workspace @this-project/application-api-v1 build"
@@ -95,21 +98,21 @@
   "build-aws-object-storage-adapter": {
     "deps": [
       "build-backend-application-adapter",
-      "build-util-common-types",
-      "build-util-common-util"
+      "build-util-atomic-env",
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/aws-object-storage-adapter build"
   },
   "build-backend-application-adapter": {
     "deps": [
-      "build-util-common-types",
+      "build-util-types-common",
       "build-development-codegen-ts-auto-index"
     ],
     "cmd": "yarn workspace @this-project/backend-application-adapter build"
   },
   "build-backend-application-transaction": {
     "deps": [
-      "build-util-common-types",
+      "build-util-types-common",
       "build-development-codegen-ts-auto-index"
     ],
     "cmd": "yarn workspace @this-project/backend-application-transaction build"
@@ -123,14 +126,14 @@
   },
   "build-backend-scripts-main": {
     "deps": [
-      "build-util-common-util",
+      "build-util-atomic-disposer",
       "build-development-codegen-env-typegen"
     ],
     "cmd": "yarn workspace @this-project/backend-scripts-main build"
   },
   "build-backend-util-di": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/backend-util-di build"
   },
@@ -182,20 +185,20 @@
   "build-editor-core-builder": {
     "deps": [
       "build-editor-core-types",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-core-builder build"
   },
   "build-editor-core-parser": {
     "deps": [
       "build-editor-core-types",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-core-parser build"
   },
   "build-editor-core-types": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-core-types build"
   },
@@ -203,7 +206,7 @@
     "deps": [
       "build-editor-core-types",
       "build-editor-plugins-util",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-plugins-section build"
   },
@@ -213,14 +216,14 @@
       "build-editor-core-parser",
       "build-editor-core-types",
       "build-editor-plugins-section",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-plugins-test build"
   },
   "build-editor-plugins-util": {
     "deps": [
       "build-editor-core-types",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-plugins-util build"
   },
@@ -229,7 +232,7 @@
       "build-editor-core-types",
       "build-editor-react-types",
       "build-util-atomic-unwrap",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-react-mdcode build"
   },
@@ -242,14 +245,14 @@
       "build-editor-react-mdcode",
       "build-editor-react-types",
       "build-util-atomic-unwrap",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-react-test build"
   },
   "build-editor-react-types": {
     "deps": [
       "build-editor-core-types",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/editor-react-types build"
   },
@@ -276,8 +279,9 @@
     "deps": [
       "build-frontend-util-dom-util",
       "build-frontend-util-react-util",
-      "build-util-common-types",
-      "build-util-common-util"
+      "build-util-atomic-disposer",
+      "build-util-atomic-watch-target",
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/frontend-components-base build"
   },
@@ -289,7 +293,7 @@
   },
   "build-frontend-util-dom-util": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/frontend-util-dom-util build"
   },
@@ -309,7 +313,7 @@
   },
   "build-frontend-util-react-util": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/frontend-util-react-util build"
   },
@@ -329,9 +333,15 @@
   },
   "build-graphql-types-parse": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/graphql-types-parse build"
+  },
+  "build-util-atomic-disposer": {
+    "deps": [
+      "build-util-types-common"
+    ],
+    "cmd": "yarn workspace @this-project/util-atomic-disposer build"
   },
   "build-util-atomic-env": {
     "deps": [],
@@ -344,7 +354,7 @@
   "build-util-atomic-throttled-pool": {
     "deps": [
       "build-util-atomic-event-bus",
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/util-atomic-throttled-pool build"
   },
@@ -358,33 +368,39 @@
   },
   "build-util-atomic-unwrap": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/util-atomic-unwrap build"
   },
+  "build-util-atomic-watch-target": {
+    "deps": [
+      "build-util-types-common"
+    ],
+    "cmd": "yarn workspace @this-project/util-atomic-watch-target build"
+  },
   "build-util-client-graphql-client": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/util-client-graphql-client build"
   },
   "build-util-client-rest-client": {
     "deps": [
-      "build-util-common-types"
+      "build-util-types-common"
     ],
     "cmd": "yarn workspace @this-project/util-client-rest-client build"
   },
-  "build-util-common-types": {
+  "build-util-types-common": {
     "deps": [
       "build-development-codegen-ts-auto-index"
     ],
-    "cmd": "yarn workspace @this-project/util-common-types build"
+    "cmd": "yarn workspace @this-project/util-types-common build"
   },
-  "build-util-common-util": {
+  "build-util-types-rest": {
     "deps": [
-      "build-util-common-types"
+      "build-development-codegen-ts-auto-index"
     ],
-    "cmd": "yarn workspace @this-project/util-common-util build"
+    "cmd": "yarn workspace @this-project/util-types-rest build"
   },
   "build-viuc-main-cli-with-all": {
     "deps": [
@@ -406,7 +422,7 @@
   },
   "build-viuc-main-node": {
     "deps": [
-      "build-util-common-types",
+      "build-util-types-common",
       "build-viuc-main-core"
     ],
     "cmd": "yarn workspace @this-project/viuc-main-node build"

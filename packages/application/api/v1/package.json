@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@this-project/application-api-common": "workspace:*",
-    "@this-project/util-common-types": "workspace:*"
+    "@this-project/util-types-common": "workspace:*",
+    "@this-project/util-types-rest": "workspace:*"
   }
 }

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@this-project/editor-react-types",
+  "name": "@this-project/util-atomic-watch-target",
   "type": "module",
   "version": "0.1.0",
   "license": "UNLICENSED",
@@ -9,12 +9,9 @@
     "build": "yarn tsc"
   },
   "devDependencies": {
-    "@types/react": "^19.1.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@this-project/editor-core-types": "workspace:*",
-    "@this-project/util-types-common": "workspace:*",
-    "react": "^19.1.0"
+    "@this-project/util-types-common": "workspace:*"
   }
 }
