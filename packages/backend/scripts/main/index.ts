@@ -6,9 +6,8 @@ import { ApolloServerPluginLandingPageDisabled } from "@apollo/server/plugin/dis
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 import cors from "cors";
 import express, { json, Router } from "express";
-import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
-
 import { GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
+import { graphqlUploadExpress } from "graphql-upload-ts";
 import { Context } from "./types/Context";
 
 declare global {

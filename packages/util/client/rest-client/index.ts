@@ -1,9 +1,11 @@
 import {
-  APIRouteBase,
-  ExtractVariablesFromPath,
   StringUnionToString,
   UnionToIntersection,
 } from "@this-project/util-types-common";
+import {
+  APIRouteBase,
+  ExtractVariablesFromPath,
+} from "@this-project/util-types-rest";
 
 export interface RestOptions {
   customFetch?: typeof fetch;

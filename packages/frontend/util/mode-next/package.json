@@ -12,8 +12,10 @@
     "@types/react": "^19.1.0",
     "typescript": "^5.8.3"
   },
+  "dependencies": {
+    "@this-project/frontend-util-mode": "workspace:*"
+  },
   "peerDependencies": {
-    "@this-project/frontend-util-mode": "*",
     "next": "^15.3.0"
   }
 }

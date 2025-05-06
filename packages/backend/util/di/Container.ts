@@ -56,10 +56,16 @@ export class Registration<TType, TMap extends {}> {
     switch (this.internal[0]) {
       case "scoped-class":
       case "transient-class":
-        return new Registration(["singleton-class", this.internal[1]]);
+        return new Registration<TType, TMap>([
+          "singleton-class",
+          this.internal[1],
+        ]);
       case "scoped-function":
       case "transient-function":
-        return new Registration(["singleton-function", this.internal[1]]);
+        return new Registration<TType, TMap>([
+          "singleton-function",
+          this.internal[1],
+        ]);
       default:
         return this;
     }
@@ -69,10 +75,16 @@ export class Registration<TType, TMap extends {}> {
     switch (this.internal[0]) {
       case "scoped-class":
       case "singleton-class":
-        return new Registration(["transient-class", this.internal[1]]);
+        return new Registration<TType, TMap>([
+          "transient-class",
+          this.internal[1],
+        ]);
       case "scoped-function":
       case "singleton-function":
-        return new Registration(["transient-function", this.internal[1]]);
+        return new Registration<TType, TMap>([
+          "transient-function",
+          this.internal[1],
+        ]);
       default:
         return this;
     }
@@ -82,10 +94,16 @@ export class Registration<TType, TMap extends {}> {
     switch (this.internal[0]) {
       case "transient-class":
       case "singleton-class":
-        return new Registration(["scoped-class", this.internal[1]]);
+        return new Registration<TType, TMap>([
+          "scoped-class",
+          this.internal[1],
+        ]);
       case "transient-function":
       case "singleton-function":
-        return new Registration(["scoped-function", this.internal[1]]);
+        return new Registration<TType, TMap>([
+          "scoped-function",
+          this.internal[1],
+        ]);
       default:
         return this;
     }
@@ -101,12 +119,6 @@ type RegistrationMap<T extends {}> = {
 };
 type InitializeMap<T extends {}> = Partial<Record<keyof T, boolean>>;
 
-function isTransient(type: RegistrationInternalType) {
-  return type === "transient-class" || type === "transient-function";
-}
-function isScoped(type: RegistrationInternalType) {
-  return type === "scoped-class" || type === "scoped-function";
-}
 function isSingleton(type: RegistrationInternalType) {
   return type === "singleton-class" || type === "singleton-function";
 }
