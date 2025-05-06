@@ -3,12 +3,12 @@
     "cmd": "yarn install"
   },
   "build": {
-    "cmd": "yarn workspace @this-project/development-scripts-task start -C ../../../.. -f task/build.json -k build"
+    "cmd": "yarn workspace @this-project/development-scripts-task run start -C ../../../.. -f task/build.json -k build"
   },
   "test": {
     "cmd": "sh ./scripts/for-each-package.sh npm test"
   },
   "all": {
-    "cmd": "yarn install && yarn task build && yarn task test"
+    "cmd": "yarn install && yarn run task build && yarn run task test"
   }
 }
