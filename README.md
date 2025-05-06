@@ -38,7 +38,12 @@ This repository is for developing/testing experimental packages such as the foll
 - User group and role, access control to posts
 - Approval system for sharing posts with other entities
 
-## Development Notes
+## Development
+
+- Use Visual Studio Code or its variant.
+- Setup yarn sdk by `yarn && yarn dlx @yarnpkg/sdks vscode`.
+
+### Notes
 
 Currently, all packages are nested three levels deep in the `packages/` directory.  
 For example: `packages/a/b/c`.
