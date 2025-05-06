@@ -162,7 +162,14 @@ async function runTask(name: string) {
   return await promise;
 }
 
-runTask(task).catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+runTask(task)
+  .then(() => {
+    const atLeastOneTaskFailed = Array.from(states.values()).some(
+      (state) => state.type !== "done" || !state.succeed
+    );
+    process.exit(atLeastOneTaskFailed ? 1 : 0);
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
