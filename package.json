@@ -8,6 +8,16 @@
     "task": "yarn workspace @this-project/development-scripts-task start -C ../../../.."
   },
   "devDependencies": {
-    "typescript": "^5.8.3"
+    "@eslint/js": "^9.26.0",
+    "eslint": "^9.26.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0"
+  },
+  "dependenciesMeta": {
+    "prettier-plugin-tailwindcss@0.6.11": {
+      "unplugged": true
+    }
   }
 }

@@ -41,7 +41,7 @@ This repository is for developing/testing experimental packages such as the foll
 ## Development
 
 - Use Visual Studio Code or its variant.
-- Setup yarn sdk by `yarn && yarn dlx @yarnpkg/sdks vscode`.
+- Setup prettier by `yarn unplug prettier-plugin-tailwindcss`
 
 ### Notes
 
