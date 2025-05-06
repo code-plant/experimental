@@ -1,4 +1,4 @@
-default: init
+usage:
   sh scripts/usage.sh
 
 init:

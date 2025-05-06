@@ -12,9 +12,10 @@ The current stage of this project is in active development. As such, commits may
 
 ## Getting Started
 
-> WORKING IN PROGRESS. NOT WORK YET.
+> WORK IN PROGRESS. DOES NOT WORK YET.
 
 ```sh
+just init
 just
 ```
 
@@ -22,20 +23,20 @@ See `Justfile` recipes.
 
 ## Goals
 
-This repository is for developing/testing experimental packages such as below:
+This repository is for developing/testing experimental packages such as the following:
 
-- GraphQL client with type level parser/analyzer, like `gql.tada` but with `@include`/`@skip` support and more
+- GraphQL client with type-level parser/analyzer, like `gql.tada` but with `@include`/`@skip` support and more
 - Strongly typed GraphQL server framework with strict type checking (in contrast to `type-graphql`)
-- Command-line arguments parser with type level invalid option detection
-- Markdown/MDX alternative document format that supports plugin, section termination, rich structured data, etc.
-- TailwindCSS alternative utility class generator without huge initial bundle size, and much more robust dark mode/interactive/group, etc.
+- Command-line arguments parser with type-level invalid option detection
+- Markdown/MDX alternative document format that supports plugins, section termination, rich structured data, etc.
+- TailwindCSS alternative utility class generator without a huge initial bundle size, and with much more robust dark mode/interactive/group support, etc.
 
 ### Features
 
-- user login
-- post, comment
-- user group and role, access control to post
-- approval system for sharing posts with other entities
+- User login
+- Post, comment
+- User group and role, access control to posts
+- Approval system for sharing posts with other entities
 
 ## Development Notes
 
@@ -45,7 +46,7 @@ For example: `packages/a/b/c`.
 All `*.js` and `[!_]*.d.ts` files are excluded from Git and VS Code.  
 Therefore, if you need to include a `.d.ts` file, make sure it starts with an underscore (e.g., `_declarations.d.ts`).
 
-If type error occurs because of residue `.d.ts` files, use command below:
+If type errors occur because of residual `.d.ts` files, use the command below:
 
 ```sh
 just clean
@@ -53,39 +54,39 @@ just clean
 
 ## Brief Structure
 
-> Note: Actual directory structory may not match yet
+> Note: Actual directory structure may not match yet
 
-- `application` - shared, application-specific packages
+- `application` - Shared, application-specific packages
   - `api` - API specification between backend/frontend
-  - `logic` - common logic between backend/frontend
-- `backend` - backend-specific packages
-  - `adapters` - adapter implementations
-  - `application` - core business logic
-  - `data` - data layer
-  - `scripts` - runnable scripts, such as start server
-  - `util` - backend specific utilities
-- `development` - will be used for development only
-  - `codegen` - for code generation
-  - `scripts` - scripts for development
-  - `util` - utilities for `development/*` packages
+  - `logic` - Common logic between backend/frontend
+- `backend` - Backend-specific packages
+  - `adapters` - Adapter implementations
+  - `application` - Core business logic
+  - `data` - Data layer
+  - `scripts` - Runnable scripts, such as server start
+  - `util` - Backend-specific utilities
+- `development` - Used only for development
+  - `codegen` - For code generation
+  - `scripts` - Scripts for development
+  - `util` - Utilities for `development/*` packages
 - `editor` - MDCode: Markdown alternative document format
-  - `core` - essential packages to deal with the document
+  - `core` - Essential packages to handle the document
   - `plugins`
-  - `react` - renderer and renderer plugins for React
-- `frontend` - frontend-specific packages
+  - `react` - Renderer and renderer plugins for React
+- `frontend` - Frontend-specific packages
   - `apps` - Next.js apps
   - `components` - React components
-  - `util` - utilities only for frontend
+  - `util` - Utilities only for frontend
 - `graphql` - GraphQL tools like runtime/type-level parser
-  - `common` - shared components between server/client
+  - `common` - Shared components between server/client
   - `client`
   - `server`
-  - `types` - core types, and type level parser/analyzer, etc.
-- `util` - basic unopinionated utilities
-  - `atomic` - utilities in smallest unit
-  - `client` - type checked rest/graphql/jsonrpc/etc. client
-  - `types` - type only utilities
-- `viuc` - Very Interactive Util Classes: TailwindCSS alternative
+  - `types` - Core types and type-level parser/analyzer, etc.
+- `util` - Basic unopinionated utilities
+  - `atomic` - Utilities in the smallest unit
+  - `client` - Type-checked REST/GraphQL/JSON-RPC/etc. client
+  - `types` - Type-only utilities
+- `viuc` - Very Interactive Utility Classes: TailwindCSS alternative
   - `main`
-  - `type-plugins` - plugins for types such as `bg-[color]`
-  - `variant-plugins` - plugins for variants such as `focus:`
+  - `type-plugins` - Plugins for types such as `bg-[color]`
+  - `variant-plugins` - Plugins for variants such as `focus:`
