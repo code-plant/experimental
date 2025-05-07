@@ -3,31 +3,32 @@ export class Args<
   const args extends unknown[],
   const kwargs extends Partial<Record<string, unknown>>,
   const short extends Partial<Record<string, string>>,
-  const extra extends unknown
+  const extra,
 > {
-  public static readonly instance: Args<
+  public static readonly instance = new Args<
     0,
     [],
     { help: never; version: never },
     { h: "help"; v: "version" },
     never
-  > = new Args(0, [], {} as any, {} as any, undefined);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  >(0, [], {}, {} as { v: never; h: never }, undefined);
 
   private constructor(
     private readonly requiredArgsCount: number,
-    private readonly _positional: unknown[],
+    private readonly _positional: ((value: string) => unknown)[],
     private readonly _keyword: Partial<
-      Record<string, BooleanConstructor | ((value: string) => any)>
+      Record<string, BooleanConstructor | ((value: string) => unknown)>
     >,
     private readonly _short: short,
     private readonly _extra: [extra] extends [never]
       ? undefined
-      : (value: string) => extra
+      : (value: string) => extra,
   ) {}
 
   public positional<T>(
     parse: (value: string) => T,
-    required?: true
+    required?: true,
   ): args["length"] extends requiredArgsCount
     ? [extra] extends [never]
       ? Args<[...args, T]["length"], [...args, T], kwargs, short, extra>
@@ -35,17 +36,18 @@ export class Args<
     : never;
   public positional<T>(
     parse: (value: string) => T,
-    required: false
+    required: false,
   ): [extra] extends [never]
     ? Args<requiredArgsCount, [...args, optional?: T], kwargs, short, extra>
     : never;
   public positional<T>(
     parse: (value: string) => T,
-    required = false
+    required = false,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Args<any, any[], kwargs, short, extra> {
     if (this._extra) {
       throw new Error(
-        "Extra and optional positional arguments are mutually exclusive"
+        "Extra and optional positional arguments are mutually exclusive",
       );
     }
     return new Args(
@@ -53,61 +55,62 @@ export class Args<
       [...this._positional, parse],
       this._keyword,
       this._short,
-      this._extra
+      this._extra,
     );
   }
 
   public keyword<T, const L extends string>(
     parse: (value: string) => T,
-    long: L
+    long: L,
   ): L extends ""
     ? never
     : L extends keyof kwargs
-    ? never
-    : ToLetters<L> extends Allowed
-    ? Args<
-        requiredArgsCount,
-        args,
-        kwargs & Partial<Record<L, T>>,
-        short,
-        extra
-      >
-    : never;
+      ? never
+      : ToLetters<L> extends Allowed
+        ? Args<
+            requiredArgsCount,
+            args,
+            kwargs & Partial<Record<L, T>>,
+            short,
+            extra
+          >
+        : never;
   public keyword<T, const L extends string, const S extends string>(
     parse: (value: string) => T,
     long: L,
-    short: S
+    short: S,
   ): L extends ""
     ? never
     : L extends `-${string}`
-    ? never
-    : L extends keyof kwargs
-    ? never
-    : S extends ""
-    ? never
-    : S extends `-${string}`
-    ? never
-    : S extends keyof short
-    ? never
-    : S extends `${string}${infer I}`
-    ? I extends ""
-      ? ToLetters<L> extends Allowed
-        ? S extends Allowed
-          ? Args<
-              requiredArgsCount,
-              args,
-              kwargs & Partial<Record<L, T>>,
-              short & Partial<Record<S, L>>,
-              extra
-            >
-          : never
-        : never
-      : never
-    : never;
+      ? never
+      : L extends keyof kwargs
+        ? never
+        : S extends ""
+          ? never
+          : S extends `-${string}`
+            ? never
+            : S extends keyof short
+              ? never
+              : S extends `${string}${infer I}`
+                ? I extends ""
+                  ? ToLetters<L> extends Allowed
+                    ? S extends Allowed
+                      ? Args<
+                          requiredArgsCount,
+                          args,
+                          kwargs & Partial<Record<L, T>>,
+                          short & Partial<Record<S, L>>,
+                          extra
+                        >
+                      : never
+                    : never
+                  : never
+                : never;
   public keyword(
     parse: (value: string) => unknown,
     long: string,
-    short?: string
+    short?: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Args<requiredArgsCount, any[], any, any, extra> {
     let newShort = this._short;
     if (short !== undefined) {
@@ -116,7 +119,7 @@ export class Args<
       }
       if (short in newShort) {
         throw new Error(
-          `Duplicate short parameter "${short}": "${newShort[short]}" and "${long}"`
+          `Duplicate short parameter "${short}": "${String(newShort[short])}" and "${long}"`,
         );
       }
       if ((ALLOWED as readonly string[]).indexOf(short) === -1) {
@@ -139,13 +142,7 @@ export class Args<
         .split("")
         .some((ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1)
     ) {
-      throw new Error(
-        `Invalid charactor "${long
-          .split("")
-          .find(
-            (ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1
-          )}" in "${long}"`
-      );
+      throw new Error(`Invalid charactor in "${long}"`);
     }
     if (long.startsWith("-")) {
       throw new Error('Long keyword parameter cannot starts with "-".');
@@ -156,12 +153,12 @@ export class Args<
       this._positional,
       newKeyword,
       newShort,
-      this._extra
+      this._extra,
     );
   }
 
   public extra<const E>(
-    parser: (str: string) => E
+    parser: (str: string) => E,
   ): args["length"] extends requiredArgsCount
     ? [extra] extends [never]
       ? Args<requiredArgsCount, args, kwargs, short, E>
@@ -172,68 +169,73 @@ export class Args<
     }
     if (this._positional.length !== this.requiredArgsCount) {
       throw new Error(
-        "Extra and optional positional arguments are mutually exclusive"
+        "Extra and optional positional arguments are mutually exclusive",
       );
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return new Args(
       this.requiredArgsCount,
       this._positional,
       this._keyword,
       this._short,
-      parser as any
+      parser as unknown as [extra] extends [never]
+        ? undefined
+        : (value: string) => extra,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ) as any;
   }
 
   public boolean<const L extends string>(
-    long: L
-  ): L extends ""
-    ? never
-    : L extends `-${string}`
-    ? never
-    : L extends keyof kwargs
-    ? never
-    : ToLetters<L> extends Allowed
-    ? Args<
-        requiredArgsCount,
-        args,
-        kwargs & Partial<Record<L, true | undefined>>,
-        short,
-        extra
-      >
-    : never;
-  public boolean<const L extends string, const S extends string>(
     long: L,
-    short: S
   ): L extends ""
     ? never
     : L extends `-${string}`
-    ? never
-    : L extends keyof kwargs
-    ? never
-    : S extends ""
-    ? never
-    : S extends `-${string}`
-    ? never
-    : S extends keyof short
-    ? never
-    : S extends `${string}${infer I}`
-    ? I extends ""
-      ? ToLetters<L> extends Allowed
-        ? S extends Allowed
+      ? never
+      : L extends keyof kwargs
+        ? never
+        : ToLetters<L> extends Allowed
           ? Args<
               requiredArgsCount,
               args,
               kwargs & Partial<Record<L, true | undefined>>,
-              short & Partial<Record<S, L>>,
+              short,
               extra
             >
-          : never
-        : never
-      : never
-    : never;
+          : never;
+  public boolean<const L extends string, const S extends string>(
+    long: L,
+    short: S,
+  ): L extends ""
+    ? never
+    : L extends `-${string}`
+      ? never
+      : L extends keyof kwargs
+        ? never
+        : S extends ""
+          ? never
+          : S extends `-${string}`
+            ? never
+            : S extends keyof short
+              ? never
+              : S extends `${string}${infer I}`
+                ? I extends ""
+                  ? ToLetters<L> extends Allowed
+                    ? S extends Allowed
+                      ? Args<
+                          requiredArgsCount,
+                          args,
+                          kwargs & Partial<Record<L, true | undefined>>,
+                          short & Partial<Record<S, L>>,
+                          extra
+                        >
+                      : never
+                    : never
+                  : never
+                : never;
   public boolean(
     long: string,
-    short?: string
+    short?: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Args<requiredArgsCount, any[], any, any, extra> {
     let newShort = this._short;
     if (short !== undefined) {
@@ -242,7 +244,7 @@ export class Args<
       }
       if (short in newShort) {
         throw new Error(
-          `Duplicate short parameter "${short}": "${newShort[short]}" and "${long}"`
+          `Duplicate short parameter "${short}": "${String(newShort[short])}" and "${long}"`,
         );
       }
       if ((ALLOWED as readonly string[]).indexOf(short) === -1) {
@@ -265,13 +267,7 @@ export class Args<
         .split("")
         .some((ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1)
     ) {
-      throw new Error(
-        `Invalid charactor "${long
-          .split("")
-          .find(
-            (ch) => (ALLOWED as readonly string[]).indexOf(ch) === -1
-          )}" in "${long}"`
-      );
+      throw new Error(`Invalid charactor in "${long}"`);
     }
     if (long.startsWith("-")) {
       throw new Error('Long keyword parameter cannot starts with "-".');
@@ -282,7 +278,7 @@ export class Args<
       this._positional,
       newKeyword,
       newShort,
-      this._extra
+      this._extra,
     );
   }
 
@@ -301,7 +297,7 @@ export class Args<
         extra: extra[];
       }
     | { type: "error"; reason: string } {
-    const positionalValues: any[] = [];
+    const positionalValues: unknown[] = [];
     const keywordValues: Record<string, unknown> = {};
     const extra: extra[] = [];
 
@@ -309,7 +305,8 @@ export class Args<
     let parsingFlags = true; // true until we see `--`
 
     for (let i = 0; i < argv.length; i++) {
-      let current = argv[i];
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const current = argv[i]!;
 
       // If we see `--`, disable flag parsing and move on to next token (DON’T add `--` itself to arguments)
       if (parsingFlags && current === "--") {
@@ -320,9 +317,10 @@ export class Args<
       // After `--`, treat the token as positional/extra (ignore leading dashes)
       if (!parsingFlags) {
         if (posIndex < this._positional.length) {
-          const parser = this._positional[posIndex];
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const parser = this._positional[posIndex]!;
           try {
-            positionalValues.push((parser as any)(current));
+            positionalValues.push(parser(current));
           } catch (err) {
             return {
               type: "error",
@@ -338,7 +336,7 @@ export class Args<
             };
           }
           try {
-            extra.push(this._extra!(current));
+            extra.push(this._extra(current));
           } catch (err) {
             return {
               type: "error",
@@ -415,9 +413,11 @@ export class Args<
                 reason: `Expected value after --${longFlag}`,
               };
             }
-            valueStr = argv[i];
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            valueStr = argv[i]!;
           }
           try {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             keywordValues[longFlag] = parserOrBoolean!(valueStr);
           } catch (err) {
             return {
@@ -440,7 +440,8 @@ export class Args<
 
         let sfIndex = 0;
         while (sfIndex < shortFlags.length) {
-          const shortChar = shortFlags[sfIndex];
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const shortChar = shortFlags[sfIndex]!;
           if (!(shortChar in this._short)) {
             return {
               type: "error",
@@ -448,6 +449,7 @@ export class Args<
             };
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           const longKey = this._short[shortChar]!;
           const parserOrBoolean = this._keyword[longKey];
 
@@ -459,6 +461,7 @@ export class Args<
             const remainder = shortFlags.slice(sfIndex + 1);
             if (remainder) {
               try {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 keywordValues[longKey] = parserOrBoolean!(remainder);
               } catch (err) {
                 return {
@@ -477,7 +480,8 @@ export class Args<
                 };
               }
               try {
-                keywordValues[longKey] = parserOrBoolean!(argv[i]);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                keywordValues[longKey] = parserOrBoolean!(argv[i]!);
               } catch (err) {
                 return {
                   type: "error",
@@ -496,7 +500,9 @@ export class Args<
         if (posIndex < this._positional.length) {
           const parser = this._positional[posIndex];
           try {
-            positionalValues.push((parser as any)(current));
+            positionalValues.push(
+              (parser as (value: string) => unknown)(current),
+            );
           } catch (err) {
             return {
               type: "error",
@@ -512,7 +518,7 @@ export class Args<
             };
           }
           try {
-            extra.push(this._extra!(current));
+            extra.push(this._extra(current));
           } catch (err) {
             return {
               type: "error",
@@ -533,9 +539,9 @@ export class Args<
 
     return {
       type: "ok",
-      positional: positionalValues as any,
-      keywords: keywordValues as any,
-      extra,
+      positional: positionalValues as args,
+      keywords: keywordValues as kwargs,
+      extra: extra,
     };
   }
 }
@@ -543,8 +549,8 @@ export class Args<
 type ToLetters<S extends string, R = never> = S extends ""
   ? R
   : S extends `${infer I}${infer J}`
-  ? ToLetters<J, R | I>
-  : never;
+    ? ToLetters<J, R | I>
+    : never;
 type Allowed = (typeof ALLOWED)[number];
 
 // prettier-ignore
