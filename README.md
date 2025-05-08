@@ -38,12 +38,7 @@ This repository is for developing/testing experimental packages such as the foll
 - User group and role, access control to posts
 - Approval system for sharing posts with other entities
 
-## Development
-
-- Use Visual Studio Code or its variant.
-- Setup prettier by `yarn unplug prettier-plugin-tailwindcss`
-
-### Notes
+## Development Note
 
 Currently, all packages are nested three levels deep in the `packages/` directory.  
 For example: `packages/a/b/c`.
