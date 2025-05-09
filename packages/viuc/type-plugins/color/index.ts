@@ -20,7 +20,8 @@ export const ColorTypePlugin: TypePlugin<ThemeBase> = {
     const actualPrefix = config.prefix + PREFIX;
     const [light, dark] = className.startsWith(actualPrefix + "[")
       ? dup(className.slice(actualPrefix.length + 1, -1))
-      : config.theme.color[className.slice(actualPrefix.length)]!;
+      : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        config.theme.color[className.slice(actualPrefix.length)]!;
     return config.darkModeStrategy.type === "class"
       ? [
           {

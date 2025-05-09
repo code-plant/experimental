@@ -23,6 +23,8 @@ export default tseslint.config(
       "**/build/**",
       "**/*.js",
       "**/*.d.ts",
+      "**/*.cjs",
+      "**/*.mjs",
     ],
   },
 );

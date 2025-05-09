@@ -20,7 +20,6 @@
     "@this-project/util-atomic-env": "workspace:*",
     "@this-project/util-atomic-event-bus": "workspace:*",
     "@this-project/util-atomic-throttled-pool": "workspace:*",
-    "@this-project/util-atomic-unreachable": "workspace:*",
     "@this-project/util-atomic-unwrap-non-nullable": "workspace:*"
   }
 }

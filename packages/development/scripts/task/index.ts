@@ -3,7 +3,6 @@
 import { Args } from "@this-project/development-util-args";
 import { env } from "@this-project/util-atomic-env";
 import { ThrottledPool } from "@this-project/util-atomic-throttled-pool";
-import { unreachable } from "@this-project/util-atomic-unreachable";
 import { unwrapNonNullable } from "@this-project/util-atomic-unwrap-non-nullable";
 import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -74,8 +73,9 @@ interface CommandItemExtra {
 
 // TODO: validate task file
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const taskFile: TaskFile = JSON.parse(
-  readFileSync(resolve(cwd, args.keywords.file ?? "Task.json"), "utf8")
+  readFileSync(resolve(cwd, args.keywords.file ?? "Task.json"), "utf8"),
 );
 
 type State =
@@ -87,74 +87,78 @@ const states = new Map<string, State>();
 
 async function runTask(name: string) {
   if (states.has(name)) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const state = states.get(name)!;
     if (state.type === "running") {
       await state.promise;
     }
     return;
   }
-  const promise = new Promise<void>(async (resolve, reject) => {
+  const promise = new Promise<void>((resolve, reject) => {
     const taskDefinition = taskFile[name];
     if (!taskDefinition) {
       reject(new Error(`Task "${name}" not found`));
       return;
     }
-    await Promise.all(taskDefinition.deps?.map((dep) => runTask(dep)) ?? []);
-    await pool.run(() => {
-      const args =
-        typeof taskDefinition.cmd === "string"
-          ? ["sh", "-c", taskDefinition.cmd]
-          : taskDefinition.cmd.map((item) =>
-              typeof item === "string"
-                ? item
-                : item.type === "cwd"
-                ? cwd
-                : item.type === "env"
-                ? env(item.name)
-                : item.type === "extra"
-                ? unwrapNonNullable(extra[item.index])
-                : unreachable("Invalid command item")
-            );
-      if (
-        (taskDefinition.deps ?? []).some((dep) => {
-          const state = states.get(dep);
-          return state?.type !== "done" || !state.succeed;
-        })
-      ) {
-        states.set(name, { type: "done", succeed: false });
-        resolve();
-        return;
-      } else {
-        resolve(
-          new Promise<void>((resolve, reject) => {
-            console.log(`Running ${name}...`);
-            const proc = spawn(args[0], args.slice(1), {
-              stdio: "inherit",
-              env: {
-                ...process.env,
-                ...taskDefinition.env,
-              },
-              cwd,
-            });
-            proc.on("close", (code) => {
-              if (code === 0) {
-                states.set(name, { type: "done", succeed: true });
-                console.log(`Task "${name}" succeeded`);
-                resolve();
-              } else {
-                if (keepGoing) {
-                  states.set(name, { type: "done", succeed: false });
-                  console.log(`Task "${name}" failed with code ${code}`);
+
+    (async () => {
+      await Promise.all(taskDefinition.deps?.map((dep) => runTask(dep)) ?? []);
+      await pool.run(() => {
+        const args =
+          typeof taskDefinition.cmd === "string"
+            ? ["sh", "-c", taskDefinition.cmd]
+            : taskDefinition.cmd.map((item) =>
+                typeof item === "string"
+                  ? item
+                  : item.type === "cwd"
+                    ? cwd
+                    : item.type === "env"
+                      ? env(item.name)
+                      : unwrapNonNullable(extra[item.index]),
+              );
+        if (
+          (taskDefinition.deps ?? []).some((dep) => {
+            const state = states.get(dep);
+            return state?.type !== "done" || !state.succeed;
+          })
+        ) {
+          states.set(name, { type: "done", succeed: false });
+          resolve();
+          return;
+        } else {
+          resolve(
+            new Promise<void>((resolve, reject) => {
+              console.log(`Running ${name}...`);
+              const proc = spawn(String(args[0]), args.slice(1), {
+                stdio: "inherit",
+                env: {
+                  ...process.env,
+                  ...taskDefinition.env,
+                },
+                cwd,
+              });
+              proc.on("close", (code) => {
+                if (code === 0) {
+                  states.set(name, { type: "done", succeed: true });
+                  console.log(`Task "${name}" succeeded`);
                   resolve();
                 } else {
-                  reject(new Error(`Task "${name}" failed with code ${code}`));
+                  if (keepGoing) {
+                    states.set(name, { type: "done", succeed: false });
+                    console.log(`Task "${name}" failed with code ${code}`);
+                    resolve();
+                  } else {
+                    reject(
+                      new Error(`Task "${name}" failed with code ${code}`),
+                    );
+                  }
                 }
-              }
-            });
-          })
-        );
-      }
-    });
+              });
+            }),
+          );
+        }
+      });
+    })().catch(reject);
   });
   if (!states.has(name)) {
     states.set(name, { type: "running", promise });
@@ -165,7 +169,7 @@ async function runTask(name: string) {
 runTask(task)
   .then(() => {
     const atLeastOneTaskFailed = Array.from(states.values()).some(
-      (state) => state.type !== "done" || !state.succeed
+      (state) => state.type !== "done" || !state.succeed,
     );
     process.exit(atLeastOneTaskFailed ? 1 : 0);
   })

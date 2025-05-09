@@ -27,7 +27,7 @@ task name:
 
 
 # build task and its dependencies
-build-init-deps: build-init-deps-development-util-args build-init-deps-util-atomic-env build-init-deps-util-atomic-event-bus build-init-deps-util-atomic-throttled-pool build-init-deps-util-atomic-unreachable build-init-deps-util-atomic-unwrap-non-nullable build-init-deps-development-scripts-task
+build-init-deps: build-init-deps-development-util-args build-init-deps-util-atomic-env build-init-deps-util-atomic-event-bus build-init-deps-util-atomic-throttled-pool build-init-deps-util-atomic-unwrap-non-nullable build-init-deps-development-scripts-task
 build-init-deps-development-util-args:
   yarn workspace @this-project/development-util-args run build
 build-init-deps-util-atomic-env:
@@ -36,8 +36,6 @@ build-init-deps-util-atomic-event-bus:
   yarn workspace @this-project/util-atomic-event-bus run build
 build-init-deps-util-atomic-throttled-pool:
   yarn workspace @this-project/util-atomic-throttled-pool run build
-build-init-deps-util-atomic-unreachable:
-  yarn workspace @this-project/util-atomic-unreachable run build
 build-init-deps-util-atomic-unwrap-non-nullable:
   yarn workspace @this-project/util-atomic-unwrap-non-nullable run build
 build-init-deps-development-scripts-task:
