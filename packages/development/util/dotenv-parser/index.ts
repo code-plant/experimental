@@ -19,7 +19,7 @@ export function parse(content: string): DotEnv {
     const match = trimmed.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
     if (!match) return;
 
-    let [_, key, value] = match;
+    let [, key, value] = match as [string, string, string];
 
     value = value.trim();
     // Remove surrounding quotes if any

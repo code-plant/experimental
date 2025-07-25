@@ -43,7 +43,7 @@ export function parse(tokens: Token[]): Document | ParseError {
         col: token.col,
         content: token.value,
       });
-    } else if (token.type === "codeBlock") {
+    } else {
       (tagStack[tagStack.length - 1]?.children ?? result).push({
         type: "code",
         line: token.line,
@@ -57,7 +57,8 @@ export function parse(tokens: Token[]): Document | ParseError {
 
   if (tagStack.length > 0) {
     return {
-      tokenNear: tokens[tokens.length - 1],
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      tokenNear: tokens[tokens.length - 1]!,
       message: "Unclosed tag",
     };
   }

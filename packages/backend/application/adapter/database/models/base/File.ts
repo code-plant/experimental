@@ -14,6 +14,7 @@ export type File = Ensure<
       type: string;
       path: string;
     };
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     objects: {};
     uniqueIndices: [];
     indices: [];

@@ -74,14 +74,14 @@ export class AWSObjectStorageAdapter implements ObjectStorageAdapter {
    * @param id The ObjectId (key) for the file.
    * @returns The public URL to access the file.
    */
-  async generatePublicUrl(id: ObjectId): Promise<string> {
+  generatePublicUrl(id: ObjectId): Promise<string> {
     const url = this.s3.getSignedUrl("getObject", {
       Bucket: "your-bucket-name",
       Key: id,
       Expires: 3600, // The URL expires in 1 hour (can be customized)
     });
 
-    return url;
+    return Promise.resolve(url);
   }
 
   /**
@@ -90,16 +90,13 @@ export class AWSObjectStorageAdapter implements ObjectStorageAdapter {
    * @param expiresIn The expiration time in seconds (default 3600).
    * @returns The temporary URL to access the private file.
    */
-  async generatePrivateUrl(
-    id: ObjectId,
-    expiresIn: number = 3600
-  ): Promise<string> {
+  generatePrivateUrl(id: ObjectId, expiresIn: number = 3600): Promise<string> {
     const url = this.s3.getSignedUrl("getObject", {
       Bucket: "your-bucket-name",
       Key: id,
       Expires: expiresIn, // Custom expiration time (default is 1 hour)
     });
 
-    return url;
+    return Promise.resolve(url);
   }
 }

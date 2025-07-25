@@ -80,7 +80,12 @@ export function tokenize(source: string): Token[] | TokenizeError {
           message: "Unrecognized code block start",
         };
       }
-      const [, precedingWhitespaces, fence, lang] = match;
+      const [, precedingWhitespaces, fence, lang] = match as [
+        string,
+        string,
+        string,
+        string,
+      ];
       tokens.push({
         type: "text",
         line: state.line,
@@ -105,7 +110,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
     // Escaped Code Block Start
     let match: RegExpMatchArray | null;
     if (state.type === "text" && (match = line.match(/^(\s*)\\```/))) {
-      const [, precedingWhitespaces] = match;
+      const [, precedingWhitespaces] = match as [string, string];
       const skip = precedingWhitespaces.length + 1;
       left = left.slice(skip);
       skipped += skip;
@@ -119,10 +124,15 @@ export function tokenize(source: string): Token[] | TokenizeError {
         let match: RegExpMatchArray | null;
         while (
           (match = left.match(
-            /^(\s*)([a-zA-Z0-9-]+(?:=(?:"(?:(?:\\.)|[^"\\])*"|[a-zA-Z0-9-]*))?)((?:[\]\s\/]|$).*)$/
+            /^(\s*)([a-zA-Z0-9-]+(?:=(?:"(?:(?:\\.)|[^"\\])*"|[a-zA-Z0-9-]*))?)((?:[\]\s/]|$).*)$/,
           ))
         ) {
-          const [, spaces, attr, rest] = match;
+          const [, spaces, attr, rest] = match as [
+            string,
+            string,
+            string,
+            string,
+          ];
           const parsedAttr = parseAttr(attr, lineNum, skipped);
           if (!Array.isArray(parsedAttr)) {
             return parsedAttr;
@@ -142,7 +152,12 @@ export function tokenize(source: string): Token[] | TokenizeError {
 
         match = left.match(/^(\s*)(\/?)\](.*)$/);
         if (match) {
-          const [, spaces, close, rest] = match;
+          const [, spaces, close, rest] = match as [
+            string,
+            string,
+            string,
+            string,
+          ];
           tokens.push({
             type: "tagStart",
             line: state.line,
@@ -174,12 +189,12 @@ export function tokenize(source: string): Token[] | TokenizeError {
           // text
           if (left.match(/^\\\[\/?[a-zA-Z0-9-]/)) {
             // real escape
-            currentLine.push(left[1]);
+            currentLine.push(left[1]!); // eslint-disable-line @typescript-eslint/no-non-null-assertion
             skipped += 2;
             left = left.slice(2);
           } else {
             // not escape
-            currentLine.push(left[0]);
+            currentLine.push(left[0]!); // eslint-disable-line @typescript-eslint/no-non-null-assertion
             skipped += 1;
             left = left.slice(1);
           }
@@ -193,7 +208,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
               message: `Unrecognized tag close: ${left}`,
             };
           }
-          const [, name, rest] = match;
+          const [, name, rest] = match as [string, string, string];
           state.content.push(currentLine.join(""));
           currentLine.length = 0;
           tokens.push({
@@ -214,7 +229,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
         } else {
           // opening tag
           const match = left.match(
-            /^\[([a-zA-Z0-9-]+(?:=(?:"(?:(?:\\.)|[^"\\])*"|[a-zA-Z0-9-]*))?)((?:[\]\s\/]|$).*)$/
+            /^\[([a-zA-Z0-9-]+(?:=(?:"(?:(?:\\.)|[^"\\])*"|[a-zA-Z0-9-]*))?)((?:[\]\s/]|$).*)$/,
           );
           if (!match) {
             return {
@@ -223,7 +238,7 @@ export function tokenize(source: string): Token[] | TokenizeError {
               message: `Unrecognized tag open: ${left}`,
             };
           }
-          const [, attr, rest] = match;
+          const [, attr, rest] = match as [string, string, string];
           const parsedAttr = parseAttr(attr, lineNum, skipped);
           if (!Array.isArray(parsedAttr)) {
             return parsedAttr;
@@ -231,14 +246,12 @@ export function tokenize(source: string): Token[] | TokenizeError {
           state.content.push(currentLine.join(""));
           currentLine.length = 0;
           const [name, value] = parsedAttr;
-          if (state) {
-            tokens.push({
-              type: "text",
-              line: state.line,
-              col: state.col,
-              value: state.content.join("\n"),
-            });
-          }
+          tokens.push({
+            type: "text",
+            line: state.line,
+            col: state.col,
+            value: state.content.join("\n"),
+          });
           state = {
             type: "tag",
             line: lineNum,
@@ -289,13 +302,13 @@ export function tokenize(source: string): Token[] | TokenizeError {
 function parseAttr(
   attr: string,
   line: number,
-  col: number
+  col: number,
 ): [name: string, value: string | true] | TokenizeError {
   const match = attr.match(/^([a-zA-Z0-9-]+)=(.*?)$/);
   if (!match) {
     return [attr, true];
   }
-  const [, name, value] = match;
+  const [, name, value] = match as [string, string, string];
   const parsedValue = parseAttrValue(value, line, col + name.length + 1);
   if (typeof parsedValue === "object") {
     return parsedValue;
@@ -306,13 +319,13 @@ function parseAttr(
 function parseAttrValue(
   value: string,
   line: number,
-  col: number
+  col: number,
 ): string | TokenizeError {
   if (!value.startsWith('"')) {
     return value;
   }
   value = value.slice(1, -1);
-  let result: string[] = [];
+  const result: string[] = [];
   let state = false;
   for (const char of value) {
     col++;

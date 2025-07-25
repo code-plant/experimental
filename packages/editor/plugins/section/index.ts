@@ -14,7 +14,7 @@ export type SectionPluginResultNode<T extends NodeBase> =
   | NodeTag<SectionPluginResultNode<T>>;
 
 export const SectionPlugin = <T extends NodeBase>(
-  document: Document<SectionPluginResultNode<T>>
+  document: Document<SectionPluginResultNode<T>>,
 ): Result<
   Document<SectionPluginResultNode<T>>,
   ValidationError<NodeTag<SectionPluginResultNode<T>>>
@@ -51,26 +51,31 @@ export const SectionPlugin = <T extends NodeBase>(
           let match: RegExpMatchArray | null;
           if ((match = line.match(/^(#+)$/))) {
             // Explicitly Closing Section
-            const level = match[1].length;
+            const [, levelString] = match as [string, string];
+            const level = levelString.length;
             if (stack.length < level) {
               error = {
                 node,
-                message: `Explicitly closing section level ${level} is invalid. Current section level is ${stack.length}.`,
+                message: `Explicitly closing section level ${String(level)} is invalid. Current section level is ${String(stack.length)}.`,
               };
               return;
             }
             while (stack.length >= level) {
               stack.pop();
             }
-          } else if ((match = line.match(/^(#+) (.+) \{\#(.*?)\}$/))) {
+          } else if ((match = line.match(/^(#+) (.+) \{#(.*?)\}$/))) {
             // Section Start With Custom ID
-            const level = match[1].length;
-            const title = match[2];
-            const id = match[3];
+            const [, levelString, title, id] = match as [
+              string,
+              string,
+              string,
+              string,
+            ];
+            const level = levelString.length;
             if (stack.length + 1 < level) {
               error = {
                 node,
-                message: `Starting section with level ${level} is invalid. Current section level is ${stack.length}.`,
+                message: `Starting section with level ${String(level)} is invalid. Current section level is ${String(stack.length)}.`,
               };
               return;
             }
@@ -92,13 +97,13 @@ export const SectionPlugin = <T extends NodeBase>(
             stack.push(sectionNode);
           } else {
             // Section Start Without Custom ID
-            match = line.match(/^(#+) (.+)$/)!;
-            const level = match[1].length;
-            const title = match[2];
+            match = line.match(/^(#+) (.+)$/);
+            const [, levelString, title] = match as [string, string, string];
+            const level = levelString.length;
             if (stack.length + 1 < level) {
               error = {
                 node,
-                message: `Starting section with level ${level} is invalid. Current section level is ${stack.length}.`,
+                message: `Starting section with level ${String(level)} is invalid. Current section level is ${String(stack.length)}.`,
               };
               return;
             }

@@ -31,12 +31,13 @@ export interface NodeCodeBlock extends NodeBase {
   content: string;
 }
 
-export interface Context extends Partial<Record<keyof any, unknown>> {
+export interface Context
+  extends Partial<Record<string | number | symbol, unknown>> {
   isMeaningful?: boolean;
 }
 
 export type Plugin<T extends NodeBase, U extends NodeBase> = (
-  document: Document<T>
+  document: Document<T>,
 ) => Result<Document<U>, ValidationError<T>>;
 
 export interface ValidationError<T extends NodeBase> {

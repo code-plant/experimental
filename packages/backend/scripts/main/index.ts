@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-const IS_PRODUCTION = process.env.NODE_ENV !== "development";
+const IS_PRODUCTION = process.env["NODE_ENV"] !== "development";
 
 async function main() {
   const app = express();
@@ -32,7 +32,8 @@ async function main() {
           hello: {
             type: GraphQLString,
             resolve: (source, args, context, info) => (
-              console.log({ source, args, context, info }), "world"
+              console.log({ source, args, context, info }),
+              "world"
             ),
           },
         },
@@ -53,7 +54,7 @@ async function main() {
   await apolloServer.start();
 
   async function createContextFromRequest(
-    req: IncomingMessage
+    req: IncomingMessage,
   ): Promise<Context> {
     const ip = "" + req.socket.remoteAddress;
     const token = req.headers.authorization;
@@ -75,7 +76,7 @@ async function main() {
     graphqlUploadExpress(),
     expressMiddleware(apolloServer, {
       context: ({ req }) => createContextFromRequest(req),
-    })
+    }),
   );
 
   const port = Number(process.env.PORT) || 3000;
