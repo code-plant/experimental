@@ -11,11 +11,11 @@ import { GUCClassToString } from "./util/GUCClassToString";
 function classNameHandler<TTheme extends ThemeBase>(
   className: string,
   config: ConfigWithoutPlugins<TTheme>,
-  context: ExecutionContext<TTheme>
+  context: ExecutionContext<TTheme>,
 ): TypePlugin<TTheme> {
   let valid = false;
   for (const prefix in context.typePrefixes) {
-    if (className.slice(0, prefix.length) == prefix) {
+    if (className.slice(0, prefix.length) === prefix) {
       for (const plugin of context.typePrefixes[prefix]!) {
         if (plugin.isValidClass(className, config)) {
           return plugin;
@@ -34,11 +34,11 @@ function classNameHandler<TTheme extends ThemeBase>(
 function variantHandler<TTheme extends ThemeBase>(
   variant: string,
   config: ConfigWithoutPlugins<TTheme>,
-  context: ExecutionContext<TTheme>
+  context: ExecutionContext<TTheme>,
 ): VariantPlugin<TTheme> {
   let valid = false;
   for (const prefix in context.variantPrefixes) {
-    if (variant.slice(0, prefix.length) == prefix) {
+    if (variant.slice(0, prefix.length) === prefix) {
       for (const plugin of context.variantPrefixes[prefix]!) {
         if (plugin.isValidVariant(variant, config)) {
           return plugin;
@@ -57,20 +57,29 @@ function variantHandler<TTheme extends ThemeBase>(
 export function cssContent<TTheme extends ThemeBase>(
   gucClass: GUCClass,
   config: Config<TTheme>,
-  context: ExecutionContext<TTheme> = executionContext(config)
+  context: ExecutionContext<TTheme> = executionContext(config),
 ): CSSContent[] {
   const { typePlugins, variantPlugins, ...configWithoutPlugins } = config;
   const { className, variants } = gucClass;
-  return variants.reduce<CSSContent[]>((contents, variant) => {
-    const plugin = variantHandler(variant, configWithoutPlugins, context);
-    const result: CSSContent[] = [];
-    for (const content of contents) {
-      if (content.couldAffectedByVariants) {
-        result.push(...plugin.process(content, variant, configWithoutPlugins));
-      } else {
-        result.push(content);
+  return variants.reduce<CSSContent[]>(
+    (contents, variant) => {
+      const plugin = variantHandler(variant, configWithoutPlugins, context);
+      const result: CSSContent[] = [];
+      for (const content of contents) {
+        if (content.couldAffectedByVariants) {
+          result.push(
+            ...plugin.process(content, variant, configWithoutPlugins),
+          );
+        } else {
+          result.push(content);
+        }
       }
-    }
-    return result;
-  }, classNameHandler(className, configWithoutPlugins, context).cssContent(className, cssesc(GUCClassToString(gucClass), { isIdentifier: true }), configWithoutPlugins) || []);
+      return result;
+    },
+    classNameHandler(className, configWithoutPlugins, context).cssContent(
+      className,
+      cssesc(GUCClassToString(gucClass), { isIdentifier: true }),
+      configWithoutPlugins,
+    ) || [],
+  );
 }

@@ -3,7 +3,12 @@ import { Args } from "..";
 function deepEqual(a: any, b: any): boolean {
   if (a === b) return true;
 
-  if (typeof a !== "object" || typeof b !== "object" || a == null || b == null)
+  if (
+    typeof a !== "object" ||
+    typeof b !== "object" ||
+    a === null ||
+    b === null
+  )
     return false;
 
   const keysA = Object.keys(a);
@@ -58,7 +63,7 @@ assertDeepEqual(
     positional: ["main.c"],
     keywords: { normal: true, depth: true, output: "out.txt" },
     extra: [],
-  }
+  },
 );
 
 // Case: Mixed short and long flags
@@ -69,7 +74,7 @@ assertDeepEqual(
     positional: ["index.ts"],
     keywords: { normal: true, depth: true, output: "build.js" },
     extra: [],
-  }
+  },
 );
 
 // Case: Unrecognized option after `--`

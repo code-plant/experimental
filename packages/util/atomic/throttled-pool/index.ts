@@ -11,7 +11,7 @@ export class ThrottledPool {
   }
 
   async run<T>(task: () => Awaitable<T>): Promise<T> {
-    while (this.runningJobs == this.jobs) {
+    while (this.runningJobs === this.jobs) {
       let cleanup: () => void;
       await new Promise((resolve) => {
         cleanup = this.onEnd(resolve);
