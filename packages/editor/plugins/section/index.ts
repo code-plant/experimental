@@ -21,19 +21,14 @@ export const SectionPlugin = <T extends NodeBase>(
 > => {
   const result: Document<SectionPluginResultNode<T>> = [];
   const stack: NodeTag<SectionPluginResultNode<T>>[] = [];
-  let error: ValidationError<NodeText> | null = null;
-  document.forEach((node) => {
-    if (error) {
-      return;
-    }
+  for (const node of document) {
     if (is<NodeText>(node, "text")) {
       const buffer: string[] = [];
       let lineNum = node.line;
       let col = node.col;
-      node.content.split("\n").forEach((line, i) => {
-        if (error) {
-          return;
-        }
+      for (const [line, i] of node.content
+        .split("\n")
+        .map((line, i) => [line, i] as const)) {
         if (line.match(/^#+(?: .|$)/)) {
           // Section
           if (buffer.length) {
@@ -54,11 +49,13 @@ export const SectionPlugin = <T extends NodeBase>(
             const [, levelString] = match as [string, string];
             const level = levelString.length;
             if (stack.length < level) {
-              error = {
-                node,
-                message: `Explicitly closing section level ${String(level)} is invalid. Current section level is ${String(stack.length)}.`,
+              return {
+                type: "error",
+                error: {
+                  node,
+                  message: `Explicitly closing section level ${String(level)} is invalid. Current section level is ${String(stack.length)}.`,
+                },
               };
-              return;
             }
             while (stack.length >= level) {
               stack.pop();
@@ -130,7 +127,7 @@ export const SectionPlugin = <T extends NodeBase>(
           // Normal
           buffer.push(line);
         }
-      });
+      }
       if (buffer.length) {
         (stack[stack.length - 1]?.children ?? result).push(<NodeText>{
           type: "text",
@@ -142,12 +139,6 @@ export const SectionPlugin = <T extends NodeBase>(
     } else {
       (stack[stack.length - 1]?.children ?? result).push(node);
     }
-  });
-  if (error) {
-    return {
-      type: "error",
-      error,
-    };
   }
   return {
     type: "ok",
